@@ -223,7 +223,7 @@ section{position:relative;padding:140px 0;transition:background 700ms var(--ease
 .pin-label{position:absolute;top:48px;left:48px;font-family:var(--font-mono);font-size:11px;letter-spacing:0.16em;text-transform:uppercase;color:var(--ink-soft);z-index:3}
 .pin-title{position:absolute;top:80px;left:48px;font-family:var(--font-display);font-size:clamp(28px,3.2vw,44px);line-height:1.05;letter-spacing:-0.02em;max-width:22ch;z-index:3;pointer-events:none}
 .pin-title em{font-style:italic;color:var(--accent)}
-@media(max-width:900px){.services-pin .pin-stage{align-items:flex-start}.pin-label,.pin-title{display:none}.pin-progress{left:22px;right:22px}.pin-track{padding:28px 22px 0;gap:18px}.service-card{flex-basis:82vw;padding:28px;height:auto;min-height:320px}.service-card .ic{top:28px;right:28px}}
+@media(max-width:900px){.services-pin{height:auto!important}.services-pin .pin-stage{position:static;height:auto;min-height:0;display:block;align-items:flex-start;overflow:visible}.pin-label,.pin-title,.pin-progress{display:none}.pin-track{transform:none!important;display:flex;align-items:stretch;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;padding:24px 22px;gap:18px;scrollbar-width:none}.pin-track::-webkit-scrollbar{display:none}.service-card{flex-basis:82vw;padding:28px;height:auto;min-height:320px;scroll-snap-align:center}.service-card .ic{top:28px;right:28px}}
 
 /* === ABOUT === */
 .about{display:grid;grid-template-columns:1.1fr 1fr;gap:80px;align-items:center}
@@ -677,11 +677,14 @@ body.no-scroll{overflow:hidden}
   var pin=document.querySelector('.services-pin');
   if(pin){
     var track=pin.querySelector('.pin-track'),prog=pin.querySelector('.pin-progress'),pinDistance=0;
+    function pinMobile(){return innerWidth<=900}
     function setupPin(){
+      /* En celular el bloque es un carrusel horizontal nativo: sin pin ni alto extra (evita espacio muerto) */
+      if(pinMobile()){pin.style.height='';track.style.transform='';if(prog)prog.style.removeProperty('--p');return;}
       pinDistance=track.scrollWidth-innerWidth+80;
       pin.style.height=(innerHeight+pinDistance)+'px';
     }
-    function onPinScroll(){var r=pin.getBoundingClientRect(),total=pin.offsetHeight-innerHeight,p=Math.max(0,Math.min(1,-r.top/total));track.style.transform='translateX('+(- p*pinDistance)+'px)';if(prog)prog.style.setProperty('--p',(p*100)+'%')}
+    function onPinScroll(){if(pinMobile())return;var r=pin.getBoundingClientRect(),total=pin.offsetHeight-innerHeight,p=Math.max(0,Math.min(1,-r.top/total));track.style.transform='translateX('+(- p*pinDistance)+'px)';if(prog)prog.style.setProperty('--p',(p*100)+'%')}
     setupPin();
     addEventListener('scroll',onPinScroll,{passive:true});onPinScroll();
     /* Solo recalcular si cambia el ANCHO (evita el salto por la barra de URL móvil que cambia el alto) */
