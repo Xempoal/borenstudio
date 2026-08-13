@@ -1,4 +1,8 @@
 User-agent: *
 Allow: /
 
+# Invitaciones privadas (se comparten por link directo, no se indexan)
+Disallow: /ariadna/
+Disallow: /orlando/
+
 Sitemap: https://borenstudio.com/sitemap.xml
