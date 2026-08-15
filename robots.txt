@@ -1,6 +1,10 @@
 User-agent: *
 Allow: /
 
+# Invitaciones privadas (se comparten por link directo, no se indexan)
+Disallow: /ariadna/
+Disallow: /orlando/
+
 # Portal de carga de clientes: es un link privado que se comparte a mano.
 Disallow: /carga
 Disallow: /carga/
