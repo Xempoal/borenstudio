@@ -1,0 +1,348 @@
+@import "tailwindcss";
+
+/* Tailwind escanea estos archivos para saber que clases incluir. */
+@source "../carga/index.html";
+@source "../carga/admin/index.html";
+
+/* ==========================================================================
+   Boren Studio — portal de carga
+   Dirección: laboratorio fotográfico editorial.
+
+   Papel cálido, tinta carbón, cobre como foil. Cada archivo se presenta como
+   una placa numerada de una hoja de contactos, y el progreso sube como tinta
+   dentro de la placa. Regla tipográfica clara: serif para los números y los
+   títulos, monoespaciada para los metadatos, sans solo para leer.
+   ========================================================================== */
+
+@theme {
+  /* --- Papel y tinta --- */
+  --color-papel: #f4efe4;
+  --color-papel-alto: #fbf8f1;
+  --color-papel-hondo: #e8e0cf;
+  --color-tinta: #181410;
+  --color-tinta-media: #574e42;
+  --color-tinta-tenue: #9b9084;
+
+  /* --- Foil de cobre --- */
+  --color-cobre: #b85c38;
+  --color-cobre-claro: #d88a66;
+  --color-cobre-velo: #f2ddd0;
+
+  /* --- Señales --- */
+  --color-fijado: #3f7d58;
+  --color-velado: #a8442a;
+
+  /* --- Tipografía --- */
+  --font-display: "DM Serif Display", "Iowan Old Style", Georgia, serif;
+  --font-sans: "Geist", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-mono: "Geist Mono", ui-monospace, "SF Mono", Menlo, monospace;
+
+  /* --- Curvas --- */
+  --ease-papel: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-tinta: cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+/* La misma paleta, revelada en oscuro. No es un invert: el papel se vuelve
+   carbón y el cobre sube de brillo para no apagarse contra el fondo. */
+@custom-variant oscuro (&:where(.oscuro, .oscuro *));
+
+@layer theme {
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --color-papel: #17130f;
+      --color-papel-alto: #221c16;
+      --color-papel-hondo: #0f0c09;
+      --color-tinta: #f2ede2;
+      --color-tinta-media: #b0a698;
+      --color-tinta-tenue: #6d6459;
+      --color-cobre: #d88a66;
+      --color-cobre-claro: #e8a986;
+      --color-cobre-velo: #33231a;
+      --color-fijado: #6bae84;
+      --color-velado: #e0876b;
+    }
+  }
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background-color: var(--color-papel);
+    color: var(--color-tinta);
+    font-family: var(--font-sans);
+    /* Halo tibio arriba: da la sensación de una lámpara sobre la mesa. */
+    background-image: radial-gradient(
+      120% 70% at 50% -10%,
+      color-mix(in oklab, var(--color-cobre) 9%, transparent) 0%,
+      transparent 60%
+    );
+    background-attachment: fixed;
+  }
+
+  /* Grano de película sobre todo. Va en un pseudo-elemento fijo para que no
+     se mueva con el scroll: si se moviera parecería una textura, y el punto
+     es que parezca la emulsión del papel. */
+  body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: 60;
+    pointer-events: none;
+    opacity: 0.035;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23g)'/%3E%3C/svg%3E");
+  }
+
+  ::selection {
+    background: var(--color-cobre);
+    color: var(--color-papel-alto);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-cobre);
+    outline-offset: 3px;
+    border-radius: 3px;
+  }
+
+  /* Números tabulares en todo lo que cuenta bytes y porcentajes, para que no
+     bailen los dígitos mientras sube un archivo. */
+  .font-mono,
+  [class*="tabular"] {
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+@layer components {
+  /* --- Filete editorial: la línea de cabecera de una hoja de contactos --- */
+  .filete {
+    border-top: 1px solid color-mix(in oklab, var(--color-tinta) 14%, transparent);
+  }
+
+  /* --- Etiqueta de metadato --- */
+  .etiqueta {
+    font-family: var(--font-mono);
+    font-size: 0.625rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-tinta-tenue);
+  }
+
+  /* --- Placa: la tarjeta de cada archivo --- */
+  .placa {
+    position: relative;
+    background: var(--color-papel-alto);
+    border: 1px solid color-mix(in oklab, var(--color-tinta) 11%, transparent);
+    transition:
+      border-color 0.35s var(--ease-papel),
+      transform 0.35s var(--ease-papel);
+  }
+  .placa::before {
+    /* Muesca de cobre en la esquina, como la marca de un revelado. */
+    content: "";
+    position: absolute;
+    top: -1px;
+    left: -1px;
+    width: 10px;
+    height: 10px;
+    border-top: 2px solid var(--color-cobre);
+    border-left: 2px solid var(--color-cobre);
+    opacity: 0;
+    transition: opacity 0.35s var(--ease-papel);
+  }
+  .placa[data-estado="subiendo"]::before,
+  .placa[data-estado="fijada"]::before {
+    opacity: 1;
+  }
+  .placa[data-estado="velada"] {
+    border-color: color-mix(in oklab, var(--color-velado) 45%, transparent);
+  }
+
+  /* --- Tinta: la barra de progreso, que sube en vez de correr --- */
+  .tinta {
+    position: relative;
+    height: 2px;
+    overflow: hidden;
+    background: color-mix(in oklab, var(--color-tinta) 10%, transparent);
+  }
+  .tinta > i {
+    display: block;
+    height: 100%;
+    width: 0;
+    background: linear-gradient(
+      90deg,
+      var(--color-cobre) 0%,
+      var(--color-cobre-claro) 100%
+    );
+    transition: width 0.3s linear;
+  }
+  .tinta[data-estado="fijada"] > i {
+    background: var(--color-fijado);
+  }
+  .tinta[data-estado="velada"] > i {
+    background: var(--color-velado);
+  }
+
+  /* --- Botón principal: bloque de tinta que se llena de cobre --- */
+  .boton {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    background: var(--color-tinta);
+    color: var(--color-papel);
+    border: 1px solid var(--color-tinta);
+    transition:
+      transform 0.3s var(--ease-papel),
+      opacity 0.2s;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .boton::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: var(--color-cobre);
+    transform: translateY(101%);
+    transition: transform 0.45s var(--ease-papel);
+  }
+  .boton:hover:not(:disabled)::before {
+    transform: translateY(0);
+  }
+  .boton:hover:not(:disabled) {
+    border-color: var(--color-cobre);
+  }
+  .boton:active:not(:disabled) {
+    transform: scale(0.985);
+  }
+  .boton:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+  }
+
+  /* --- Botón secundario: solo el contorno --- */
+  .boton-tenue {
+    background: transparent;
+    color: var(--color-tinta);
+    border-color: color-mix(in oklab, var(--color-tinta) 22%, transparent);
+  }
+  .boton-tenue::before {
+    display: none;
+  }
+  .boton-tenue:hover:not(:disabled) {
+    border-color: var(--color-cobre);
+    color: var(--color-cobre);
+  }
+
+  /* --- Campo de texto --- */
+  .campo {
+    background: var(--color-papel-alto);
+    border: 1px solid color-mix(in oklab, var(--color-tinta) 20%, transparent);
+    color: var(--color-tinta);
+    transition:
+      border-color 0.25s,
+      box-shadow 0.25s;
+  }
+  .campo::placeholder {
+    color: var(--color-tinta-tenue);
+  }
+  .campo:focus {
+    outline: none;
+    border-color: var(--color-cobre);
+    box-shadow: 0 0 0 3px color-mix(in oklab, var(--color-cobre) 16%, transparent);
+  }
+  .campo[aria-invalid="true"] {
+    border-color: var(--color-velado);
+  }
+
+  /* --- Casilla del PIN --- */
+  .digito {
+    font-family: var(--font-display);
+    font-size: 1.75rem;
+    text-align: center;
+    background: var(--color-papel-alto);
+    color: var(--color-tinta);
+    border: 1px solid color-mix(in oklab, var(--color-tinta) 20%, transparent);
+    caret-color: var(--color-cobre);
+    transition:
+      border-color 0.2s,
+      box-shadow 0.2s,
+      background 0.2s;
+  }
+  .digito:focus {
+    outline: none;
+    border-color: var(--color-cobre);
+    box-shadow: 0 0 0 3px color-mix(in oklab, var(--color-cobre) 16%, transparent);
+  }
+  .digito[data-lleno="si"] {
+    background: var(--color-cobre-velo);
+    border-color: color-mix(in oklab, var(--color-cobre) 55%, transparent);
+  }
+
+  /* --- Zona de arrastre --- */
+  .bandeja {
+    position: relative;
+    background: var(--color-papel-alto);
+    border: 1px dashed color-mix(in oklab, var(--color-tinta) 24%, transparent);
+    transition:
+      border-color 0.3s var(--ease-papel),
+      background 0.3s var(--ease-papel);
+    -webkit-tap-highlight-color: transparent;
+  }
+  .bandeja:hover,
+  .bandeja:focus-within {
+    border-color: var(--color-cobre);
+  }
+  .bandeja[data-dentro="si"] {
+    border-color: var(--color-cobre);
+    border-style: solid;
+    background: var(--color-cobre-velo);
+  }
+
+  /* --- Medidor de cuota --- */
+  .medidor {
+    height: 3px;
+    background: color-mix(in oklab, var(--color-tinta) 10%, transparent);
+    overflow: hidden;
+  }
+  .medidor > i {
+    display: block;
+    height: 100%;
+    background: var(--color-cobre);
+    transition: width 0.6s var(--ease-papel);
+  }
+  .medidor[data-lleno="si"] > i {
+    background: var(--color-velado);
+  }
+}
+
+@layer utilities {
+  /* Estado inicial de lo que Motion va a revelar. Si el JS no corre, esta
+     regla se anula abajo para que el contenido nunca quede invisible. */
+  .revelar {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  html.sin-js .revelar,
+  html.animado .revelar {
+    opacity: 1;
+    transform: none;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .revelar {
+      opacity: 1 !important;
+      transform: none !important;
+    }
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}

@@ -6,11 +6,18 @@
   "scripts": {
     "dev": "wrangler pages dev",
     "deploy": "wrangler pages deploy",
-    "vendor:aws4fetch": "node scripts/vendor-aws4fetch.mjs"
+    "css": "tailwindcss -i src/estilos.css -o carga/assets/estilos.css --minify",
+    "css:watch": "tailwindcss -i src/estilos.css -o carga/assets/estilos.css --watch",
+    "motion": "esbuild node_modules/motion/dist/es/mini.mjs --bundle --format=esm --minify --target=es2022 --outfile=carga/assets/motion.js",
+    "vendor:aws4fetch": "node scripts/vendor-aws4fetch.mjs",
+    "build": "npm run css && npm run motion && npm run vendor:aws4fetch"
   },
-  "//": "aws4fetch va como devDependency a proposito: la copia que se usa en produccion es functions/_lib/aws4fetch.js, integrada al repo, porque el proyecto de Pages no corre 'npm install'.",
+  "//": "Cloudflare NO corre build en este proyecto: todo esto se ejecuta a mano y el resultado ya compilado (carga/assets/*, functions/_lib/aws4fetch.js) se sube al repo. Ver README-carga.md.",
   "devDependencies": {
+    "@tailwindcss/cli": "^4.3.3",
     "aws4fetch": "^1.0.20",
+    "motion": "^13.1.0",
+    "tailwindcss": "^4.3.3",
     "wrangler": "^4.123.0"
   }
 }

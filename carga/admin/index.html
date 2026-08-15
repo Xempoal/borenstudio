@@ -1,374 +1,428 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" class="sin-js">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Cargas de clientes — Boren Studio</title>
+<title>Archivo — Boren Studio</title>
 <meta name="robots" content="noindex, nofollow">
-<meta name="theme-color" content="#F2EDE2" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#1C1814" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#F4EFE4" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#17130F" media="(prefers-color-scheme: dark)">
 <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
-<style>
-:root{
-  --cream-100:#F2EDE2;--cream-300:#DDD3BF;
-  --carbon-900:#1C1814;--carbon-800:#2A241D;--carbon-700:#3A3128;
-  --copper-500:#B85C38;--copper-300:#D88A66;
-  --bg:var(--cream-100);--panel:#FBF8F2;
-  --ink:var(--carbon-900);--ink-soft:rgba(28,24,20,.62);--ink-faint:rgba(28,24,20,.38);
-  --line:rgba(28,24,20,.12);--line-fuerte:rgba(28,24,20,.24);
-  --accent:var(--copper-500);--alerta:#A8442A;
-  --font-display:'DM Serif Display',Georgia,serif;
-  --font-sans:'Geist','Inter',system-ui,-apple-system,'Segoe UI',sans-serif;
-  --font-mono:'Geist Mono',ui-monospace,'SF Mono',Menlo,monospace;
-  --ease:cubic-bezier(.22,1,.36,1);
-}
-@media (prefers-color-scheme:dark){
-  :root{
-    --bg:var(--carbon-900);--panel:var(--carbon-800);
-    --ink:var(--cream-100);--ink-soft:rgba(242,237,226,.62);--ink-faint:rgba(242,237,226,.38);
-    --line:rgba(242,237,226,.14);--line-fuerte:rgba(242,237,226,.28);
-    --accent:var(--copper-300);--alerta:#E0876B;
-  }
-}
-*{box-sizing:border-box;margin:0;padding:0}
-html{-webkit-text-size-adjust:100%}
-body{
-  background:var(--bg);color:var(--ink);font-family:var(--font-sans);font-size:16px;line-height:1.5;
-  -webkit-font-smoothing:antialiased;min-height:100dvh;
-  padding:0 18px calc(50px + env(safe-area-inset-bottom));
-}
-:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:6px}
-img{display:block;max-width:100%}
-.contenedor{width:100%;max-width:860px;margin:0 auto}
 
-.top{
-  display:flex;align-items:center;justify-content:space-between;gap:14px;
-  padding:22px 0 20px;border-bottom:1px solid var(--line);margin-bottom:24px;
-}
-.top .marca{display:flex;align-items:center;gap:10px}
-.top .mark{
-  width:28px;height:28px;flex:0 0 28px;display:grid;place-items:center;
-  background:var(--ink);color:var(--bg);border-radius:4px;
-  font-family:var(--font-display);font-size:18px;line-height:1;padding-bottom:2px;
-}
-.top .titulo{font-family:var(--font-display);font-size:19px;line-height:1.1}
-.top .quien{font-family:var(--font-mono);font-size:10.5px;color:var(--ink-faint);text-align:right;word-break:break-all;max-width:45vw}
-
-h1{font-family:var(--font-display);font-weight:400;font-size:clamp(26px,6vw,34px);line-height:1.15;letter-spacing:-.015em}
-.sub{color:var(--ink-soft);font-size:14px;margin-top:8px}
-
-.migas{
-  display:flex;align-items:center;gap:9px;font-family:var(--font-mono);font-size:11px;
-  letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:16px;
-}
-.migas button{
-  background:none;border:0;color:var(--accent);font:inherit;cursor:pointer;
-  display:inline-flex;align-items:center;gap:6px;padding:4px 0;
-}
-.migas svg{width:12px;height:12px}
-
-.tarjetas{display:flex;flex-direction:column;gap:10px;margin-top:22px}
-.tarjeta{
-  display:grid;grid-template-columns:1fr auto;align-items:center;gap:14px;
-  width:100%;text-align:left;
-  background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:15px 16px;
-  cursor:pointer;font:inherit;color:inherit;
-  transition:border-color .2s var(--ease),transform .2s var(--ease);
-  -webkit-tap-highlight-color:transparent;
-}
-.tarjeta:hover{border-color:var(--accent)}
-.tarjeta:active{transform:scale(.99)}
-.tarjeta .negocio{font-size:16.5px;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.tarjeta .datos{font-family:var(--font-mono);font-size:11.5px;color:var(--ink-soft);margin-top:5px}
-.tarjeta .flecha{color:var(--ink-faint);width:17px;height:17px}
-
-.rejilla{
-  display:grid;grid-template-columns:repeat(auto-fill,minmax(146px,1fr));gap:11px;margin-top:20px;
-}
-.pieza{
-  background:var(--panel);border:1px solid var(--line);border-radius:13px;overflow:hidden;
-  display:flex;flex-direction:column;
-}
-.pieza .lienzo{
-  aspect-ratio:1;background:var(--cream-300);display:grid;place-items:center;
-  color:var(--ink-faint);position:relative;
-}
-@media (prefers-color-scheme:dark){.pieza .lienzo{background:var(--carbon-700)}}
-.pieza .lienzo img{width:100%;height:100%;object-fit:cover}
-.pieza .lienzo svg{width:30px;height:30px}
-.pieza .info{padding:10px 11px 11px;display:flex;flex-direction:column;gap:8px;flex:1}
-.pieza .nom{
-  font-size:12.5px;line-height:1.35;word-break:break-word;
-  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
-}
-.pieza .tam{font-family:var(--font-mono);font-size:10.5px;color:var(--ink-soft);margin-top:auto}
-.pieza .bajar{
-  display:flex;align-items:center;justify-content:center;gap:7px;
-  padding:8px;border-radius:8px;border:1px solid var(--line-fuerte);
-  font-family:var(--font-mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;
-  color:var(--ink);text-decoration:none;transition:border-color .2s,color .2s;
-}
-.pieza .bajar:hover{border-color:var(--accent);color:var(--accent)}
-.pieza .bajar svg{width:12px;height:12px}
-
-.btn{
-  display:inline-flex;align-items:center;justify-content:center;gap:10px;width:100%;
-  padding:15px 22px;border-radius:999px;border:1px solid var(--ink);
-  background:var(--ink);color:var(--bg);text-decoration:none;
-  font-family:var(--font-mono);font-size:12px;letter-spacing:.09em;text-transform:uppercase;font-weight:500;
-  cursor:pointer;transition:background .3s var(--ease),transform .3s var(--ease);
-  -webkit-tap-highlight-color:transparent;
-}
-.btn:hover{background:var(--accent);border-color:var(--accent);color:#fff}
-.btn:active{transform:scale(.98)}
-.btn svg{width:15px;height:15px;flex:0 0 15px}
-.acciones{margin-top:22px}
-
-.estado{
-  text-align:center;padding:52px 20px;color:var(--ink-soft);font-size:14.5px;
-}
-.estado.mal{color:var(--alerta)}
-.giro{
-  width:24px;height:24px;margin:0 auto 14px;border-radius:50%;
-  border:2px solid var(--line);border-top-color:var(--accent);animation:girar .8s linear infinite;
-}
-@keyframes girar{to{transform:rotate(360deg)}}
-[hidden]{display:none !important}
-@media (prefers-reduced-motion:reduce){*{transition:none !important;animation:none !important}}
-</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" media="print" onload="this.media='all'"
+      href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Geist+Mono:wght@400;500&family=Geist:wght@400;500&display=swap">
+<link rel="stylesheet" href="/carga/assets/estilos.css">
 </head>
-<body>
-<div class="contenedor">
 
-  <header class="top">
-    <div class="marca">
-      <div class="mark" aria-hidden="true">B</div>
-      <div class="titulo">Cargas de clientes</div>
+<body class="min-h-dvh antialiased">
+
+<noscript>
+  <div class="mx-auto max-w-md px-5 py-20 text-center">
+    <h1 class="font-display text-2xl">Necesitas activar JavaScript</h1>
+    <p class="mt-3 text-sm text-tinta-media">El panel no puede funcionar sin él.</p>
+  </div>
+</noscript>
+
+<!-- ══════════ Candado ══════════ -->
+<section id="candado" class="grid min-h-dvh place-items-center px-5 py-12" hidden>
+  <div class="w-full max-w-[20rem] text-center">
+    <div class="revelar mx-auto mb-7 grid size-11 place-items-center rounded-sm bg-tinta pb-0.5 font-display text-2xl leading-none text-papel">B</div>
+
+    <h1 class="revelar font-display text-3xl leading-none tracking-tight">Archivo</h1>
+    <p class="revelar etiqueta mt-3 normal-case tracking-[0.05em]">Escribe el PIN para entrar</p>
+
+    <form id="form-pin" class="revelar mt-9" autocomplete="off">
+      <div class="flex justify-center gap-2" id="casillas">
+        <input class="digito size-11 rounded-none" inputmode="numeric" pattern="[0-9]*" maxlength="1" aria-label="Dígito 1">
+        <input class="digito size-11 rounded-none" inputmode="numeric" pattern="[0-9]*" maxlength="1" aria-label="Dígito 2">
+        <input class="digito size-11 rounded-none" inputmode="numeric" pattern="[0-9]*" maxlength="1" aria-label="Dígito 3">
+        <input class="digito size-11 rounded-none" inputmode="numeric" pattern="[0-9]*" maxlength="1" aria-label="Dígito 4">
+        <input class="digito size-11 rounded-none" inputmode="numeric" pattern="[0-9]*" maxlength="1" aria-label="Dígito 5">
+        <input class="digito size-11 rounded-none" inputmode="numeric" pattern="[0-9]*" maxlength="1" aria-label="Dígito 6">
+      </div>
+
+      <p id="pin-error" class="mt-5 min-h-[2.5rem] text-[0.8rem] leading-snug text-velado" role="alert"></p>
+
+      <button type="submit" class="boton w-full px-6 py-4" id="btn-entrar" disabled>
+        <span id="btn-entrar-texto">Entrar</span>
+      </button>
+    </form>
+  </div>
+</section>
+
+<!-- ══════════ Panel ══════════ -->
+<div id="panel" hidden class="mx-auto w-full max-w-4xl px-5 pb-[calc(4rem+env(safe-area-inset-bottom))]">
+
+  <header class="filete-no flex items-center justify-between gap-4 border-b border-[color-mix(in_oklab,var(--color-tinta)_12%,transparent)] py-6">
+    <div class="flex items-center gap-3">
+      <div class="grid size-8 shrink-0 place-items-center rounded-sm bg-tinta pb-0.5 font-display text-xl leading-none text-papel">B</div>
+      <div class="leading-none">
+        <div class="font-display text-lg tracking-tight">Archivo</div>
+        <span class="etiqueta mt-1 block">Material de clientes</span>
+      </div>
     </div>
-    <div class="quien" id="quien"></div>
+    <button id="btn-salir" class="etiqueta transition-colors hover:text-cobre" type="button">Salir</button>
   </header>
 
-  <main id="vista">
-    <div class="estado"><div class="giro"></div>Cargando…</div>
-  </main>
+  <main id="vista" class="pt-9"></main>
 </div>
 
-<script>
-(function(){
-  "use strict";
+<script type="module">
+import { animate } from "/carga/assets/motion.js";
 
-  var API = "/carga/admin/api";
-  var vista = document.getElementById("vista");
-  // Escribir location.hash dispara hashchange; sin esto cada navegación
-  // se cargaría dos veces.
-  var propio = false;
-  function fijarHash(valor){
-    if(location.hash.slice(1) === valor) return;
-    propio = true;
-    location.hash = valor;
+const raiz = document.documentElement;
+raiz.classList.remove("sin-js");
+
+const API = "/carga/admin/api";
+const $ = (id) => document.getElementById(id);
+const reducido = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+const revelar = (els, base = 0.04) => {
+  if (reducido) { raiz.classList.add("animado"); return; }
+  [...els].forEach((el, i) =>
+    animate(el, { opacity: [0, 1], transform: ["translateY(10px)", "translateY(0px)"] },
+      { duration: 0.45, delay: base + i * 0.05, easing: [0.22, 1, 0.36, 1] }));
+};
+
+// Red de seguridad: si una animación falla a medias, nada puede quedarse
+// invisible. La clase `animado` fuerza opacidad 1 sobre todo lo revelable.
+setTimeout(() => raiz.classList.add("animado"), 1600);
+
+const peso = (b) => {
+  if (!b) return "0 B";
+  const u = ["B", "KB", "MB", "GB", "TB"];
+  const i = Math.min(Math.floor(Math.log(b) / Math.log(1024)), 4);
+  return `${(b / 1024 ** i).toFixed(i === 0 ? 0 : 1)} ${u[i]}`;
+};
+
+/* ══════════ Candado ══════════ */
+const casillas = [...$("casillas").querySelectorAll("input")];
+
+const pinActual = () => casillas.map((c) => c.value).join("");
+
+function refrescarCasillas() {
+  casillas.forEach((c) => { c.dataset.lleno = c.value ? "si" : "no"; });
+  $("btn-entrar").disabled = pinActual().length !== 6;
+}
+
+casillas.forEach((casilla, i) => {
+  casilla.addEventListener("input", () => {
+    casilla.value = casilla.value.replace(/\D/g, "").slice(0, 1);
+    refrescarCasillas();
+    if (casilla.value && i < casillas.length - 1) casillas[i + 1].focus();
+    if (pinActual().length === 6) $("form-pin").requestSubmit();
+  });
+  casilla.addEventListener("keydown", (e) => {
+    if (e.key === "Backspace" && !casilla.value && i > 0) {
+      casillas[i - 1].focus();
+      casillas[i - 1].value = "";
+      refrescarCasillas();
+    }
+    if (e.key === "ArrowLeft" && i > 0) casillas[i - 1].focus();
+    if (e.key === "ArrowRight" && i < casillas.length - 1) casillas[i + 1].focus();
+  });
+  // Pegar el PIN completo desde el portapapeles.
+  casilla.addEventListener("paste", (e) => {
+    e.preventDefault();
+    const digitos = (e.clipboardData.getData("text") || "").replace(/\D/g, "").slice(0, 6);
+    digitos.split("").forEach((d, k) => { if (casillas[k]) casillas[k].value = d; });
+    refrescarCasillas();
+    casillas[Math.min(digitos.length, 5)].focus();
+    if (digitos.length === 6) $("form-pin").requestSubmit();
+  });
+});
+
+function limpiarPin(enfocar = true) {
+  casillas.forEach((c) => (c.value = ""));
+  refrescarCasillas();
+  if (enfocar) casillas[0].focus();
+}
+
+function sacudir() {
+  if (reducido) return;
+  animate($("casillas"),
+    { transform: ["translateX(0px)", "translateX(-7px)", "translateX(7px)", "translateX(-4px)", "translateX(0px)"] },
+    { duration: 0.4 });
+}
+
+let enviandoPin = false;
+
+$("form-pin").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  if (enviandoPin || pinActual().length !== 6) return;
+
+  enviandoPin = true;
+  $("btn-entrar").disabled = true;
+  $("btn-entrar-texto").textContent = "Comprobando…";
+  $("pin-error").textContent = "";
+
+  try {
+    const r = await fetch(`${API}/entrar`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ pin: pinActual() }),
+    });
+    const d = await r.json().catch(() => ({}));
+
+    if (r.ok && d.ok) { abrirPanel(); return; }
+
+    $("pin-error").textContent = d.error || "No se pudo entrar.";
+    sacudir();
+    limpiarPin();
+
+    if (r.status === 429) {
+      casillas.forEach((c) => (c.disabled = true));
+      $("btn-entrar").disabled = true;
+      $("btn-entrar-texto").textContent = "Bloqueado";
+      return;
+    }
+  } catch {
+    $("pin-error").textContent = "Sin conexión. Revisa tu señal.";
+  } finally {
+    if (!$("candado").hidden && !casillas[0].disabled) {
+      $("btn-entrar-texto").textContent = "Entrar";
+    }
+    enviandoPin = false;
+    refrescarCasillas();
   }
+});
 
-  var ICONO_VIDEO = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 7.5A2.5 2.5 0 0 1 5.5 5h7A2.5 2.5 0 0 1 15 7.5v9A2.5 2.5 0 0 1 12.5 19h-7A2.5 2.5 0 0 1 3 16.5z"/><path d="M15 10.5l5-3v9l-5-3z"/></svg>';
-  var ICONO_DOC = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/></svg>';
-  var ICONO_BAJAR = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11m0 0l-4-4m4 4l4-4"/><path d="M4 17v2a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-2"/></svg>';
-  var ICONO_ATRAS = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>';
-  var ICONO_FLECHA = '<svg class="flecha" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg>';
+function mostrarCandado(bloqueadoMs = 0) {
+  $("panel").hidden = true;
+  $("candado").hidden = false;
+  revelar($("candado").querySelectorAll(".revelar"));
 
-  function peso(b){
-    if(!b) return "0 B";
-    var u = ["B","KB","MB","GB","TB"], i = Math.min(Math.floor(Math.log(b)/Math.log(1024)), 4);
-    return (b/Math.pow(1024,i)).toFixed(i === 0 ? 0 : 1) + " " + u[i];
+  if (bloqueadoMs > 0) {
+    const min = Math.ceil(bloqueadoMs / 60000);
+    $("pin-error").textContent =
+      `Demasiados intentos. Vuelve a intentar en ${min >= 60 ? `${Math.ceil(min / 60)} h` : `${min} min`}.`;
+    casillas.forEach((c) => (c.disabled = true));
+    $("btn-entrar-texto").textContent = "Bloqueado";
+  } else {
+    setTimeout(() => casillas[0].focus(), 350);
   }
+}
 
-  function pedir(ruta){
-    return fetch(API + ruta, { headers: { Accept: "application/json" }, cache: "no-store" })
-      .then(function(r){
-        return r.json().catch(function(){ return {}; }).then(function(d){
-          if(!r.ok || !d.ok) throw new Error(d.error || ("Error " + r.status));
-          return d;
-        });
-      });
-  }
+function abrirPanel() {
+  $("candado").hidden = true;
+  $("panel").hidden = false;
+  limpiarPin(false);
+  casillas.forEach((c) => (c.disabled = false));
+  $("btn-entrar-texto").textContent = "Entrar";
+  verCarpetas();
+}
 
-  function cargando(texto){
-    vista.textContent = "";
-    var d = document.createElement("div");
-    d.className = "estado";
-    d.innerHTML = '<div class="giro"></div>';
-    d.appendChild(document.createTextNode(texto));
-    vista.appendChild(d);
-  }
+$("btn-salir").addEventListener("click", async () => {
+  await fetch(`${API}/salir`, { method: "POST" }).catch(() => {});
+  location.hash = "";
+  mostrarCandado();
+});
 
-  function fallo(mensaje){
-    vista.textContent = "";
-    var d = document.createElement("div");
-    d.className = "estado mal";
-    d.textContent = mensaje;
-    vista.appendChild(d);
-  }
+/* ══════════ Datos ══════════ */
+const SVG_VIDEO = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" class="size-7"><path d="M3 7.5A2.5 2.5 0 0 1 5.5 5h7A2.5 2.5 0 0 1 15 7.5v9A2.5 2.5 0 0 1 12.5 19h-7A2.5 2.5 0 0 1 3 16.5z"/><path d="M15 10.5l5-3v9l-5-3z"/></svg>';
+const SVG_DOC = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" class="size-7"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/></svg>';
+const SVG_BAJAR = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" class="size-3.5"><path d="M12 4v11m0 0l-4-4m4 4l4-4"/><path d="M4 17v2a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-2"/></svg>';
+const SVG_ATRAS = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" class="size-3"><path d="M15 5l-7 7 7 7"/></svg>';
+const SVG_FLECHA = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" class="size-4 text-tinta-tenue"><path d="M9 5l7 7-7 7"/></svg>';
 
-  // ---------- lista de carpetas ----------
-  function verCarpetas(){
-    cargando("Cargando carpetas…");
-    fijarHash("");
+const vista = () => $("vista");
 
-    pedir("/carpetas").then(function(d){
-      vista.textContent = "";
+let propio = false;
+function fijarHash(valor) {
+  if (location.hash.slice(1) === valor) return;
+  propio = true;
+  location.hash = valor;
+}
 
-      var h1 = document.createElement("h1");
-      h1.textContent = d.carpetas.length
-        ? d.carpetas.length + (d.carpetas.length === 1 ? " carpeta" : " carpetas")
-        : "Sin cargas todavía";
-      vista.appendChild(h1);
+async function pedir(ruta) {
+  const r = await fetch(API + ruta, { headers: { Accept: "application/json" }, cache: "no-store" });
+  const d = await r.json().catch(() => ({}));
+  if (r.status === 401) { mostrarCandado(); throw new Error("sesion"); }
+  if (!r.ok || !d.ok) throw new Error(d.error || `Error ${r.status}`);
+  return d;
+}
 
-      var sub = document.createElement("p");
-      sub.className = "sub";
-      sub.textContent = d.carpetas.length
-        ? "Más recientes primero. Todo se borra solo a los 10 días."
-        : "Cuando un cliente suba archivos en borenstudio.com/carga, aparecerán aquí.";
-      vista.appendChild(sub);
+function cargando(texto) {
+  vista().innerHTML =
+    `<div class="py-20 text-center"><div class="mx-auto mb-4 size-5 animate-spin rounded-full border-2 border-[color-mix(in_oklab,var(--color-tinta)_14%,transparent)] border-t-cobre"></div>
+     <span class="etiqueta normal-case tracking-[0.05em]">${texto}</span></div>`;
+}
 
-      if(d.truncado){
-        var t = document.createElement("p");
-        t.className = "sub";
-        t.textContent = "Hay más objetos de los que caben en una lista; se muestran los primeros 10 000.";
-        vista.appendChild(t);
+function fallo(mensaje) {
+  if (mensaje === "sesion") return;
+  vista().innerHTML = `<div class="py-20 text-center text-sm text-velado">${mensaje}</div>`;
+}
+
+/* ── Lista de carpetas ── */
+async function verCarpetas() {
+  cargando("Abriendo el archivo…");
+  fijarHash("");
+
+  try {
+    const d = await pedir("/carpetas");
+    const v = vista();
+    v.textContent = "";
+
+    const enc = document.createElement("div");
+    enc.className = "revelar";
+    enc.innerHTML = `
+      <h2 class="font-display text-[clamp(1.8rem,6vw,2.6rem)] leading-none tracking-[-0.015em]">
+        ${d.carpetas.length ? `${d.carpetas.length} ${d.carpetas.length === 1 ? "entrega" : "entregas"}` : "Sin entregas"}
+      </h2>
+      <p class="mt-3 text-sm text-tinta-media">
+        ${d.carpetas.length
+          ? "Más recientes primero. Todo se borra solo a los 10 días."
+          : "Cuando un cliente suba material en borenstudio.com/carga, aparecerá aquí."}
+      </p>`;
+    v.appendChild(enc);
+
+    // Medidor del periodo
+    if (d.cuota) {
+      const pct = d.cuota.tope > 0 ? Math.min(100, (d.cuota.usado / d.cuota.tope) * 100) : 0;
+      const lleno = d.cuota.disponible <= 0;
+      const cu = document.createElement("div");
+      cu.className = "revelar mt-8 border-t border-[color-mix(in_oklab,var(--color-tinta)_12%,transparent)] pt-4";
+      cu.innerHTML = `
+        <div class="flex items-baseline justify-between gap-3">
+          <span class="etiqueta">Espacio del periodo</span>
+          <span class="font-mono text-[0.7rem] text-tinta-media">${peso(d.cuota.usado)} de ${peso(d.cuota.tope)}</span>
+        </div>
+        <div class="medidor mt-2" data-lleno="${lleno ? "si" : "no"}"><i style="width:${pct}%"></i></div>
+        <p class="etiqueta mt-2 normal-case tracking-[0.04em]">Se reinicia el ${new Date(d.cuota.seLiberaEl).toLocaleDateString("es-MX", { day: "numeric", month: "long" })}</p>`;
+      v.appendChild(cu);
+    }
+
+    if (d.truncado) {
+      const t = document.createElement("p");
+      t.className = "mt-4 text-xs text-tinta-tenue";
+      t.textContent = "Hay más objetos de los que caben en una lista; se muestran los primeros 10 000.";
+      v.appendChild(t);
+    }
+
+    const cont = document.createElement("div");
+    cont.className = "mt-8 flex flex-col gap-2";
+
+    d.carpetas.forEach((c) => {
+      const b = document.createElement("button");
+      b.type = "button";
+      b.className = "placa revelar grid w-full grid-cols-[1fr_auto] items-center gap-4 px-4 py-4 text-left hover:border-cobre";
+      b.innerHTML = `
+        <div class="min-w-0">
+          <div class="truncate font-display text-lg leading-tight">${c.negocio}</div>
+          <div class="mt-1.5 font-mono text-[0.68rem] text-tinta-tenue">
+            ${c.fecha} &nbsp;·&nbsp; ${c.cantidad} ${c.cantidad === 1 ? "archivo" : "archivos"} &nbsp;·&nbsp; ${peso(c.bytes)}
+          </div>
+        </div>${SVG_FLECHA}`;
+      b.addEventListener("click", () => verCarpeta(c.prefijo));
+      cont.appendChild(b);
+    });
+
+    v.appendChild(cont);
+    revelar(v.querySelectorAll(".revelar"));
+  } catch (e) { fallo(e.message); }
+}
+
+/* ── Detalle de carpeta ── */
+async function verCarpeta(prefijo) {
+  cargando("Abriendo entrega…");
+  fijarHash(encodeURIComponent(prefijo));
+
+  try {
+    const d = await pedir(`/carpeta?p=${encodeURIComponent(prefijo)}`);
+    const v = vista();
+    v.textContent = "";
+
+    const atras = document.createElement("button");
+    atras.type = "button";
+    atras.className = "revelar etiqueta mb-6 inline-flex items-center gap-2 transition-colors hover:text-cobre";
+    atras.innerHTML = `${SVG_ATRAS}<span>Todas las entregas</span>`;
+    atras.addEventListener("click", verCarpetas);
+    v.appendChild(atras);
+
+    const enc = document.createElement("div");
+    enc.className = "revelar";
+    enc.innerHTML = `
+      <h2 class="font-display text-[clamp(1.7rem,5.5vw,2.4rem)] leading-none tracking-[-0.015em]">${d.negocio}</h2>
+      <p class="mt-3 font-mono text-xs text-tinta-media">
+        ${d.fecha} &nbsp;·&nbsp; ${d.cantidad} ${d.cantidad === 1 ? "archivo" : "archivos"} &nbsp;·&nbsp; ${peso(d.bytes)}
+      </p>`;
+    v.appendChild(enc);
+
+    const acc = document.createElement("div");
+    acc.className = "revelar mt-6";
+    acc.innerHTML = `<a class="boton flex w-full items-center justify-center gap-2.5 px-6 py-4"
+        href="${API}/zip?p=${encodeURIComponent(prefijo)}">${SVG_BAJAR}<span>Descargar toda la entrega</span></a>`;
+    v.appendChild(acc);
+
+    const rejilla = document.createElement("div");
+    rejilla.className = "mt-8 grid grid-cols-2 gap-2.5 sm:grid-cols-3 lg:grid-cols-4";
+
+    d.archivos.forEach((a, i) => {
+      const p = document.createElement("div");
+      p.className = "placa revelar flex flex-col overflow-hidden";
+
+      const lienzo = document.createElement("div");
+      lienzo.className = "relative grid aspect-square place-items-center bg-papel-hondo text-tinta-tenue";
+      if (a.vista) {
+        const img = document.createElement("img");
+        img.src = a.vista;
+        img.alt = a.nombre;
+        img.loading = "lazy";
+        img.decoding = "async";
+        img.className = "size-full object-cover";
+        // Si el navegador no sabe leer el formato (HEIC en Chrome), caemos al ícono.
+        img.onerror = () => { lienzo.innerHTML = SVG_DOC; };
+        lienzo.appendChild(img);
+      } else {
+        lienzo.innerHTML = a.tipo === "video" ? SVG_VIDEO : SVG_DOC;
       }
 
-      var cont = document.createElement("div");
-      cont.className = "tarjetas";
+      const num = document.createElement("span");
+      num.className = "absolute left-2 top-2 bg-papel/85 px-1.5 py-0.5 font-mono text-[0.6rem] text-tinta-media";
+      num.textContent = String(i + 1).padStart(2, "0");
+      lienzo.appendChild(num);
 
-      d.carpetas.forEach(function(c){
-        var b = document.createElement("button");
-        b.type = "button";
-        b.className = "tarjeta";
+      const info = document.createElement("div");
+      info.className = "flex flex-1 flex-col gap-2 p-2.5";
+      info.innerHTML = `
+        <div class="line-clamp-2 text-[0.72rem] leading-snug break-words">${a.nombre}</div>
+        <div class="mt-auto font-mono text-[0.62rem] text-tinta-tenue">${peso(a.bytes)}</div>
+        <a class="boton boton-tenue flex items-center justify-center gap-1.5 px-2 py-2 text-[0.6rem]"
+           href="${a.descarga}">${SVG_BAJAR}<span>Descargar</span></a>`;
 
-        var izq = document.createElement("div");
-        var n = document.createElement("div");
-        n.className = "negocio";
-        n.textContent = c.negocio;
-        var m = document.createElement("div");
-        m.className = "datos";
-        m.textContent = c.fecha + "  ·  " + c.cantidad + (c.cantidad === 1 ? " archivo" : " archivos") + "  ·  " + peso(c.bytes);
-        izq.appendChild(n);
-        izq.appendChild(m);
+      p.append(lienzo, info);
+      rejilla.appendChild(p);
+    });
 
-        var fl = document.createElement("span");
-        fl.innerHTML = ICONO_FLECHA;
+    v.appendChild(rejilla);
+    revelar(v.querySelectorAll(".revelar"));
+    scrollTo(0, 0);
+  } catch (e) { fallo(e.message); }
+}
 
-        b.appendChild(izq);
-        b.appendChild(fl);
-        b.addEventListener("click", function(){ verCarpeta(c.prefijo); });
-        cont.appendChild(b);
-      });
+/* ══════════ Arranque ══════════ */
+addEventListener("hashchange", () => {
+  if (propio) { propio = false; return; }
+  if ($("candado").hidden === false) return;
+  const p = decodeURIComponent(location.hash.slice(1));
+  p ? verCarpeta(p) : verCarpetas();
+});
 
-      vista.appendChild(cont);
-    }).catch(function(e){ fallo(e.message); });
+try {
+  const r = await fetch(`${API}/sesion`, { cache: "no-store" });
+  const d = await r.json();
+  if (d.sesion) {
+    $("panel").hidden = false;
+    const inicial = decodeURIComponent(location.hash.slice(1));
+    inicial ? verCarpeta(inicial) : verCarpetas();
+  } else {
+    mostrarCandado(d.bloqueadoMs || 0);
   }
-
-  // ---------- detalle de una carpeta ----------
-  function verCarpeta(prefijo){
-    cargando("Abriendo carpeta…");
-    fijarHash(encodeURIComponent(prefijo));
-
-    pedir("/carpeta?p=" + encodeURIComponent(prefijo)).then(function(d){
-      vista.textContent = "";
-
-      var migas = document.createElement("div");
-      migas.className = "migas";
-      var atras = document.createElement("button");
-      atras.type = "button";
-      atras.innerHTML = ICONO_ATRAS + "<span>Todas las carpetas</span>";
-      atras.addEventListener("click", verCarpetas);
-      migas.appendChild(atras);
-      vista.appendChild(migas);
-
-      var h1 = document.createElement("h1");
-      h1.textContent = d.negocio;
-      vista.appendChild(h1);
-
-      var sub = document.createElement("p");
-      sub.className = "sub";
-      sub.textContent = d.fecha + "  ·  " + d.cantidad + (d.cantidad === 1 ? " archivo" : " archivos") + "  ·  " + peso(d.bytes);
-      vista.appendChild(sub);
-
-      var acciones = document.createElement("div");
-      acciones.className = "acciones";
-      var zip = document.createElement("a");
-      zip.className = "btn";
-      zip.href = API + "/zip?p=" + encodeURIComponent(prefijo);
-      zip.innerHTML = ICONO_BAJAR + "<span>Descargar toda la carpeta</span>";
-      acciones.appendChild(zip);
-      vista.appendChild(acciones);
-
-      var rejilla = document.createElement("div");
-      rejilla.className = "rejilla";
-
-      d.archivos.forEach(function(a){
-        var p = document.createElement("div");
-        p.className = "pieza";
-
-        var lienzo = document.createElement("div");
-        lienzo.className = "lienzo";
-        if(a.vista){
-          var img = document.createElement("img");
-          img.src = a.vista;
-          img.alt = a.nombre;
-          img.loading = "lazy";
-          img.decoding = "async";
-          // Si la vista previa falla (HEIC en Chrome, por ejemplo), caemos al icono.
-          img.onerror = function(){ lienzo.innerHTML = ICONO_DOC; };
-          lienzo.appendChild(img);
-        } else {
-          lienzo.innerHTML = a.tipo === "video" ? ICONO_VIDEO : ICONO_DOC;
-        }
-
-        var info = document.createElement("div");
-        info.className = "info";
-
-        var nom = document.createElement("div");
-        nom.className = "nom";
-        nom.textContent = a.nombre;
-        nom.title = a.nombre;
-
-        var tam = document.createElement("div");
-        tam.className = "tam";
-        tam.textContent = peso(a.bytes);
-
-        var bajar = document.createElement("a");
-        bajar.className = "bajar";
-        bajar.href = a.descarga;
-        bajar.innerHTML = ICONO_BAJAR + "<span>Descargar</span>";
-
-        info.appendChild(nom);
-        info.appendChild(tam);
-        info.appendChild(bajar);
-        p.appendChild(lienzo);
-        p.appendChild(info);
-        rejilla.appendChild(p);
-      });
-
-      vista.appendChild(rejilla);
-      window.scrollTo(0, 0);
-    }).catch(function(e){ fallo(e.message); });
-  }
-
-  // ---------- arranque ----------
-  fetch(API + "/sesion", { cache: "no-store" })
-    .then(function(r){ return r.json(); })
-    .then(function(d){ if(d && d.email) document.getElementById("quien").textContent = d.email; })
-    .catch(function(){});
-
-  var inicial = decodeURIComponent(location.hash.slice(1));
-  if(inicial) verCarpeta(inicial); else verCarpetas();
-
-  // Solo reaccionamos al botón "atrás" del navegador, no a nuestros cambios.
-  window.addEventListener("hashchange", function(){
-    if(propio){ propio = false; return; }
-    var p = decodeURIComponent(location.hash.slice(1));
-    if(p) verCarpeta(p); else verCarpetas();
-  });
-})();
+} catch {
+  mostrarCandado();
+}
 </script>
 </body>
 </html>
