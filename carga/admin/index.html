@@ -3,49 +3,48 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Archivo — Boren Studio</title>
+<title>Panel de cargas — Boren Studio</title>
 <meta name="robots" content="noindex, nofollow">
-<meta name="theme-color" content="#F4EFE4" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#17130F" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#FFFFFF">
+<meta name="color-scheme" content="light">
 <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" media="print" onload="this.media='all'"
-      href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Geist+Mono:wght@400;500&family=Geist:wght@400;500&display=swap">
+      href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500&family=Geist:wght@400;500;600;700&display=swap">
 <link rel="stylesheet" href="/carga/assets/estilos.css">
 </head>
 
-<body class="min-h-dvh antialiased">
+<body class="flex min-h-dvh flex-col antialiased">
 
 <noscript>
   <div class="mx-auto max-w-md px-5 py-20 text-center">
-    <h1 class="font-display text-2xl">Necesitas activar JavaScript</h1>
-    <p class="mt-3 text-sm text-tinta-media">El panel no puede funcionar sin él.</p>
+    <h1 class="text-xl font-bold">Necesitas activar JavaScript</h1>
+    <p class="mt-2 text-sm text-suave">El panel no puede funcionar sin él.</p>
   </div>
 </noscript>
 
 <!-- ══════════ Candado ══════════ -->
-<section id="candado" class="grid min-h-dvh place-items-center px-5 py-12" hidden>
-  <div class="w-full max-w-[20rem] text-center">
-    <div class="revelar mx-auto mb-7 grid size-11 place-items-center rounded-sm bg-tinta pb-0.5 font-display text-2xl leading-none text-papel">B</div>
+<section id="candado" hidden class="grid flex-1 place-items-center px-5 py-12">
+  <div class="w-full max-w-[21rem] text-center">
+    <div class="revelar marca mx-auto mb-6 size-11 text-xl">B</div>
+    <h1 class="revelar text-[1.6rem] leading-tight font-bold tracking-[-0.02em]">Panel de cargas</h1>
+    <p class="revelar mt-2 text-[0.9rem] text-suave">Escribe tu PIN para entrar</p>
 
-    <h1 class="revelar font-display text-3xl leading-none tracking-tight">Archivo</h1>
-    <p class="revelar etiqueta mt-3 normal-case tracking-[0.05em]">Escribe el PIN para entrar</p>
-
-    <form id="form-pin" class="revelar mt-9" autocomplete="off">
+    <form id="form-pin" class="revelar mt-8" autocomplete="off">
       <div class="flex justify-center gap-2" id="casillas">
-        <input class="digito size-11 rounded-none" inputmode="numeric" pattern="[0-9]*" maxlength="1" aria-label="Dígito 1">
-        <input class="digito size-11 rounded-none" inputmode="numeric" pattern="[0-9]*" maxlength="1" aria-label="Dígito 2">
-        <input class="digito size-11 rounded-none" inputmode="numeric" pattern="[0-9]*" maxlength="1" aria-label="Dígito 3">
-        <input class="digito size-11 rounded-none" inputmode="numeric" pattern="[0-9]*" maxlength="1" aria-label="Dígito 4">
-        <input class="digito size-11 rounded-none" inputmode="numeric" pattern="[0-9]*" maxlength="1" aria-label="Dígito 5">
-        <input class="digito size-11 rounded-none" inputmode="numeric" pattern="[0-9]*" maxlength="1" aria-label="Dígito 6">
+        <input class="digito size-12" inputmode="numeric" pattern="[0-9]*" maxlength="1" aria-label="Dígito 1">
+        <input class="digito size-12" inputmode="numeric" pattern="[0-9]*" maxlength="1" aria-label="Dígito 2">
+        <input class="digito size-12" inputmode="numeric" pattern="[0-9]*" maxlength="1" aria-label="Dígito 3">
+        <input class="digito size-12" inputmode="numeric" pattern="[0-9]*" maxlength="1" aria-label="Dígito 4">
+        <input class="digito size-12" inputmode="numeric" pattern="[0-9]*" maxlength="1" aria-label="Dígito 5">
+        <input class="digito size-12" inputmode="numeric" pattern="[0-9]*" maxlength="1" aria-label="Dígito 6">
       </div>
 
-      <p id="pin-error" class="mt-5 min-h-[2.5rem] text-[0.8rem] leading-snug text-velado" role="alert"></p>
+      <p id="pin-error" class="mt-4 min-h-[2.75rem] text-[0.85rem] leading-snug text-alerta" role="alert"></p>
 
-      <button type="submit" class="boton w-full px-6 py-4" id="btn-entrar" disabled>
+      <button type="submit" class="btn w-full px-6 py-3.5" id="btn-entrar" disabled>
         <span id="btn-entrar-texto">Entrar</span>
       </button>
     </form>
@@ -53,20 +52,31 @@
 </section>
 
 <!-- ══════════ Panel ══════════ -->
-<div id="panel" hidden class="mx-auto w-full max-w-4xl px-5 pb-[calc(4rem+env(safe-area-inset-bottom))]">
-
-  <header class="filete-no flex items-center justify-between gap-4 border-b border-[color-mix(in_oklab,var(--color-tinta)_12%,transparent)] py-6">
-    <div class="flex items-center gap-3">
-      <div class="grid size-8 shrink-0 place-items-center rounded-sm bg-tinta pb-0.5 font-display text-xl leading-none text-papel">B</div>
-      <div class="leading-none">
-        <div class="font-display text-lg tracking-tight">Archivo</div>
-        <span class="etiqueta mt-1 block">Material de clientes</span>
+<div id="panel" hidden class="flex flex-1 flex-col">
+  <header class="border-b border-linea">
+    <div class="mx-auto flex w-full max-w-[70rem] items-center justify-between gap-4 px-5 py-4 sm:px-8">
+      <div class="flex items-center gap-3">
+        <div class="marca size-9 text-lg">B</div>
+        <div class="leading-tight">
+          <div class="text-[0.95rem] font-semibold tracking-tight">Panel de cargas</div>
+          <div class="text-xs text-suave">Material de clientes</div>
+        </div>
       </div>
+      <button id="btn-salir" type="button"
+              class="rounded-lg px-3 py-2 text-[0.85rem] font-medium text-suave transition-colors hover:bg-nieve hover:text-texto">
+        Salir
+      </button>
     </div>
-    <button id="btn-salir" class="etiqueta transition-colors hover:text-cobre" type="button">Salir</button>
   </header>
 
-  <main id="vista" class="pt-9"></main>
+  <main id="vista" class="mx-auto w-full max-w-[70rem] flex-1 px-5 py-9 sm:px-8"></main>
+
+  <footer class="border-t border-linea">
+    <div class="mx-auto flex w-full max-w-[70rem] items-center justify-center gap-2.5 px-5 py-5 text-[0.82rem] text-tenue">
+      <span>Boren Studio · Panel de cargas</span>
+      <span class="marca size-5 text-[0.62rem]">B</span>
+    </div>
+  </footer>
 </div>
 
 <script type="module">
@@ -74,21 +84,18 @@ import { animate } from "/carga/assets/motion.js";
 
 const raiz = document.documentElement;
 raiz.classList.remove("sin-js");
+setTimeout(() => raiz.classList.add("animado"), 1600);
 
 const API = "/carga/admin/api";
 const $ = (id) => document.getElementById(id);
 const reducido = matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-const revelar = (els, base = 0.04) => {
+const revelar = (els, base = 0.03) => {
   if (reducido) { raiz.classList.add("animado"); return; }
   [...els].forEach((el, i) =>
-    animate(el, { opacity: [0, 1], transform: ["translateY(10px)", "translateY(0px)"] },
-      { duration: 0.45, delay: base + i * 0.05, easing: [0.22, 1, 0.36, 1] }));
+    animate(el, { opacity: [0, 1], transform: ["translateY(8px)", "translateY(0px)"] },
+      { duration: 0.4, delay: base + i * 0.04, easing: [0.22, 1, 0.36, 1] }));
 };
-
-// Red de seguridad: si una animación falla a medias, nada puede quedarse
-// invisible. La clase `animado` fuerza opacidad 1 sobre todo lo revelable.
-setTimeout(() => raiz.classList.add("animado"), 1600);
 
 const peso = (b) => {
   if (!b) return "0 B";
@@ -96,13 +103,18 @@ const peso = (b) => {
   const i = Math.min(Math.floor(Math.log(b) / Math.log(1024)), 4);
   return `${(b / 1024 ** i).toFixed(i === 0 ? 0 : 1)} ${u[i]}`;
 };
+const escapar = (t) => String(t).replace(/[&<>"]/g, (c) =>
+  ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+
+/* Para la cuota usamos dos decimales: con uno solo, el tope de 9.99 GB se
+   redondea a "10.0 GB" y parece un límite distinto del que está configurado. */
+const pesoGB = (b) => `${(b / 1024 ** 3).toFixed(2)} GB`;
 
 /* ══════════ Candado ══════════ */
 const casillas = [...$("casillas").querySelectorAll("input")];
-
 const pinActual = () => casillas.map((c) => c.value).join("");
 
-function refrescarCasillas() {
+function refrescar() {
   casillas.forEach((c) => { c.dataset.lleno = c.value ? "si" : "no"; });
   $("btn-entrar").disabled = pinActual().length !== 6;
 }
@@ -110,33 +122,32 @@ function refrescarCasillas() {
 casillas.forEach((casilla, i) => {
   casilla.addEventListener("input", () => {
     casilla.value = casilla.value.replace(/\D/g, "").slice(0, 1);
-    refrescarCasillas();
-    if (casilla.value && i < casillas.length - 1) casillas[i + 1].focus();
+    refrescar();
+    if (casilla.value && i < 5) casillas[i + 1].focus();
     if (pinActual().length === 6) $("form-pin").requestSubmit();
   });
   casilla.addEventListener("keydown", (e) => {
     if (e.key === "Backspace" && !casilla.value && i > 0) {
       casillas[i - 1].focus();
       casillas[i - 1].value = "";
-      refrescarCasillas();
+      refrescar();
     }
     if (e.key === "ArrowLeft" && i > 0) casillas[i - 1].focus();
-    if (e.key === "ArrowRight" && i < casillas.length - 1) casillas[i + 1].focus();
+    if (e.key === "ArrowRight" && i < 5) casillas[i + 1].focus();
   });
-  // Pegar el PIN completo desde el portapapeles.
   casilla.addEventListener("paste", (e) => {
     e.preventDefault();
-    const digitos = (e.clipboardData.getData("text") || "").replace(/\D/g, "").slice(0, 6);
-    digitos.split("").forEach((d, k) => { if (casillas[k]) casillas[k].value = d; });
-    refrescarCasillas();
-    casillas[Math.min(digitos.length, 5)].focus();
-    if (digitos.length === 6) $("form-pin").requestSubmit();
+    const d = (e.clipboardData.getData("text") || "").replace(/\D/g, "").slice(0, 6);
+    d.split("").forEach((x, k) => { if (casillas[k]) casillas[k].value = x; });
+    refrescar();
+    casillas[Math.min(d.length, 5)].focus();
+    if (d.length === 6) $("form-pin").requestSubmit();
   });
 });
 
 function limpiarPin(enfocar = true) {
   casillas.forEach((c) => (c.value = ""));
-  refrescarCasillas();
+  refrescar();
   if (enfocar) casillas[0].focus();
 }
 
@@ -144,16 +155,16 @@ function sacudir() {
   if (reducido) return;
   animate($("casillas"),
     { transform: ["translateX(0px)", "translateX(-7px)", "translateX(7px)", "translateX(-4px)", "translateX(0px)"] },
-    { duration: 0.4 });
+    { duration: 0.38 });
 }
 
-let enviandoPin = false;
+let enviando = false;
 
 $("form-pin").addEventListener("submit", async (e) => {
   e.preventDefault();
-  if (enviandoPin || pinActual().length !== 6) return;
+  if (enviando || pinActual().length !== 6) return;
 
-  enviandoPin = true;
+  enviando = true;
   $("btn-entrar").disabled = true;
   $("btn-entrar-texto").textContent = "Comprobando…";
   $("pin-error").textContent = "";
@@ -181,11 +192,9 @@ $("form-pin").addEventListener("submit", async (e) => {
   } catch {
     $("pin-error").textContent = "Sin conexión. Revisa tu señal.";
   } finally {
-    if (!$("candado").hidden && !casillas[0].disabled) {
-      $("btn-entrar-texto").textContent = "Entrar";
-    }
-    enviandoPin = false;
-    refrescarCasillas();
+    if (!casillas[0].disabled) $("btn-entrar-texto").textContent = "Entrar";
+    enviando = false;
+    refrescar();
   }
 });
 
@@ -201,7 +210,7 @@ function mostrarCandado(bloqueadoMs = 0) {
     casillas.forEach((c) => (c.disabled = true));
     $("btn-entrar-texto").textContent = "Bloqueado";
   } else {
-    setTimeout(() => casillas[0].focus(), 350);
+    setTimeout(() => casillas[0].focus(), 300);
   }
 }
 
@@ -221,19 +230,19 @@ $("btn-salir").addEventListener("click", async () => {
 });
 
 /* ══════════ Datos ══════════ */
-const SVG_VIDEO = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" class="size-7"><path d="M3 7.5A2.5 2.5 0 0 1 5.5 5h7A2.5 2.5 0 0 1 15 7.5v9A2.5 2.5 0 0 1 12.5 19h-7A2.5 2.5 0 0 1 3 16.5z"/><path d="M15 10.5l5-3v9l-5-3z"/></svg>';
-const SVG_DOC = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" class="size-7"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/></svg>';
-const SVG_BAJAR = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" class="size-3.5"><path d="M12 4v11m0 0l-4-4m4 4l4-4"/><path d="M4 17v2a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-2"/></svg>';
-const SVG_ATRAS = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" class="size-3"><path d="M15 5l-7 7 7 7"/></svg>';
-const SVG_FLECHA = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" class="size-4 text-tinta-tenue"><path d="M9 5l7 7-7 7"/></svg>';
+const SVG_VIDEO = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" class="size-8"><path d="M3 7.5A2.5 2.5 0 0 1 5.5 5h7A2.5 2.5 0 0 1 15 7.5v9A2.5 2.5 0 0 1 12.5 19h-7A2.5 2.5 0 0 1 3 16.5z"/><path d="M15 10.5l5-3v9l-5-3z"/></svg>';
+const SVG_DOC = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" class="size-8"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/></svg>';
+const SVG_BAJAR = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" class="size-4"><path d="M12 4v11m0 0l-4-4m4 4l4-4"/><path d="M4 17v2a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-2"/></svg>';
+const SVG_ATRAS = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="size-4"><path d="M15 5l-7 7 7 7"/></svg>';
+const SVG_FLECHA = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" class="size-5 text-tenue"><path d="M9 5l7 7-7 7"/></svg>';
 
 const vista = () => $("vista");
 
 let propio = false;
-function fijarHash(valor) {
-  if (location.hash.slice(1) === valor) return;
+function fijarHash(v) {
+  if (location.hash.slice(1) === v) return;
   propio = true;
-  location.hash = valor;
+  location.hash = v;
 }
 
 async function pedir(ruta) {
@@ -246,85 +255,93 @@ async function pedir(ruta) {
 
 function cargando(texto) {
   vista().innerHTML =
-    `<div class="py-20 text-center"><div class="mx-auto mb-4 size-5 animate-spin rounded-full border-2 border-[color-mix(in_oklab,var(--color-tinta)_14%,transparent)] border-t-cobre"></div>
-     <span class="etiqueta normal-case tracking-[0.05em]">${texto}</span></div>`;
+    `<div class="py-24 text-center">
+       <div class="mx-auto mb-4 size-6 animate-spin rounded-full border-2 border-linea border-t-violeta"></div>
+       <span class="text-[0.88rem] text-suave">${texto}</span>
+     </div>`;
 }
 
-function fallo(mensaje) {
-  if (mensaje === "sesion") return;
-  vista().innerHTML = `<div class="py-20 text-center text-sm text-velado">${mensaje}</div>`;
+function fallo(m) {
+  if (m === "sesion") return;
+  vista().innerHTML = `<div class="py-24 text-center text-[0.9rem] text-alerta">${escapar(m)}</div>`;
 }
 
-/* ── Lista de carpetas ── */
+/* ── Tarjetas de consumo ── */
+function tarjetasCuota(c) {
+  const pct = c.tope > 0 ? Math.min(100, (c.usado / c.tope) * 100) : 0;
+  const nivel = c.disponible <= 0 ? "lleno" : pct >= 80 ? "alto" : "normal";
+  const renueva = new Date(c.seLiberaEl).toLocaleDateString("es-MX",
+    { day: "numeric", month: "long", timeZone: "America/Mexico_City" });
+
+  return `
+  <div class="revelar grid grid-cols-1 gap-3 sm:grid-cols-3">
+    <div class="carta p-4 sm:col-span-2">
+      <div class="flex items-baseline justify-between gap-3">
+        <span class="text-[0.85rem] font-semibold">Almacenamiento del periodo</span>
+        <span class="text-[0.85rem] text-suave tabular">${pesoGB(c.usado)} de ${pesoGB(c.tope)}</span>
+      </div>
+      <div class="medidor mt-3" data-nivel="${nivel}"><i style="width:${pct}%"></i></div>
+      <div class="mt-2.5 flex items-baseline justify-between gap-3 text-[0.78rem] text-suave tabular">
+        <span>${pct.toFixed(1)}% utilizado</span>
+        <span>${c.disponible > 0 ? `${pesoGB(c.disponible)} disponibles` : "Sin espacio"}</span>
+      </div>
+    </div>
+
+    <div class="carta carta-tinta flex flex-col justify-center p-4">
+      <div class="text-[0.85rem] font-semibold text-violeta">Se renueva en</div>
+      <div class="mt-1 text-[2rem] leading-none font-bold tracking-tight tabular">
+        ${c.dias} <span class="text-base font-medium text-suave">${c.dias === 1 ? "día" : "días"}</span>
+      </div>
+      <div class="mt-1.5 text-[0.78rem] text-suave">El ${renueva}</div>
+    </div>
+  </div>`;
+}
+
+/* ── Lista de entregas ── */
 async function verCarpetas() {
-  cargando("Abriendo el archivo…");
+  cargando("Cargando entregas…");
   fijarHash("");
 
   try {
     const d = await pedir("/carpetas");
     const v = vista();
-    v.textContent = "";
+    const n = d.carpetas.length;
 
-    const enc = document.createElement("div");
-    enc.className = "revelar";
-    enc.innerHTML = `
-      <h2 class="font-display text-[clamp(1.8rem,6vw,2.6rem)] leading-none tracking-[-0.015em]">
-        ${d.carpetas.length ? `${d.carpetas.length} ${d.carpetas.length === 1 ? "entrega" : "entregas"}` : "Sin entregas"}
-      </h2>
-      <p class="mt-3 text-sm text-tinta-media">
-        ${d.carpetas.length
-          ? "Más recientes primero. Todo se borra solo a los 10 días."
-          : "Cuando un cliente suba material en borenstudio.com/carga, aparecerá aquí."}
-      </p>`;
-    v.appendChild(enc);
+    v.innerHTML = `
+      <div class="revelar">
+        <h2 class="text-[clamp(1.5rem,4.5vw,2rem)] leading-tight font-bold tracking-[-0.022em]">
+          ${n ? `${n} ${n === 1 ? "entrega" : "entregas"}` : "Sin entregas todavía"}
+        </h2>
+        <p class="mt-2 text-[0.9rem] text-suave">
+          ${n ? "Más recientes primero. Todo se borra solo a los 10 días."
+              : "Cuando un cliente suba archivos en borenstudio.com/carga, aparecerán aquí."}
+        </p>
+      </div>
+      ${d.cuota ? `<div class="mt-7">${tarjetasCuota(d.cuota)}</div>` : ""}
+      ${d.truncado ? `<p class="mt-4 text-xs text-tenue">Hay más objetos de los que caben en una lista; se muestran los primeros 10 000.</p>` : ""}
+      <div class="mt-8 flex flex-col gap-2.5" id="entregas"></div>`;
 
-    // Medidor del periodo
-    if (d.cuota) {
-      const pct = d.cuota.tope > 0 ? Math.min(100, (d.cuota.usado / d.cuota.tope) * 100) : 0;
-      const lleno = d.cuota.disponible <= 0;
-      const cu = document.createElement("div");
-      cu.className = "revelar mt-8 border-t border-[color-mix(in_oklab,var(--color-tinta)_12%,transparent)] pt-4";
-      cu.innerHTML = `
-        <div class="flex items-baseline justify-between gap-3">
-          <span class="etiqueta">Espacio del periodo</span>
-          <span class="font-mono text-[0.7rem] text-tinta-media">${peso(d.cuota.usado)} de ${peso(d.cuota.tope)}</span>
-        </div>
-        <div class="medidor mt-2" data-lleno="${lleno ? "si" : "no"}"><i style="width:${pct}%"></i></div>
-        <p class="etiqueta mt-2 normal-case tracking-[0.04em]">Se reinicia el ${new Date(d.cuota.seLiberaEl).toLocaleDateString("es-MX", { day: "numeric", month: "long" })}</p>`;
-      v.appendChild(cu);
-    }
-
-    if (d.truncado) {
-      const t = document.createElement("p");
-      t.className = "mt-4 text-xs text-tinta-tenue";
-      t.textContent = "Hay más objetos de los que caben en una lista; se muestran los primeros 10 000.";
-      v.appendChild(t);
-    }
-
-    const cont = document.createElement("div");
-    cont.className = "mt-8 flex flex-col gap-2";
-
-    d.carpetas.forEach((c) => {
+    const cont = $("entregas");
+    for (const c of d.carpetas) {
       const b = document.createElement("button");
       b.type = "button";
-      b.className = "placa revelar grid w-full grid-cols-[1fr_auto] items-center gap-4 px-4 py-4 text-left hover:border-cobre";
+      b.className = "revelar carta grid w-full grid-cols-[1fr_auto] items-center gap-4 p-4 text-left transition-colors hover:border-violeta-linea hover:bg-violeta-tenue";
       b.innerHTML = `
         <div class="min-w-0">
-          <div class="truncate font-display text-lg leading-tight">${c.negocio}</div>
-          <div class="mt-1.5 font-mono text-[0.68rem] text-tinta-tenue">
+          <div class="truncate text-[1rem] font-semibold tracking-tight">${escapar(c.negocio)}</div>
+          <div class="mt-1 text-[0.8rem] text-suave tabular">
             ${c.fecha} &nbsp;·&nbsp; ${c.cantidad} ${c.cantidad === 1 ? "archivo" : "archivos"} &nbsp;·&nbsp; ${peso(c.bytes)}
           </div>
         </div>${SVG_FLECHA}`;
       b.addEventListener("click", () => verCarpeta(c.prefijo));
       cont.appendChild(b);
-    });
+    }
 
-    v.appendChild(cont);
     revelar(v.querySelectorAll(".revelar"));
   } catch (e) { fallo(e.message); }
 }
 
-/* ── Detalle de carpeta ── */
+/* ── Detalle de una entrega ── */
 async function verCarpeta(prefijo) {
   cargando("Abriendo entrega…");
   fijarHash(encodeURIComponent(prefijo));
@@ -332,39 +349,36 @@ async function verCarpeta(prefijo) {
   try {
     const d = await pedir(`/carpeta?p=${encodeURIComponent(prefijo)}`);
     const v = vista();
-    v.textContent = "";
 
-    const atras = document.createElement("button");
-    atras.type = "button";
-    atras.className = "revelar etiqueta mb-6 inline-flex items-center gap-2 transition-colors hover:text-cobre";
-    atras.innerHTML = `${SVG_ATRAS}<span>Todas las entregas</span>`;
-    atras.addEventListener("click", verCarpetas);
-    v.appendChild(atras);
+    v.innerHTML = `
+      <button type="button" id="btn-atras"
+              class="revelar mb-6 inline-flex items-center gap-2 rounded-lg px-2 py-1.5 -ml-2 text-[0.85rem] font-medium text-suave transition-colors hover:bg-nieve hover:text-texto">
+        ${SVG_ATRAS}<span>Todas las entregas</span>
+      </button>
 
-    const enc = document.createElement("div");
-    enc.className = "revelar";
-    enc.innerHTML = `
-      <h2 class="font-display text-[clamp(1.7rem,5.5vw,2.4rem)] leading-none tracking-[-0.015em]">${d.negocio}</h2>
-      <p class="mt-3 font-mono text-xs text-tinta-media">
-        ${d.fecha} &nbsp;·&nbsp; ${d.cantidad} ${d.cantidad === 1 ? "archivo" : "archivos"} &nbsp;·&nbsp; ${peso(d.bytes)}
-      </p>`;
-    v.appendChild(enc);
+      <div class="revelar flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+        <div class="min-w-0">
+          <h2 class="text-[clamp(1.4rem,4.5vw,1.9rem)] leading-tight font-bold tracking-[-0.022em]">${escapar(d.negocio)}</h2>
+          <p class="mt-2 text-[0.85rem] text-suave tabular">
+            ${d.fecha} &nbsp;·&nbsp; ${d.cantidad} ${d.cantidad === 1 ? "archivo" : "archivos"} &nbsp;·&nbsp; ${peso(d.bytes)}
+          </p>
+        </div>
+        <a class="btn shrink-0 px-5 py-3" href="${API}/zip?p=${encodeURIComponent(prefijo)}">
+          ${SVG_BAJAR}<span>Descargar todo</span>
+        </a>
+      </div>
 
-    const acc = document.createElement("div");
-    acc.className = "revelar mt-6";
-    acc.innerHTML = `<a class="boton flex w-full items-center justify-center gap-2.5 px-6 py-4"
-        href="${API}/zip?p=${encodeURIComponent(prefijo)}">${SVG_BAJAR}<span>Descargar toda la entrega</span></a>`;
-    v.appendChild(acc);
+      <div class="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4" id="rejilla"></div>`;
 
-    const rejilla = document.createElement("div");
-    rejilla.className = "mt-8 grid grid-cols-2 gap-2.5 sm:grid-cols-3 lg:grid-cols-4";
+    $("btn-atras").addEventListener("click", verCarpetas);
 
-    d.archivos.forEach((a, i) => {
+    const rejilla = $("rejilla");
+    d.archivos.forEach((a) => {
       const p = document.createElement("div");
-      p.className = "placa revelar flex flex-col overflow-hidden";
+      p.className = "revelar carta flex flex-col overflow-hidden";
 
       const lienzo = document.createElement("div");
-      lienzo.className = "relative grid aspect-square place-items-center bg-papel-hondo text-tinta-tenue";
+      lienzo.className = "grid aspect-square place-items-center bg-nieve text-tenue";
       if (a.vista) {
         const img = document.createElement("img");
         img.src = a.vista;
@@ -372,31 +386,26 @@ async function verCarpeta(prefijo) {
         img.loading = "lazy";
         img.decoding = "async";
         img.className = "size-full object-cover";
-        // Si el navegador no sabe leer el formato (HEIC en Chrome), caemos al ícono.
+        // Si el navegador no sabe leer el formato (HEIC en Chrome), cae al ícono.
         img.onerror = () => { lienzo.innerHTML = SVG_DOC; };
         lienzo.appendChild(img);
       } else {
         lienzo.innerHTML = a.tipo === "video" ? SVG_VIDEO : SVG_DOC;
       }
 
-      const num = document.createElement("span");
-      num.className = "absolute left-2 top-2 bg-papel/85 px-1.5 py-0.5 font-mono text-[0.6rem] text-tinta-media";
-      num.textContent = String(i + 1).padStart(2, "0");
-      lienzo.appendChild(num);
-
       const info = document.createElement("div");
-      info.className = "flex flex-1 flex-col gap-2 p-2.5";
+      info.className = "flex flex-1 flex-col gap-2 border-t border-linea p-3";
       info.innerHTML = `
-        <div class="line-clamp-2 text-[0.72rem] leading-snug break-words">${a.nombre}</div>
-        <div class="mt-auto font-mono text-[0.62rem] text-tinta-tenue">${peso(a.bytes)}</div>
-        <a class="boton boton-tenue flex items-center justify-center gap-1.5 px-2 py-2 text-[0.6rem]"
-           href="${a.descarga}">${SVG_BAJAR}<span>Descargar</span></a>`;
+        <div class="line-clamp-2 text-[0.78rem] leading-snug font-medium break-words">${escapar(a.nombre)}</div>
+        <div class="mt-auto text-[0.72rem] text-suave tabular">${peso(a.bytes)}</div>
+        <a class="btn btn-borde w-full px-2 py-2 text-[0.75rem]" href="${a.descarga}">
+          ${SVG_BAJAR}<span>Descargar</span>
+        </a>`;
 
       p.append(lienzo, info);
       rejilla.appendChild(p);
     });
 
-    v.appendChild(rejilla);
     revelar(v.querySelectorAll(".revelar"));
     scrollTo(0, 0);
   } catch (e) { fallo(e.message); }
@@ -405,7 +414,7 @@ async function verCarpeta(prefijo) {
 /* ══════════ Arranque ══════════ */
 addEventListener("hashchange", () => {
   if (propio) { propio = false; return; }
-  if ($("candado").hidden === false) return;
+  if (!$("candado").hidden) return;
   const p = decodeURIComponent(location.hash.slice(1));
   p ? verCarpeta(p) : verCarpetas();
 });

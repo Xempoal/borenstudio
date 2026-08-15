@@ -4,10 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Envía tus archivos — Boren Studio</title>
-<meta name="description" content="Sube fotos y videos de tu negocio a Boren Studio, en calidad original.">
+<meta name="description" content="Sube las fotos y videos de tu proyecto a Boren Studio, en calidad original.">
 <meta name="robots" content="noindex, nofollow">
-<meta name="theme-color" content="#F4EFE4" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#17130F" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#FFFFFF">
+<meta name="color-scheme" content="light">
 <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
 <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png">
 <link rel="manifest" href="/carga/manifest.webmanifest">
@@ -15,148 +15,218 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" media="print" onload="this.media='all'"
-      href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Geist+Mono:wght@400;500&family=Geist:wght@400;500&display=swap">
+      href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500&family=Geist:wght@400;500;600;700&display=swap">
 <link rel="stylesheet" href="/carga/assets/estilos.css">
 </head>
 
-<body class="min-h-dvh antialiased">
+<body class="flex min-h-dvh flex-col antialiased">
 
 <noscript>
-  <div class="border-b border-[color-mix(in_oklab,var(--color-velado)_38%,transparent)] bg-[color-mix(in_oklab,var(--color-velado)_9%,transparent)] px-5 py-4 text-center text-sm">
+  <div class="border-b border-[color-mix(in_oklab,var(--color-alerta)_35%,transparent)] bg-alerta-tenue px-5 py-3.5 text-center text-sm">
     Para poder enviar tus archivos necesitas activar JavaScript en tu navegador.
   </div>
 </noscript>
 
-<div class="mx-auto w-full max-w-[38rem] px-5 pb-[calc(4rem+env(safe-area-inset-bottom))]">
-
-  <!-- ══ Cabecera ══ -->
-  <header class="revelar flex items-center gap-3 pt-7 pb-9">
-    <div class="grid size-8 shrink-0 place-items-center rounded-sm bg-tinta pb-0.5 font-display text-xl leading-none text-papel">B</div>
-    <div class="leading-none">
-      <div class="font-display text-lg tracking-tight">Boren Studio</div>
-      <span class="etiqueta mt-1 block">Recepción de material</span>
+<!-- ══════════ Cabecera ══════════ -->
+<header class="border-b border-linea">
+  <div class="mx-auto flex w-full max-w-[78rem] items-center justify-between gap-4 px-5 py-4 sm:px-8">
+    <div class="flex items-center gap-3">
+      <div class="marca size-9 text-lg">B</div>
+      <div class="leading-tight">
+        <div class="text-[0.95rem] font-semibold tracking-tight">Boren Studio</div>
+        <div class="text-xs text-suave">Carga de archivos</div>
+      </div>
     </div>
-  </header>
 
-  <main>
-    <!-- ══════════ Paso 1 — Formulario ══════════ -->
-    <section id="paso-form">
+    <div class="carta carta-tinta hidden items-center gap-2.5 px-3.5 py-2.5 sm:flex">
+      <svg class="size-5 shrink-0 text-violeta" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+           stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M12 3l7.5 3v5.2c0 4.4-3 8.4-7.5 9.8-4.5-1.4-7.5-5.4-7.5-9.8V6z"/><path d="M9.2 12.2l2 2 3.6-3.8"/>
+      </svg>
+      <div class="leading-tight">
+        <div class="text-[0.8rem] font-semibold text-violeta">Tus archivos están seguros</div>
+        <div class="text-[0.72rem] text-suave">Cifrado y almacenamiento protegido</div>
+      </div>
+    </div>
+  </div>
+</header>
 
-      <h1 class="revelar font-display text-[clamp(2.1rem,10vw,3.4rem)] leading-[0.95] tracking-[-0.02em]">
-        Envía tus<br><span class="text-cobre italic">archivos</span>
+<main class="flex flex-1">
+  <!-- min-h-full hace que el filete divisor corra de arriba abajo en escritorio.
+       min-w-0 en las columnas es obligatorio: por omisión un hijo de grid no
+       encoge por debajo de su contenido mínimo y la página se desborda en el
+       celular. -->
+  <div class="mx-auto grid w-full max-w-[78rem] flex-1 grid-cols-1 lg:grid-cols-[23rem_1fr] xl:grid-cols-[26rem_1fr]">
+
+    <!-- ══════════ Columna izquierda ══════════ -->
+    <aside class="min-w-0 border-b border-linea px-5 py-9 sm:px-8 lg:border-r lg:border-b-0 lg:py-14">
+      <h1 class="revelar text-[clamp(1.7rem,5.5vw,2rem)] leading-[1.14] font-bold tracking-[-0.025em]">
+        Comparte los archivos<br class="hidden lg:block"> de tu proyecto
       </h1>
-
-      <p class="revelar mt-5 max-w-[38ch] text-[0.95rem] leading-relaxed text-tinta-media">
-        Fotos y videos de tu negocio, en calidad original. Sin cuentas ni contraseñas:
-        escribe tu nombre, adjunta y listo.
+      <p class="revelar mt-4 max-w-[36ch] text-[0.95rem] leading-relaxed text-suave">
+        Sube las fotos y videos que utilizaremos para crear o actualizar tu sitio web.
       </p>
 
-      <!-- Ficha técnica, como el encabezado de una hoja de contactos -->
-      <dl class="revelar filete mt-8 grid grid-cols-3 gap-px overflow-hidden bg-[color-mix(in_oklab,var(--color-tinta)_10%,transparent)]">
-        <div class="bg-papel px-1 py-4">
-          <dt class="etiqueta">Por envío</dt>
-          <dd class="mt-1.5 font-display text-xl leading-none">2 GB</dd>
-        </div>
-        <div class="bg-papel px-1 py-4">
-          <dt class="etiqueta">Archivos</dt>
-          <dd class="mt-1.5 font-display text-xl leading-none">20</dd>
-        </div>
-        <div class="bg-papel px-1 py-4">
-          <dt class="etiqueta">Se guardan</dt>
-          <dd class="mt-1.5 font-display text-xl leading-none">10 días</dd>
-        </div>
-      </dl>
-
-      <!-- Nombre del negocio -->
-      <div class="revelar mt-10">
-        <label class="etiqueta mb-2.5 block" for="negocio">01 — Tu negocio</label>
-        <input type="text" id="negocio" name="negocio" placeholder="Ej. Hamburguesas Tony"
-               class="campo w-full rounded-none px-4 py-4 text-base"
-               autocomplete="organization" maxlength="60" enterkeyhint="done" spellcheck="false">
-      </div>
-
-      <!-- Bandeja -->
-      <div class="revelar mt-8">
-        <span class="etiqueta mb-2.5 block">02 — Tu material</span>
-        <label class="bandeja block cursor-pointer px-6 py-9 text-center" id="bandeja">
-          <input type="file" id="entrada" multiple accept="image/*,video/*"
-                 class="absolute inset-0 cursor-pointer opacity-0" aria-label="Seleccionar fotos y videos">
-          <svg class="mx-auto mb-3.5 size-8 text-cobre" viewBox="0 0 24 24" fill="none"
-               stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <path d="M12 16.5V4m0 0L7.5 8.5M12 4l4.5 4.5"/><path d="M3.5 15v3.5A2 2 0 0 0 5.5 20.5h13a2 2 0 0 0 2-2V15"/>
-          </svg>
-          <span class="block font-display text-lg leading-none">Elige fotos y videos</span>
-          <span class="etiqueta mt-2.5 block normal-case tracking-[0.04em]">
-            <span class="hidden sm:inline">o arrástralos aquí — </span>toca para abrir tu galería
-          </span>
-        </label>
-      </div>
-
-      <!-- Placas -->
-      <div class="mt-5 flex flex-col gap-2" id="lista"></div>
-
-      <!-- Totales -->
-      <div class="filete mt-5 flex items-baseline justify-between gap-4 pt-3.5" id="resumen" hidden>
-        <span class="etiqueta" id="resumen-n"></span>
-        <span class="font-mono text-xs" id="resumen-peso"></span>
-      </div>
-
-      <!-- Aviso -->
-      <div id="aviso" hidden role="alert"
-           class="mt-5 flex items-start gap-3 border border-[color-mix(in_oklab,var(--color-velado)_38%,transparent)] bg-[color-mix(in_oklab,var(--color-velado)_9%,transparent)] px-4 py-3.5 text-sm leading-relaxed">
-        <svg class="mt-0.5 size-4 shrink-0 text-velado" viewBox="0 0 24 24" fill="none"
-             stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true">
-          <circle cx="12" cy="12" r="9"/><path d="M12 7.5v5.5M12 16.5h.01"/>
+      <div class="revelar carta mt-8 flex items-start gap-3.5 p-4">
+        <svg class="mt-0.5 size-6 shrink-0 text-violeta" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+             stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/>
         </svg>
-        <span id="aviso-texto"></span>
-      </div>
-
-      <!-- Acciones -->
-      <div class="revelar mt-7 flex flex-col gap-2.5">
-        <button class="boton w-full px-6 py-4.5" id="btn-subir" type="button" disabled>
-          <span id="btn-texto">Enviar material</span>
-        </button>
-        <button class="boton boton-tenue w-full px-6 py-4.5" id="btn-reintentar" type="button" hidden>
-          Reintentar los que fallaron
-        </button>
-      </div>
-
-      <!-- Medidor de espacio del periodo -->
-      <div class="revelar mt-10" id="cuota" hidden>
-        <div class="flex items-baseline justify-between gap-3">
-          <span class="etiqueta">Espacio del periodo</span>
-          <span class="font-mono text-[0.7rem] text-tinta-media" id="cuota-texto"></span>
+        <div>
+          <h2 class="text-[0.9rem] font-semibold">Formatos aceptados</h2>
+          <p class="mt-1.5 text-[0.82rem] leading-relaxed text-suave">JPG, PNG, HEIC, MP4, MOV, AVI</p>
+          <p class="mt-1 text-[0.82rem] leading-relaxed text-suave">Hasta 100 archivos · 2 GB en total</p>
         </div>
-        <div class="medidor mt-2" id="cuota-barra"><i style="width:0%"></i></div>
+      </div>
+
+      <div class="revelar carta carta-tinta mt-3 flex items-start gap-3.5 p-4">
+        <svg class="mt-0.5 size-6 shrink-0 text-violeta" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+             stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M12 3l1.6 4.4L18 9l-4.4 1.6L12 15l-1.6-4.4L6 9l4.4-1.6z"/><path d="M18 15l.8 2.2L21 18l-2.2.8L18 21l-.8-2.2L15 18l2.2-.8z"/>
+        </svg>
+        <div>
+          <h2 class="text-[0.9rem] font-semibold">¿Tienes muchos archivos?</h2>
+          <p class="mt-1.5 text-[0.82rem] leading-relaxed text-suave">
+            Puedes comprimirlos en un .ZIP para subirlos todos juntos.
+          </p>
+        </div>
+      </div>
+    </aside>
+
+    <!-- ══════════ Columna derecha ══════════ -->
+    <section class="min-w-0 px-5 py-9 sm:px-8 lg:py-14">
+      <div class="mx-auto w-full max-w-[42rem]">
+
+        <!-- ── Formulario ── -->
+        <div id="paso-form">
+          <label class="revelar mb-2.5 block text-[0.9rem] font-semibold" for="negocio">
+            ¿Para qué negocio son estos archivos?
+          </label>
+          <div class="revelar relative">
+            <svg class="pointer-events-none absolute top-1/2 left-3.5 size-5 -translate-y-1/2 text-tenue"
+                 viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+                 stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M4 9.5L5.5 4.5h13L20 9.5"/><path d="M4 9.5a2.5 2.5 0 0 0 4 1.9 2.5 2.5 0 0 0 4 0 2.5 2.5 0 0 0 4 0 2.5 2.5 0 0 0 4-1.9"/>
+              <path d="M5.5 12.4V19a.5.5 0 0 0 .5.5h12a.5.5 0 0 0 .5-.5v-6.6"/>
+            </svg>
+            <input type="text" id="negocio" name="negocio" placeholder="Hamburguesas Tony"
+                   class="campo py-3.5 pr-4 pl-11 text-[0.95rem]"
+                   autocomplete="organization" maxlength="60" enterkeyhint="done" spellcheck="false">
+          </div>
+
+          <!-- Zona de arrastre -->
+          <label class="zona revelar mt-6 block cursor-pointer px-6 py-10 text-center sm:py-14" id="zona">
+            <input type="file" id="entrada" multiple accept="image/*,video/*,.zip,.heic,.heif"
+                   class="absolute inset-0 cursor-pointer opacity-0" aria-label="Seleccionar archivos">
+            <svg class="mx-auto size-14 text-violeta" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                 stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M6.5 18.5a4 4 0 0 1-.4-7.98 5.5 5.5 0 0 1 10.65-1.9A4.25 4.25 0 0 1 18.5 18.5"/>
+              <path d="M12 21V11m0 0l-3 3m3-3l3 3"/>
+            </svg>
+            <p class="mt-4 text-lg font-semibold tracking-tight">Arrastra tus archivos aquí</p>
+            <p class="mt-1 text-[0.88rem] text-suave">o selecciona archivos desde tu dispositivo</p>
+            <span class="btn pointer-events-none mt-5 inline-flex px-5 py-2.5">Seleccionar archivos</span>
+            <p class="mt-5 text-[0.78rem] text-tenue">Fotos y videos · Hasta 100 archivos · 2 GB en total</p>
+          </label>
+
+          <!-- Encabezado de la lista -->
+          <div class="mt-8 flex items-center justify-between gap-4" id="cabecera-lista" hidden>
+            <h2 class="text-[0.9rem] font-semibold">
+              Archivos seleccionados <span class="text-suave tabular" id="cuenta"></span>
+            </h2>
+            <div class="flex items-center gap-4">
+              <span class="text-[0.82rem] text-suave tabular" id="total-peso"></span>
+              <button type="button" id="btn-vaciar"
+                      class="inline-flex items-center gap-1.5 text-[0.82rem] font-medium text-alerta transition-opacity hover:opacity-70">
+                <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"
+                     stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M4 7h16M9.5 7V5.5a1 1 0 0 1 1-1h3a1 1 0 0 1 1 1V7"/><path d="M6.5 7l.8 12a1 1 0 0 0 1 .9h7.4a1 1 0 0 0 1-.9l.8-12"/>
+                </svg>
+                Eliminar todos
+              </button>
+            </div>
+          </div>
+
+          <!-- Barra global mientras sube -->
+          <div class="mt-4" id="global" hidden>
+            <div class="mb-2 flex items-baseline justify-between gap-3">
+              <span class="text-[0.82rem] font-medium" id="global-texto"></span>
+              <span class="text-[0.82rem] text-suave tabular" id="global-pct"></span>
+            </div>
+            <div class="barra"><i id="global-barra" style="width:0%"></i></div>
+          </div>
+
+          <!-- Lista -->
+          <div class="mt-3 flex flex-col gap-2" id="lista"></div>
+
+          <!-- Aviso -->
+          <div id="aviso" hidden role="alert"
+               class="mt-5 flex items-start gap-3 rounded-xl border border-[color-mix(in_oklab,var(--color-alerta)_32%,transparent)] bg-alerta-tenue px-4 py-3.5 text-[0.88rem] leading-relaxed">
+            <svg class="mt-0.5 size-5 shrink-0 text-alerta" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                 stroke-width="1.7" stroke-linecap="round" aria-hidden="true">
+              <circle cx="12" cy="12" r="9"/><path d="M12 7.5v5.5M12 16.5h.01"/>
+            </svg>
+            <span id="aviso-texto"></span>
+          </div>
+
+          <!-- Pie de acción -->
+          <div class="mt-9 flex flex-col-reverse items-stretch gap-4 border-t border-linea pt-6 sm:flex-row sm:items-center sm:justify-between">
+            <p class="flex items-start gap-2.5 text-[0.78rem] leading-relaxed text-tenue">
+              <svg class="mt-px size-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                   stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M12 3l7.5 3v5.2c0 4.4-3 8.4-7.5 9.8-4.5-1.4-7.5-5.4-7.5-9.8V6z"/>
+              </svg>
+              Al enviar tus archivos, aceptas que serán utilizados
+              únicamente para trabajar en tu proyecto.
+            </p>
+
+            <div class="flex flex-col gap-2.5 sm:min-w-[15rem]">
+              <button class="btn w-full px-6 py-3.5" id="btn-subir" type="button" disabled>
+                <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                     stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M12 19V6m0 0l-4.5 4.5M12 6l4.5 4.5"/>
+                </svg>
+                <span id="btn-texto">Subir archivos</span>
+              </button>
+              <button class="btn btn-borde w-full px-6 py-3.5" id="btn-reintentar" type="button" hidden>
+                Reintentar los que fallaron
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── Confirmación ── -->
+        <div id="paso-final" hidden class="py-8 text-center">
+          <div id="sello" class="mx-auto grid size-20 place-items-center rounded-full bg-[color-mix(in_oklab,var(--color-listo)_12%,#fff)]">
+            <svg class="size-10 text-listo" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                 stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M4 12.5l5.5 5.5L20 7"/>
+            </svg>
+          </div>
+
+          <h2 class="mt-7 text-[clamp(1.5rem,5vw,2rem)] leading-tight font-bold tracking-[-0.02em]" id="final-titulo">Listo</h2>
+          <p class="mx-auto mt-3.5 max-w-[38ch] text-[0.95rem] leading-relaxed text-suave" id="final-texto"></p>
+
+          <div class="carta mx-auto mt-8 max-w-md p-4 text-left">
+            <div class="text-xs font-medium text-tenue">Guardado en</div>
+            <p class="mt-1.5 font-mono text-[0.78rem] break-all text-suave" id="final-ruta"></p>
+          </div>
+
+          <button class="btn btn-borde mx-auto mt-7 px-6 py-3.5 sm:w-auto" id="btn-otra" type="button">
+            Subir más archivos
+          </button>
+        </div>
       </div>
     </section>
+  </div>
+</main>
 
-    <!-- ══════════ Paso 2 — Confirmación ══════════ -->
-    <section id="paso-final" hidden class="pt-6 text-center">
-      <div class="mx-auto mb-8 grid size-20 place-items-center rounded-full border border-[color-mix(in_oklab,var(--color-fijado)_40%,transparent)] bg-[color-mix(in_oklab,var(--color-fijado)_11%,transparent)]"
-           id="sello">
-        <svg class="size-9 text-fijado" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-             stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <path d="M4 12.5l5.5 5.5L20 7"/>
-        </svg>
-      </div>
-
-      <h2 class="font-display text-[clamp(1.7rem,7.5vw,2.5rem)] leading-[1.05] tracking-[-0.015em]" id="final-titulo">Listo</h2>
-      <p class="mx-auto mt-4 max-w-[34ch] text-[0.95rem] leading-relaxed text-tinta-media" id="final-texto"></p>
-
-      <div class="filete mx-auto mt-9 max-w-sm pt-5">
-        <span class="etiqueta">Guardado en</span>
-        <p class="mt-2 font-mono text-xs break-all text-tinta-media" id="final-ruta"></p>
-      </div>
-
-      <button class="boton boton-tenue mt-8 w-full px-6 py-4.5" id="btn-otra" type="button">Enviar más material</button>
-    </section>
-  </main>
-
-  <p class="etiqueta filete mt-14 pt-6 text-center normal-case tracking-[0.05em]">
-    Boren Studio — el material se conserva 10 días
-  </p>
-</div>
+<footer class="border-t border-linea">
+  <div class="mx-auto flex w-full max-w-[78rem] items-center justify-center gap-2.5 px-5 py-5 text-[0.82rem] text-tenue">
+    <span>Boren Studio · Carga de archivos</span>
+    <span class="marca size-5 text-[0.62rem]">B</span>
+  </div>
+</footer>
 
 <script type="module">
 import { animate } from "/carga/assets/motion.js";
@@ -167,23 +237,22 @@ raiz.classList.remove("sin-js");
 const $ = (id) => document.getElementById(id);
 const reducido = matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-/* ── Revelado de entrada: una sola secuencia escalonada al cargar ────────── */
+/* Revelado de entrada. Red de seguridad por si una animación falla: a los
+   1.6 s la clase `animado` fuerza visible todo lo revelable. */
 if (reducido) {
   raiz.classList.add("animado");
 } else {
-  document.querySelectorAll(".revelar").forEach((el, i) => {
-    animate(el, { opacity: [0, 1], transform: ["translateY(12px)", "translateY(0px)"] },
-      { duration: 0.55, delay: 0.05 + i * 0.06, easing: [0.22, 1, 0.36, 1] });
-  });
-  // Si algo falla, que nada quede invisible.
+  document.querySelectorAll(".revelar").forEach((el, i) =>
+    animate(el, { opacity: [0, 1], transform: ["translateY(8px)", "translateY(0px)"] },
+      { duration: 0.45, delay: 0.04 + i * 0.05, easing: [0.22, 1, 0.36, 1] }));
   setTimeout(() => raiz.classList.add("animado"), 1600);
 }
 
-/* ── Constantes (deben coincidir con functions/api/firmar.js) ────────────── */
+/* ── Límites (deben coincidir con functions/api/firmar.js) ──────────────── */
 const GB = 1024 ** 3;
-const MAX_ARCHIVOS = 20;
+const MAX_ARCHIVOS = 100;
 const MAX_BYTES_ARCHIVO = 2 * GB;
-const MAX_BYTES_TANDA = 2 * GB;   // tope de la carga completa
+const MAX_BYTES_TANDA = 2 * GB;   // el envío completo
 const PARALELO = 3;               // subidas simultáneas
 const REINTENTOS = 2;             // reintentos por archivo
 
@@ -191,9 +260,8 @@ let items = [];
 let carpeta = null;
 let ocupado = false;
 let contador = 0;
-let disponiblePeriodo = null;     // bytes que quedan en el periodo
 
-/* ── Utilidades ──────────────────────────────────────────────────────────── */
+/* ── Utilidades ─────────────────────────────────────────────────────────── */
 const peso = (b) => {
   if (!b) return "0 B";
   const u = ["B", "KB", "MB", "GB"];
@@ -203,41 +271,22 @@ const peso = (b) => {
 const total = () => items.reduce((s, it) => s + it.file.size, 0);
 const esImagen = (f) => /^image\//.test(f.type);
 const esVideo = (f) => /^video\//.test(f.type);
-const dosDigitos = (n) => String(n).padStart(2, "0");
+
+function clase(f) {
+  if (esImagen(f)) return "Imagen";
+  if (esVideo(f)) return "Video";
+  if (/\.zip$/i.test(f.name)) return "Comprimido";
+  return "Archivo";
+}
 
 function mostrarAviso(texto) {
   $("aviso-texto").textContent = texto;
   $("aviso").hidden = false;
-  if (!reducido) animate($("aviso"), { opacity: [0, 1] }, { duration: 0.25 });
+  if (!reducido) animate($("aviso"), { opacity: [0, 1] }, { duration: 0.22 });
 }
 const limpiarAviso = () => { $("aviso").hidden = true; };
 
-/* ── Espacio disponible del periodo ──────────────────────────────────────── */
-async function cargarCuota() {
-  try {
-    const r = await fetch("/api/firmar", { cache: "no-store" });
-    const d = await r.json();
-    if (!d.ok) return;
-    disponiblePeriodo = d.disponible;
-
-    const tope = d.usado + d.disponible;
-    const pct = tope > 0 ? Math.min(100, (d.usado / tope) * 100) : 0;
-    const lleno = d.disponible <= 0;
-
-    $("cuota-texto").textContent = lleno
-      ? "Sin espacio en este periodo"
-      : `${peso(d.disponible)} disponibles`;
-    $("cuota-barra").dataset.lleno = lleno ? "si" : "no";
-    $("cuota-barra").firstElementChild.style.width = `${pct}%`;
-    $("cuota").hidden = false;
-
-    if (lleno) {
-      mostrarAviso("Por ahora no hay espacio disponible. Escríbele a Boren Studio para que te abra lugar.");
-    }
-  } catch { /* si no se puede leer, no estorbamos: el servidor valida igual */ }
-}
-
-/* ── Selección de archivos ───────────────────────────────────────────────── */
+/* ── Selección ──────────────────────────────────────────────────────────── */
 function agregar(archivos) {
   limpiarAviso();
   const rechazados = [];
@@ -247,23 +296,17 @@ function agregar(archivos) {
       rechazados.push(`solo caben ${MAX_ARCHIVOS} archivos por envío`);
       break;
     }
+    if (f.size === 0) { rechazados.push(`"${f.name}" está vacío`); continue; }
     if (f.size > MAX_BYTES_ARCHIVO) {
       rechazados.push(`"${f.name}" pesa ${peso(f.size)} y el máximo es 2 GB`);
       continue;
     }
-    if (f.size === 0) { rechazados.push(`"${f.name}" está vacío`); continue; }
     if (items.some((it) => it.file.name === f.name && it.file.size === f.size)) continue;
-
     if (total() + f.size > MAX_BYTES_TANDA) {
       rechazados.push(`"${f.name}" no cabe: el envío completo no puede pasar de 2 GB`);
       continue;
     }
-    if (disponiblePeriodo !== null && total() + f.size > disponiblePeriodo) {
-      rechazados.push(`"${f.name}" no cabe en el espacio que queda este periodo`);
-      continue;
-    }
-
-    items.push({ id: ++contador, file: f, estado: "listo", pct: 0, msg: peso(f.size) });
+    items.push({ id: ++contador, file: f, estado: "listo", pct: 0, msg: "" });
   }
 
   if (rechazados.length) mostrarAviso(`No se agregó: ${rechazados.join("; ")}.`);
@@ -271,48 +314,55 @@ function agregar(archivos) {
 }
 
 function quitar(id) {
-  items = items.filter((it) => it.id !== id);
+  const it = items.find((x) => x.id === id);
+  if (it?.miniatura) URL.revokeObjectURL(it.miniatura);
+  items = items.filter((x) => x.id !== id);
   limpiarAviso();
   pintar();
 }
 
-/* ── Pintado ─────────────────────────────────────────────────────────────── */
-const SVG_VIDEO = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" class="size-4"><path d="M3 7.5A2.5 2.5 0 0 1 5.5 5h7A2.5 2.5 0 0 1 15 7.5v9A2.5 2.5 0 0 1 12.5 19h-7A2.5 2.5 0 0 1 3 16.5z"/><path d="M15 10.5l5-3v9l-5-3z"/></svg>';
-const SVG_DOC = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" class="size-4"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/></svg>';
-const SVG_X = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" class="size-3.5"><path d="M6 6l12 12M18 6L6 18"/></svg>';
-const SVG_TICK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" class="size-4 text-fijado"><path d="M4 12.5l5.5 5.5L20 7"/></svg>';
+function vaciar() {
+  items.forEach((it) => it.miniatura && URL.revokeObjectURL(it.miniatura));
+  items = [];
+  $("entrada").value = "";
+  limpiarAviso();
+  pintar();
+}
 
-const ESTADO_PLACA = { listo: "listo", subiendo: "subiendo", ok: "fijada", error: "velada" };
+/* ── Pintado ────────────────────────────────────────────────────────────── */
+const SVG_VIDEO = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="size-5"><path d="M3 7.5A2.5 2.5 0 0 1 5.5 5h7A2.5 2.5 0 0 1 15 7.5v9A2.5 2.5 0 0 1 12.5 19h-7A2.5 2.5 0 0 1 3 16.5z"/><path d="M15 10.5l5-3v9l-5-3z"/></svg>';
+const SVG_DOC = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="size-5"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/></svg>';
+const SVG_ZIP = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="size-5"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/><path d="M10 8.5h1.5M10 11h1.5M10 13.5h1.5"/></svg>';
+const SVG_X = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" class="size-4"><path d="M6 6l12 12M18 6L6 18"/></svg>';
+const SVG_OK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" class="size-5 text-listo"><circle cx="12" cy="12" r="9"/><path d="M8.5 12.3l2.4 2.4 4.6-4.9" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 
 function pintar() {
   const lista = $("lista");
   lista.textContent = "";
 
-  items.forEach((it, indice) => {
+  for (const it of items) {
     const fila = document.createElement("div");
-    fila.className = "placa grid grid-cols-[1.6rem_2.5rem_1fr_auto] items-center gap-3 px-3 py-2.5";
+    fila.className = "renglon";
     fila.dataset.id = it.id;
-    fila.dataset.estado = ESTADO_PLACA[it.estado];
-
-    // Número de placa
-    const num = document.createElement("span");
-    num.className = "font-mono text-[0.65rem] text-tinta-tenue";
-    num.textContent = dosDigitos(indice + 1);
+    fila.dataset.estado = it.estado;
 
     // Miniatura
     const mini = document.createElement("div");
-    mini.className = "grid size-10 shrink-0 place-items-center overflow-hidden bg-papel-hondo text-tinta-tenue";
+    mini.className = "grid size-11 shrink-0 place-items-center overflow-hidden rounded-lg bg-nieve text-tenue";
     if (esImagen(it.file)) {
+      if (!it.miniatura) it.miniatura = URL.createObjectURL(it.file);
       const img = document.createElement("img");
       img.alt = "";
       img.loading = "lazy";
       img.decoding = "async";
       img.className = "size-full object-cover";
-      img.src = URL.createObjectURL(it.file);
-      img.onload = () => URL.revokeObjectURL(img.src);
+      img.src = it.miniatura;
+      img.onerror = () => { mini.innerHTML = SVG_DOC; };
       mini.appendChild(img);
+    } else if (esVideo(it.file)) {
+      mini.innerHTML = SVG_VIDEO;
     } else {
-      mini.innerHTML = esVideo(it.file) ? SVG_VIDEO : SVG_DOC;
+      mini.innerHTML = /\.zip$/i.test(it.file.name) ? SVG_ZIP : SVG_DOC;
     }
 
     // Datos
@@ -320,82 +370,99 @@ function pintar() {
     datos.className = "min-w-0";
 
     const nom = document.createElement("div");
-    nom.className = "truncate text-[0.82rem] leading-tight";
+    nom.className = "truncate text-[0.88rem] font-medium";
     nom.textContent = it.file.name;
     nom.title = it.file.name;
-    datos.appendChild(nom);
 
     const meta = document.createElement("div");
-    meta.className = "mt-1 font-mono text-[0.65rem] " +
-      (it.estado === "error" ? "text-velado" : it.estado === "ok" ? "text-fijado" : "text-tinta-tenue");
-    meta.textContent = it.msg;
-    datos.appendChild(meta);
+    meta.dataset.papel = "meta";
+    meta.className = "mt-0.5 text-[0.78rem] tabular " +
+      (it.estado === "error" ? "text-alerta" : "text-suave");
+    meta.textContent = it.msg || `${clase(it.file)} · ${peso(it.file.size)}`;
 
-    if (it.estado !== "listo") {
-      const tinta = document.createElement("div");
-      tinta.className = "tinta mt-2";
-      tinta.dataset.estado = ESTADO_PLACA[it.estado];
-      const relleno = document.createElement("i");
-      relleno.style.width = `${it.estado === "ok" ? 100 : Math.round(it.pct * 100)}%`;
-      tinta.appendChild(relleno);
-      datos.appendChild(tinta);
+    datos.append(nom, meta);
+
+    // Derecha
+    const der = document.createElement("div");
+    der.className = "flex shrink-0 items-center gap-3";
+
+    if (it.estado === "subiendo") {
+      const p = Math.round(it.pct * 100);
+      const env = document.createElement("div");
+      env.className = "hidden w-32 items-center gap-2.5 sm:flex";
+      env.innerHTML =
+        `<span data-papel="pct" class="w-9 shrink-0 text-right text-[0.78rem] text-suave tabular">${p}%</span>
+         <div class="barra flex-1"><i style="width:${p}%"></i></div>`;
+      der.appendChild(env);
+
+      const solo = document.createElement("span");
+      solo.dataset.papel = "pct";
+      solo.className = "text-[0.78rem] text-suave tabular sm:hidden";
+      solo.textContent = `${p}%`;
+      der.appendChild(solo);
+    } else if (it.estado === "ok") {
+      const ok = document.createElement("span");
+      ok.innerHTML = SVG_OK;
+      der.appendChild(ok);
     }
 
-    // Acción
-    let der;
-    if (it.estado === "ok") {
-      der = document.createElement("span");
-      der.innerHTML = SVG_TICK;
-    } else if (it.estado === "subiendo") {
-      der = document.createElement("span");
-      der.className = "font-mono text-[0.65rem] text-tinta-media w-9 text-right";
-      der.textContent = `${Math.round(it.pct * 100)}%`;
-    } else if (!ocupado) {
-      der = document.createElement("button");
-      der.type = "button";
-      der.className = "grid size-7 place-items-center text-tinta-tenue transition-colors hover:text-velado";
-      der.setAttribute("aria-label", `Quitar ${it.file.name}`);
-      der.innerHTML = SVG_X;
-      der.addEventListener("click", () => quitar(it.id));
-    } else {
-      der = document.createElement("span");
+    if (!ocupado) {
+      const x = document.createElement("button");
+      x.type = "button";
+      x.className = "grid size-7 place-items-center rounded-md text-tenue transition-colors hover:bg-nieve hover:text-alerta";
+      x.setAttribute("aria-label", `Quitar ${it.file.name}`);
+      x.innerHTML = SVG_X;
+      x.addEventListener("click", () => quitar(it.id));
+      der.appendChild(x);
     }
 
-    fila.append(num, mini, datos, der);
+    fila.append(mini, datos, der);
     lista.appendChild(fila);
+  }
 
-    if (!reducido && it.estado === "listo") {
-      animate(fila, { opacity: [0, 1], transform: ["translateY(6px)", "translateY(0px)"] },
-        { duration: 0.3, easing: [0.22, 1, 0.36, 1] });
-    }
-  });
-
-  const t = total();
-  $("resumen").hidden = items.length === 0;
-  $("resumen-n").textContent = `${items.length} ${items.length === 1 ? "archivo" : "archivos"}`;
-  $("resumen-peso").textContent = `${peso(t)} / 2 GB`;
+  const hay = items.length > 0;
+  $("cabecera-lista").hidden = !hay;
+  $("cuenta").textContent = `(${items.length})`;
+  $("total-peso").textContent = `${peso(total())} en total`;
+  $("btn-vaciar").hidden = ocupado;
 
   actualizarBoton();
 }
 
-/** Repinta una sola placa: redibujar las 20 en cada evento de progreso
-    hace saltar la lista en el celular. */
+/** Repinta una sola fila: con 100 archivos, redibujar todo en cada evento de
+    progreso hace saltar la lista en el celular. */
 function pintarFila(it) {
-  const fila = document.querySelector(`.placa[data-id="${it.id}"]`);
-  if (!fila) return pintar();
-  const relleno = fila.querySelector(".tinta > i");
-  if (relleno) relleno.style.width = `${Math.round(it.pct * 100)}%`;
-  const pct = fila.querySelector(".w-9");
-  if (pct) pct.textContent = `${Math.round(it.pct * 100)}%`;
-  const meta = fila.querySelector(".font-mono");
+  const fila = document.querySelector(`.renglon[data-id="${it.id}"]`);
+  if (!fila) return;
+
+  const p = Math.round(it.pct * 100);
+  fila.querySelectorAll('[data-papel="pct"]').forEach((el) => { el.textContent = `${p}%`; });
+
+  const barra = fila.querySelector(".barra > i");
+  if (barra) barra.style.width = `${p}%`;
+
+  const meta = fila.querySelector('[data-papel="meta"]');
   if (meta) meta.textContent = it.msg;
 }
 
-function actualizarBoton() {
-  $("btn-subir").disabled = ocupado || items.length === 0 || $("negocio").value.trim().length < 2;
+function pintarGlobal() {
+  const enJuego = items.filter((it) => it.estado !== "listo");
+  if (!enJuego.length) return;
+  const bytes = enJuego.reduce((s, it) => s + it.file.size, 0);
+  const hechos = enJuego.reduce((s, it) => s + it.file.size * (it.estado === "ok" ? 1 : it.pct), 0);
+  const pct = bytes ? Math.round((hechos / bytes) * 100) : 0;
+  const listos = items.filter((it) => it.estado === "ok").length;
+
+  $("global-texto").textContent = `Subiendo ${listos} de ${enJuego.length}`;
+  $("global-pct").textContent = `${pct}%`;
+  $("global-barra").style.width = `${pct}%`;
 }
 
-/* ── Subida ──────────────────────────────────────────────────────────────── */
+function actualizarBoton() {
+  $("btn-subir").disabled = ocupado || !items.length || $("negocio").value.trim().length < 2;
+}
+
+/* ── Subida ─────────────────────────────────────────────────────────────── */
 async function firmar(pendientes) {
   const r = await fetch("/api/firmar", {
     method: "POST",
@@ -426,6 +493,7 @@ function subirUno(it) {
       it.pct = e.loaded / e.total;
       it.msg = `${peso(e.loaded)} de ${peso(it.file.size)}`;
       pintarFila(it);
+      pintarGlobal();
     };
     xhr.onload = () => {
       if (xhr.status >= 200 && xhr.status < 300) return resolver();
@@ -444,17 +512,16 @@ const esperar = (ms) => new Promise((r) => setTimeout(r, ms));
 
 async function conReintentos(it) {
   it.estado = "subiendo"; it.pct = 0; it.msg = "Subiendo…";
-  pintar();
+  pintar(); pintarGlobal();
 
   for (let intento = 0; intento <= REINTENTOS; intento++) {
     try {
       await subirUno(it);
-      it.estado = "ok"; it.pct = 1; it.msg = `Recibido — ${peso(it.file.size)}`;
-      pintar();
+      it.estado = "ok"; it.pct = 1; it.msg = `${clase(it.file)} · ${peso(it.file.size)}`;
+      pintar(); pintarGlobal();
       return;
     } catch (e) {
-      const ultimo = intento === REINTENTOS || e.estado === 403;
-      if (!ultimo) {
+      if (intento < REINTENTOS && e.estado !== 403) {
         it.msg = `Reintentando (${intento + 1} de ${REINTENTOS})…`;
         it.pct = 0;
         pintarFila(it);
@@ -467,13 +534,13 @@ async function conReintentos(it) {
         e.message === "red" ? "Se cortó la conexión." :
         e.message === "tiempo" ? "Tardó demasiado." :
         `No se pudo enviar (${e.message}).`;
-      pintar();
+      pintar(); pintarGlobal();
       return;
     }
   }
 }
 
-/** Cola con tope de N simultáneos: en 4G lento, 20 PUT a la vez se ahogan. */
+/** Cola con tope de N simultáneos: en 4G lento, muchos PUT a la vez se ahogan. */
 async function cola(lista, limite, tarea) {
   let i = 0;
   const trabajador = async () => { while (i < lista.length) await tarea(lista[i++]); };
@@ -505,7 +572,8 @@ async function subir(soloFallidos) {
   $("btn-reintentar").hidden = true;
   $("negocio").disabled = true;
   $("entrada").disabled = true;
-  $("btn-texto").textContent = "Enviando…";
+  $("btn-texto").textContent = "Subiendo…";
+  $("global").hidden = false;
   pintar();
 
   try {
@@ -516,14 +584,12 @@ async function subir(soloFallidos) {
       it.url = datos.archivos[k].url;
       it.clave = datos.archivos[k].clave;
     });
-    if (datos.cuota) disponiblePeriodo = datos.cuota.disponible;
 
     await cola(pendientes, PARALELO, conReintentos);
 
     const ok = items.filter((it) => it.estado === "ok");
     const mal = items.filter((it) => it.estado === "error");
-
-    restaurarControles();
+    restaurar();
 
     if (!mal.length) {
       finalizar(ok.length);
@@ -537,18 +603,18 @@ async function subir(soloFallidos) {
       $("btn-subir").hidden = true;
     }
   } catch (e) {
-    restaurarControles();
+    restaurar();
+    $("global").hidden = true;
     pintar();
     mostrarAviso(e.message || "Algo salió mal. Vuelve a intentar.");
-    cargarCuota();
   }
 }
 
-function restaurarControles() {
+function restaurar() {
   ocupado = false;
   $("negocio").disabled = false;
   $("entrada").disabled = false;
-  $("btn-texto").textContent = "Enviar material";
+  $("btn-texto").textContent = "Subir archivos";
 }
 
 function finalizar(n) {
@@ -558,32 +624,28 @@ function finalizar(n) {
   $("final-ruta").textContent = carpeta || "";
   $("paso-form").hidden = true;
   $("paso-final").hidden = false;
-  window.scrollTo(0, 0);
+  scrollTo(0, 0);
 
-  if (!reducido) {
-    animate($("sello"), { transform: ["scale(0.7)", "scale(1)"], opacity: [0, 1] },
-      { duration: 0.5, easing: [0.34, 1.56, 0.64, 1] });
-    $("paso-final").querySelectorAll("h2, p, .filete, button").forEach((el, i) => {
-      animate(el, { opacity: [0, 1], transform: ["translateY(10px)", "translateY(0px)"] },
-        { duration: 0.45, delay: 0.15 + i * 0.07, easing: [0.22, 1, 0.36, 1] });
-    });
-  }
+  if (reducido) return;
+  animate($("sello"), { transform: ["scale(0.75)", "scale(1)"], opacity: [0, 1] },
+    { duration: 0.45, easing: [0.34, 1.56, 0.64, 1] });
+  $("paso-final").querySelectorAll("h2, p, .carta, button").forEach((el, i) =>
+    animate(el, { opacity: [0, 1], transform: ["translateY(8px)", "translateY(0px)"] },
+      { duration: 0.4, delay: 0.12 + i * 0.06, easing: [0.22, 1, 0.36, 1] }));
 }
 
 function reiniciar() {
-  items = []; carpeta = null; contador = 0;
-  $("entrada").value = "";
-  limpiarAviso();
+  vaciar();
+  carpeta = null; contador = 0;
   $("btn-subir").hidden = false;
   $("btn-reintentar").hidden = true;
+  $("global").hidden = true;
   $("paso-final").hidden = true;
   $("paso-form").hidden = false;
-  pintar();
-  cargarCuota();
-  window.scrollTo(0, 0);
+  scrollTo(0, 0);
 }
 
-/* ── Eventos ─────────────────────────────────────────────────────────────── */
+/* ── Eventos ────────────────────────────────────────────────────────────── */
 $("entrada").addEventListener("change", (e) => {
   agregar(e.target.files);
   e.target.value = ""; // permite reelegir el mismo archivo tras quitarlo
@@ -594,17 +656,18 @@ $("negocio").addEventListener("input", () => {
 });
 $("btn-subir").addEventListener("click", () => subir(false));
 $("btn-reintentar").addEventListener("click", () => subir(true));
+$("btn-vaciar").addEventListener("click", vaciar);
 $("btn-otra").addEventListener("click", reiniciar);
 
-const bandeja = $("bandeja");
+const zona = $("zona");
 ["dragenter", "dragover"].forEach((ev) =>
-  bandeja.addEventListener(ev, (e) => { e.preventDefault(); if (!ocupado) bandeja.dataset.dentro = "si"; }));
+  zona.addEventListener(ev, (e) => { e.preventDefault(); if (!ocupado) zona.dataset.dentro = "si"; }));
 ["dragleave", "drop"].forEach((ev) =>
-  bandeja.addEventListener(ev, (e) => { e.preventDefault(); bandeja.dataset.dentro = "no"; }));
-bandeja.addEventListener("drop", (e) => {
+  zona.addEventListener(ev, (e) => { e.preventDefault(); zona.dataset.dentro = "no"; }));
+zona.addEventListener("drop", (e) => {
   if (!ocupado && e.dataTransfer?.files.length) agregar(e.dataTransfer.files);
 });
-// Fuera de la bandeja, soltar un archivo no debe navegar hacia él.
+// Fuera de la zona, soltar un archivo no debe navegar hacia él.
 addEventListener("dragover", (e) => e.preventDefault());
 addEventListener("drop", (e) => e.preventDefault());
 
@@ -616,7 +679,6 @@ addEventListener("beforeunload", (e) => {
 });
 
 pintar();
-cargarCuota();
 </script>
 </body>
 </html>
