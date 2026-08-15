@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Envía tus archivos — Boren Studio</title>
+<meta name="description" content="Sube fotos y videos de tu negocio a Boren Studio, en calidad original.">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#F2EDE2" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#1C1814" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png">
+<link rel="manifest" href="/carga/manifest.webmanifest">
+
+<!-- Tipografía de marca, cargada sin bloquear el primer render: en una señal
+     mala la página se ve y funciona antes de que llegue la fuente. -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" media="print" onload="this.media='all'"
+      href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Geist+Mono:wght@400;500&family=Geist:wght@400;500&display=swap">
+
+<style>
+:root{
+  --cream-100:#F2EDE2;--cream-200:#E9E2D2;--cream-300:#DDD3BF;
+  --carbon-900:#1C1814;--carbon-800:#2A241D;--carbon-700:#3A3128;
+  --copper-500:#B85C38;--copper-300:#D88A66;--copper-100:#F0DACB;
+  --exito:#3F7D58;--alerta:#A8442A;
+
+  --bg:var(--cream-100);--panel:#FBF8F2;
+  --ink:var(--carbon-900);--ink-soft:rgba(28,24,20,.62);--ink-faint:rgba(28,24,20,.38);
+  --line:rgba(28,24,20,.12);--line-fuerte:rgba(28,24,20,.24);
+  --accent:var(--copper-500);
+
+  --font-display:'DM Serif Display',Georgia,serif;
+  --font-sans:'Geist','Inter',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --font-mono:'Geist Mono',ui-monospace,'SF Mono',Menlo,monospace;
+  --ease:cubic-bezier(.22,1,.36,1);
+  --r:14px;
+}
+@media (prefers-color-scheme:dark){
+  :root{
+    --bg:var(--carbon-900);--panel:var(--carbon-800);
+    --ink:var(--cream-100);--ink-soft:rgba(242,237,226,.62);--ink-faint:rgba(242,237,226,.38);
+    --line:rgba(242,237,226,.14);--line-fuerte:rgba(242,237,226,.28);
+    --accent:var(--copper-300);--exito:#6BAE84;--alerta:#E0876B;
+  }
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{
+  background:var(--bg);color:var(--ink);
+  font-family:var(--font-sans);font-size:16px;line-height:1.5;
+  -webkit-font-smoothing:antialiased;
+  min-height:100dvh;
+  padding:0 20px calc(40px + env(safe-area-inset-bottom));
+}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:6px}
+img{display:block;max-width:100%}
+
+.contenedor{width:100%;max-width:620px;margin:0 auto}
+
+/* --- Cabecera --- */
+.top{display:flex;align-items:center;gap:11px;padding:26px 0 30px}
+.top .mark{
+  width:30px;height:30px;flex:0 0 30px;display:grid;place-items:center;
+  background:var(--ink);color:var(--bg);border-radius:4px;
+  font-family:var(--font-display);font-size:19px;line-height:1;padding-bottom:2px;
+}
+.top .nombre{font-family:var(--font-display);font-size:21px;letter-spacing:-.01em;line-height:1.1}
+.top .tag{
+  display:block;font-family:var(--font-mono);font-size:9px;letter-spacing:.18em;
+  text-transform:uppercase;color:var(--ink-soft);margin-top:2px;
+}
+
+/* --- Textos --- */
+h1{font-family:var(--font-display);font-weight:400;font-size:clamp(29px,7.5vw,40px);line-height:1.1;letter-spacing:-.015em}
+.intro{color:var(--ink-soft);margin-top:12px;font-size:15px;max-width:44ch}
+
+/* --- Bloques --- */
+.bloque{margin-top:30px}
+.etiqueta{
+  display:block;font-family:var(--font-mono);font-size:11px;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--ink-soft);margin-bottom:9px;
+}
+input[type=text]{
+  width:100%;padding:15px 16px;font:inherit;color:var(--ink);
+  background:var(--panel);border:1px solid var(--line-fuerte);border-radius:var(--r);
+  transition:border-color .2s,box-shadow .2s;
+}
+input[type=text]::placeholder{color:var(--ink-faint)}
+input[type=text]:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px color-mix(in oklab,var(--accent) 18%,transparent)}
+input[type=text][aria-invalid="true"]{border-color:var(--alerta)}
+
+/* --- Zona de archivos --- */
+.zona{
+  position:relative;display:block;width:100%;
+  border:1.5px dashed var(--line-fuerte);border-radius:var(--r);
+  background:var(--panel);
+  padding:30px 22px;text-align:center;cursor:pointer;
+  transition:border-color .2s var(--ease),background .2s var(--ease),transform .2s var(--ease);
+  -webkit-tap-highlight-color:transparent;
+}
+.zona:hover,.zona:focus-within{border-color:var(--accent)}
+.zona.dentro{border-color:var(--accent);background:color-mix(in oklab,var(--accent) 8%,var(--panel));transform:scale(1.005)}
+.zona input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer}
+.zona .icono{width:34px;height:34px;margin:0 auto 12px;color:var(--accent)}
+.zona .principal{font-size:17px;font-weight:500}
+.zona .secundario{color:var(--ink-soft);font-size:13px;margin-top:5px}
+.solo-escritorio{display:none}
+@media(min-width:760px){.solo-escritorio{display:inline}}
+
+/* --- Lista de archivos --- */
+.lista{margin-top:16px;display:flex;flex-direction:column;gap:9px}
+.fila{
+  display:grid;grid-template-columns:38px 1fr auto;align-items:center;gap:13px;
+  background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:11px 13px;
+}
+.fila .miniatura{
+  width:38px;height:38px;border-radius:8px;background:var(--cream-300);
+  display:grid;place-items:center;overflow:hidden;flex:0 0 38px;color:var(--ink-soft);
+}
+@media (prefers-color-scheme:dark){.fila .miniatura{background:var(--carbon-700)}}
+.fila .miniatura img{width:100%;height:100%;object-fit:cover}
+.fila .miniatura svg{width:17px;height:17px}
+.fila .datos{min-width:0}
+.fila .nom{
+  font-size:14px;font-weight:500;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+}
+.fila .meta{font-family:var(--font-mono);font-size:11px;color:var(--ink-soft);margin-top:3px}
+.fila .meta.mal{color:var(--alerta)}
+.fila .meta.bien{color:var(--exito)}
+.fila.mal{border-color:color-mix(in oklab,var(--alerta) 45%,var(--line))}
+
+.barra{height:3px;border-radius:99px;background:var(--line);margin-top:7px;overflow:hidden}
+.barra i{display:block;height:100%;width:0;background:var(--accent);border-radius:99px;transition:width .25s linear}
+.barra.bien i{background:var(--exito)}
+.barra.mal i{background:var(--alerta)}
+
+.quitar{
+  width:30px;height:30px;display:grid;place-items:center;border:0;border-radius:8px;
+  background:transparent;color:var(--ink-faint);cursor:pointer;transition:color .2s,background .2s;
+}
+.quitar:hover{color:var(--alerta);background:color-mix(in oklab,var(--alerta) 10%,transparent)}
+.quitar svg{width:15px;height:15px}
+.tick{color:var(--exito);width:19px;height:19px}
+.pct{font-family:var(--font-mono);font-size:11px;color:var(--ink-soft);min-width:38px;text-align:right}
+
+.resumen{
+  display:flex;justify-content:space-between;align-items:baseline;gap:12px;
+  font-family:var(--font-mono);font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;
+  color:var(--ink-soft);margin-top:15px;
+}
+
+/* --- Botones --- */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:10px;width:100%;
+  padding:17px 24px;border-radius:999px;border:1px solid var(--ink);
+  background:var(--ink);color:var(--bg);
+  font-family:var(--font-mono);font-size:12.5px;letter-spacing:.09em;text-transform:uppercase;font-weight:500;
+  cursor:pointer;transition:transform .3s var(--ease),background .3s var(--ease),opacity .2s;
+  -webkit-tap-highlight-color:transparent;
+}
+.btn:hover:not(:disabled){background:var(--accent);border-color:var(--accent);color:#fff}
+.btn:active:not(:disabled){transform:scale(.98)}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.btn.suave{background:transparent;color:var(--ink);border-color:var(--line-fuerte)}
+.btn.suave:hover:not(:disabled){background:transparent;border-color:var(--accent);color:var(--accent)}
+.btn svg{width:15px;height:15px;flex:0 0 15px}
+.acciones{margin-top:22px;display:flex;flex-direction:column;gap:11px}
+
+/* --- Avisos --- */
+.aviso{
+  display:flex;gap:11px;align-items:flex-start;
+  border-radius:12px;padding:13px 15px;font-size:14px;margin-top:16px;
+  border:1px solid color-mix(in oklab,var(--alerta) 40%,transparent);
+  background:color-mix(in oklab,var(--alerta) 10%,transparent);
+  color:var(--ink);
+}
+.aviso svg{width:17px;height:17px;flex:0 0 17px;margin-top:2px;color:var(--alerta)}
+.aviso[hidden]{display:none}
+
+/* --- Pantalla final --- */
+.final{text-align:center;padding:34px 0 10px}
+.final .sello{
+  width:64px;height:64px;margin:0 auto 22px;border-radius:50%;
+  display:grid;place-items:center;
+  background:color-mix(in oklab,var(--exito) 15%,transparent);color:var(--exito);
+}
+.final .sello svg{width:30px;height:30px}
+.final h2{font-family:var(--font-display);font-weight:400;font-size:clamp(26px,6.5vw,34px);line-height:1.15}
+.final p{color:var(--ink-soft);margin-top:12px;font-size:15px}
+.final .ruta{
+  font-family:var(--font-mono);font-size:12px;color:var(--ink-soft);
+  background:var(--panel);border:1px solid var(--line);border-radius:9px;
+  padding:9px 13px;margin-top:20px;display:inline-block;word-break:break-all;
+}
+
+.pie{
+  margin-top:44px;padding-top:22px;border-top:1px solid var(--line);
+  font-family:var(--font-mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--ink-faint);text-align:center;
+}
+[hidden]{display:none !important}
+@media (prefers-reduced-motion:reduce){*{transition:none !important;animation:none !important}}
+</style>
+</head>
+<body>
+<div class="contenedor">
+
+  <header class="top">
+    <div class="mark" aria-hidden="true">B</div>
+    <div>
+      <div class="nombre">Boren Studio</div>
+      <span class="tag">Carga de archivos</span>
+    </div>
+  </header>
+
+  <main>
+    <!-- ============ PASO 1: formulario ============ -->
+    <section id="paso-form">
+      <h1>Envía tus archivos</h1>
+      <p class="intro">Fotos y videos de tu negocio, en calidad original. Sin cuentas ni contraseñas: llena el nombre, adjunta y listo.</p>
+
+      <div class="bloque">
+        <label class="etiqueta" for="negocio">Nombre de tu negocio</label>
+        <input type="text" id="negocio" name="negocio" placeholder="Ej. Hamburguesas Tony"
+               autocomplete="organization" maxlength="60" enterkeyhint="done" spellcheck="false">
+      </div>
+
+      <div class="bloque">
+        <span class="etiqueta">Tus archivos</span>
+        <label class="zona" id="zona">
+          <input type="file" id="entrada" multiple accept="image/*,video/*" aria-label="Seleccionar fotos y videos">
+          <svg class="icono" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M12 16V4m0 0L7.5 8.5M12 4l4.5 4.5"/><path d="M3 15v3a3 3 0 0 0 3 3h12a3 3 0 0 0 3-3v-3"/>
+          </svg>
+          <span class="principal">Selecciona fotos y videos</span>
+          <span class="secundario">
+            <span class="solo-escritorio">o arrástralos aquí · </span>Hasta 20 archivos · 2 GB cada uno
+          </span>
+        </label>
+      </div>
+
+      <div class="lista" id="lista"></div>
+      <div class="resumen" id="resumen" hidden><span id="resumen-n"></span><span id="resumen-peso"></span></div>
+
+      <div class="aviso" id="aviso" hidden role="alert">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true">
+          <circle cx="12" cy="12" r="9"/><path d="M12 7.5v5.5M12 16.5h.01"/>
+        </svg>
+        <span id="aviso-texto"></span>
+      </div>
+
+      <div class="acciones">
+        <button class="btn" id="btn-subir" type="button" disabled>
+          <span id="btn-texto">Subir archivos</span>
+        </button>
+        <button class="btn suave" id="btn-reintentar" type="button" hidden>Reintentar los que fallaron</button>
+      </div>
+    </section>
+
+    <!-- ============ PASO 2: confirmación ============ -->
+    <section id="paso-final" hidden>
+      <div class="final">
+        <div class="sello">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M4 12.5l5.5 5.5L20 7"/>
+          </svg>
+        </div>
+        <h2 id="final-titulo">Listo</h2>
+        <p id="final-texto"></p>
+        <div class="ruta" id="final-ruta"></div>
+        <div class="acciones">
+          <button class="btn suave" id="btn-otra" type="button">Subir más archivos</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <p class="pie">Boren Studio · Los archivos se conservan 10 días</p>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  var MAX_ARCHIVOS = 20;
+  var MAX_BYTES    = 2 * 1024 * 1024 * 1024;  // 2 GB
+  var PARALELO     = 3;                        // subidas simultáneas
+  var REINTENTOS   = 2;                        // reintentos por archivo
+
+  var $ = function(id){ return document.getElementById(id); };
+
+  var items = [];        // { id, file, estado, pct, msg, url, clave, xhr }
+  var carpeta = null;    // prefijo de la tanda, para que los reintentos caigan junto
+  var ocupado = false;
+  var contador = 0;
+
+  // ---------- utilidades ----------
+  function peso(b){
+    if(!b) return "0 B";
+    var u = ["B","KB","MB","GB"], i = Math.min(Math.floor(Math.log(b)/Math.log(1024)), 3);
+    return (b/Math.pow(1024,i)).toFixed(i === 0 ? 0 : 1) + " " + u[i];
+  }
+  function esImagen(f){ return /^image\//.test(f.type); }
+  function esVideo(f){ return /^video\//.test(f.type); }
+
+  function mostrarAviso(texto){
+    $("aviso-texto").textContent = texto;
+    $("aviso").hidden = false;
+  }
+  function limpiarAviso(){ $("aviso").hidden = true; }
+
+  // ---------- selección de archivos ----------
+  function agregar(archivos){
+    limpiarAviso();
+    var rechazados = [];
+
+    for(var i = 0; i < archivos.length; i++){
+      var f = archivos[i];
+
+      if(items.length >= MAX_ARCHIVOS){
+        rechazados.push("solo caben " + MAX_ARCHIVOS + " archivos por envío");
+        break;
+      }
+      if(f.size > MAX_BYTES){
+        rechazados.push('"' + f.name + '" pesa ' + peso(f.size) + " (el límite es 2 GB)");
+        continue;
+      }
+      if(f.size === 0){
+        rechazados.push('"' + f.name + '" está vacío');
+        continue;
+      }
+      // Mismo nombre y mismo peso = el usuario lo eligió dos veces.
+      var repetido = items.some(function(it){
+        return it.file.name === f.name && it.file.size === f.size;
+      });
+      if(repetido) continue;
+
+      items.push({ id: ++contador, file: f, estado: "listo", pct: 0, msg: peso(f.size) });
+    }
+
+    if(rechazados.length) mostrarAviso("No se agregó: " + rechazados.join("; ") + ".");
+    pintar();
+  }
+
+  function quitar(id){
+    items = items.filter(function(it){ return it.id !== id; });
+    limpiarAviso();
+    pintar();
+  }
+
+  // ---------- pintado ----------
+  var ICONO_VIDEO = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 7.5A2.5 2.5 0 0 1 5.5 5h7A2.5 2.5 0 0 1 15 7.5v9A2.5 2.5 0 0 1 12.5 19h-7A2.5 2.5 0 0 1 3 16.5z"/><path d="M15 10.5l5-3v9l-5-3z"/></svg>';
+  var ICONO_ARCHIVO = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/></svg>';
+  var ICONO_X = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>';
+  var ICONO_TICK = '<svg class="tick" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5l5.5 5.5L20 7"/></svg>';
+
+  function pintar(){
+    var lista = $("lista");
+    lista.textContent = "";
+
+    items.forEach(function(it){
+      var fila = document.createElement("div");
+      fila.className = "fila" + (it.estado === "error" ? " mal" : "");
+      fila.dataset.id = it.id;
+
+      // Miniatura
+      var mini = document.createElement("div");
+      mini.className = "miniatura";
+      if(esImagen(it.file)){
+        var img = document.createElement("img");
+        img.alt = "";
+        img.loading = "lazy";
+        img.src = URL.createObjectURL(it.file);
+        img.onload = function(){ URL.revokeObjectURL(img.src); };
+        mini.appendChild(img);
+      } else {
+        mini.innerHTML = esVideo(it.file) ? ICONO_VIDEO : ICONO_ARCHIVO;
+      }
+
+      // Nombre + estado
+      var datos = document.createElement("div");
+      datos.className = "datos";
+
+      var nom = document.createElement("div");
+      nom.className = "nom";
+      nom.textContent = it.file.name;
+      nom.title = it.file.name;
+      datos.appendChild(nom);
+
+      var meta = document.createElement("div");
+      meta.className = "meta" + (it.estado === "error" ? " mal" : it.estado === "ok" ? " bien" : "");
+      meta.textContent = it.msg;
+      datos.appendChild(meta);
+
+      if(it.estado === "subiendo" || it.estado === "ok" || it.estado === "error"){
+        var barra = document.createElement("div");
+        barra.className = "barra" + (it.estado === "ok" ? " bien" : it.estado === "error" ? " mal" : "");
+        var relleno = document.createElement("i");
+        relleno.style.width = (it.estado === "ok" ? 100 : Math.round(it.pct * 100)) + "%";
+        barra.appendChild(relleno);
+        datos.appendChild(barra);
+      }
+
+      // Acción a la derecha
+      var derecha;
+      if(it.estado === "ok"){
+        derecha = document.createElement("span");
+        derecha.innerHTML = ICONO_TICK;
+      } else if(it.estado === "subiendo"){
+        derecha = document.createElement("span");
+        derecha.className = "pct";
+        derecha.textContent = Math.round(it.pct * 100) + "%";
+      } else if(!ocupado){
+        derecha = document.createElement("button");
+        derecha.type = "button";
+        derecha.className = "quitar";
+        derecha.setAttribute("aria-label", "Quitar " + it.file.name);
+        derecha.innerHTML = ICONO_X;
+        derecha.addEventListener("click", function(){ quitar(it.id); });
+      } else {
+        derecha = document.createElement("span");
+      }
+
+      fila.appendChild(mini);
+      fila.appendChild(datos);
+      fila.appendChild(derecha);
+      lista.appendChild(fila);
+    });
+
+    // Resumen
+    var total = items.reduce(function(s, it){ return s + it.file.size; }, 0);
+    $("resumen").hidden = items.length === 0;
+    $("resumen-n").textContent = items.length + (items.length === 1 ? " archivo" : " archivos");
+    $("resumen-peso").textContent = peso(total);
+
+    actualizarBoton();
+  }
+
+  /** Repinta una sola fila: en una tanda de 20 archivos, redibujar todo por
+      cada evento de progreso hace saltar la lista en el celular. */
+  function pintarFila(it){
+    var fila = document.querySelector('.fila[data-id="' + it.id + '"]');
+    if(!fila) return pintar();
+
+    var relleno = fila.querySelector(".barra i");
+    if(relleno) relleno.style.width = Math.round(it.pct * 100) + "%";
+
+    var pct = fila.querySelector(".pct");
+    if(pct) pct.textContent = Math.round(it.pct * 100) + "%";
+
+    var meta = fila.querySelector(".meta");
+    if(meta) meta.textContent = it.msg;
+  }
+
+  function actualizarBoton(){
+    var negocio = $("negocio").value.trim();
+    $("btn-subir").disabled = ocupado || items.length === 0 || negocio.length < 2;
+  }
+
+  // ---------- subida ----------
+  function firmar(pendientes){
+    return fetch("/api/firmar", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        negocio: $("negocio").value.trim(),
+        carpeta: carpeta || undefined,
+        archivos: pendientes.map(function(it){
+          return { nombre: it.file.name, tamano: it.file.size, tipo: it.file.type || "" };
+        })
+      })
+    }).then(function(r){
+      return r.json().catch(function(){ return {}; }).then(function(d){
+        if(!r.ok || !d.ok) throw new Error(d.error || "No se pudieron preparar las subidas.");
+        return d;
+      });
+    });
+  }
+
+  /** PUT directo a R2 con XMLHttpRequest: fetch no reporta progreso de subida. */
+  function subirUno(it){
+    return new Promise(function(resolver, rechazar){
+      var xhr = new XMLHttpRequest();
+      it.xhr = xhr;
+      xhr.open("PUT", it.url, true);
+      if(it.file.type) xhr.setRequestHeader("Content-Type", it.file.type);
+
+      xhr.upload.onprogress = function(e){
+        if(e.lengthComputable){
+          it.pct = e.loaded / e.total;
+          it.msg = peso(e.loaded) + " de " + peso(it.file.size);
+          pintarFila(it);
+        }
+      };
+      xhr.onload = function(){
+        if(xhr.status >= 200 && xhr.status < 300) resolver();
+        else{
+          var err = new Error("HTTP " + xhr.status);
+          err.estado = xhr.status;
+          rechazar(err);
+        }
+      };
+      xhr.onerror   = function(){ rechazar(new Error("red")); };
+      xhr.ontimeout = function(){ rechazar(new Error("tiempo")); };
+      xhr.onabort   = function(){ rechazar(new Error("cancelado")); };
+      xhr.send(it.file);
+    });
+  }
+
+  function esperar(ms){ return new Promise(function(r){ setTimeout(r, ms); }); }
+
+  function conReintentos(it){
+    it.estado = "subiendo";
+    it.pct = 0;
+    it.msg = "Subiendo…";
+    pintar();
+
+    var intento = 0;
+    function probar(){
+      return subirUno(it).then(function(){
+        it.estado = "ok";
+        it.pct = 1;
+        it.msg = "Enviado · " + peso(it.file.size);
+        pintar();
+      }).catch(function(e){
+        intento++;
+        if(intento <= REINTENTOS && e.estado !== 403){
+          it.msg = "Reintentando (" + intento + " de " + REINTENTOS + ")…";
+          it.pct = 0;
+          pintarFila(it);
+          return esperar(1200 * intento).then(probar);
+        }
+        it.estado = "error";
+        it.msg =
+          e.estado === 403 ? "El enlace venció. Vuelve a intentar." :
+          e.message === "red" ? "Se cortó la conexión." :
+          e.message === "tiempo" ? "Tardó demasiado." :
+          "No se pudo enviar (" + e.message + ").";
+        pintar();
+      });
+    }
+    return probar();
+  }
+
+  /** Cola con tope de N simultáneos: en 4G lento, 20 PUT a la vez se ahogan. */
+  function cola(lista, limite, tarea){
+    var i = 0;
+    function trabajador(){
+      if(i >= lista.length) return Promise.resolve();
+      return tarea(lista[i++]).then(trabajador);
+    }
+    var hilos = [];
+    for(var k = 0; k < Math.min(limite, lista.length); k++) hilos.push(trabajador());
+    return Promise.all(hilos);
+  }
+
+  function subir(soloFallidos){
+    if(ocupado) return;
+
+    var negocio = $("negocio").value.trim();
+    if(negocio.length < 2){
+      $("negocio").setAttribute("aria-invalid", "true");
+      $("negocio").focus();
+      mostrarAviso("Escribe el nombre de tu negocio para continuar.");
+      return;
+    }
+    $("negocio").removeAttribute("aria-invalid");
+
+    if(navigator.onLine === false){
+      mostrarAviso("No hay conexión a internet. Revisa tu señal y vuelve a intentar.");
+      return;
+    }
+
+    var pendientes = soloFallidos
+      ? items.filter(function(it){ return it.estado === "error"; })
+      : items.slice();
+    if(pendientes.length === 0) return;
+
+    ocupado = true;
+    limpiarAviso();
+    $("btn-reintentar").hidden = true;
+    $("negocio").disabled = true;
+    $("entrada").disabled = true;
+    $("btn-texto").textContent = "Subiendo…";
+    pintar();
+
+    firmar(pendientes).then(function(datos){
+      carpeta = datos.carpeta;
+      // El servidor devuelve las URLs en el mismo orden en que las pedimos.
+      pendientes.forEach(function(it, k){
+        it.url = datos.archivos[k].url;
+        it.clave = datos.archivos[k].clave;
+      });
+      return cola(pendientes, PARALELO, conReintentos);
+    }).then(function(){
+      var ok = items.filter(function(it){ return it.estado === "ok"; });
+      var mal = items.filter(function(it){ return it.estado === "error"; });
+
+      ocupado = false;
+      $("negocio").disabled = false;
+      $("entrada").disabled = false;
+      $("btn-texto").textContent = "Subir archivos";
+
+      if(mal.length === 0){
+        finalizar(ok.length);
+      } else {
+        pintar();
+        mostrarAviso(
+          mal.length + (mal.length === 1 ? " archivo no se pudo enviar." : " archivos no se pudieron enviar.") +
+          (ok.length ? " Los otros " + ok.length + " ya están a salvo." : "")
+        );
+        $("btn-reintentar").hidden = false;
+        $("btn-subir").hidden = true;
+      }
+    }).catch(function(e){
+      ocupado = false;
+      $("negocio").disabled = false;
+      $("entrada").disabled = false;
+      $("btn-texto").textContent = "Subir archivos";
+      pintar();
+      mostrarAviso(e.message || "Algo salió mal. Vuelve a intentar.");
+    });
+  }
+
+  function finalizar(n){
+    $("final-titulo").textContent = "Listo, recibimos tus " + n + (n === 1 ? " archivo" : " archivos");
+    $("final-texto").textContent = "Ya los tenemos en calidad original. No hace falta que hagas nada más — te escribimos en cuanto los revisemos.";
+    $("final-ruta").textContent = carpeta || "";
+    $("final-ruta").hidden = !carpeta;
+    $("paso-form").hidden = true;
+    $("paso-final").hidden = false;
+    window.scrollTo(0, 0);
+  }
+
+  function reiniciar(){
+    items = [];
+    carpeta = null;
+    contador = 0;
+    $("entrada").value = "";
+    limpiarAviso();
+    $("btn-subir").hidden = false;
+    $("btn-reintentar").hidden = true;
+    $("paso-final").hidden = true;
+    $("paso-form").hidden = false;
+    pintar();
+    window.scrollTo(0, 0);
+  }
+
+  // ---------- eventos ----------
+  $("entrada").addEventListener("change", function(e){
+    agregar(e.target.files);
+    e.target.value = ""; // permite volver a elegir el mismo archivo tras quitarlo
+  });
+
+  $("negocio").addEventListener("input", function(){
+    $("negocio").removeAttribute("aria-invalid");
+    actualizarBoton();
+  });
+
+  $("btn-subir").addEventListener("click", function(){ subir(false); });
+  $("btn-reintentar").addEventListener("click", function(){ subir(true); });
+  $("btn-otra").addEventListener("click", reiniciar);
+
+  // Arrastrar y soltar (escritorio)
+  var zona = $("zona");
+  ["dragenter","dragover"].forEach(function(ev){
+    zona.addEventListener(ev, function(e){
+      e.preventDefault();
+      if(!ocupado) zona.classList.add("dentro");
+    });
+  });
+  ["dragleave","drop"].forEach(function(ev){
+    zona.addEventListener(ev, function(e){
+      e.preventDefault();
+      zona.classList.remove("dentro");
+    });
+  });
+  zona.addEventListener("drop", function(e){
+    if(ocupado) return;
+    if(e.dataTransfer && e.dataTransfer.files.length) agregar(e.dataTransfer.files);
+  });
+  // Fuera de la zona, soltar un archivo no debe navegar hacia él.
+  window.addEventListener("dragover", function(e){ e.preventDefault(); });
+  window.addEventListener("drop", function(e){ e.preventDefault(); });
+
+  window.addEventListener("offline", function(){
+    if(ocupado) mostrarAviso("Se perdió la conexión. Reintentamos solos en cuanto vuelva.");
+  });
+
+  // No dejar que cierren la pestaña a media subida.
+  window.addEventListener("beforeunload", function(e){
+    if(ocupado){ e.preventDefault(); e.returnValue = ""; }
+  });
+
+  pintar();
+})();
+</script>
+</body>
+</html>

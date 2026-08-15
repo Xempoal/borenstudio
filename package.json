@@ -1,0 +1,16 @@
+{
+  "name": "borenstudio",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Sitio de Boren Studio (Cloudflare Pages) + portal de carga de archivos para clientes.",
+  "scripts": {
+    "dev": "wrangler pages dev",
+    "deploy": "wrangler pages deploy"
+  },
+  "dependencies": {
+    "aws4fetch": "^1.0.20"
+  },
+  "devDependencies": {
+    "wrangler": "^4.123.0"
+  }
+}
