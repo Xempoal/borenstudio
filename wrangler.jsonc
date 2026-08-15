@@ -22,7 +22,7 @@
   // Identificadores publicos de Cloudflare Access (no son secretos, pero
   // sin ellos el panel /carga/admin responde 503 a proposito: falla cerrado).
   "vars": {
-    "ACCESS_TEAM_DOMAIN": "",
-    "ACCESS_AUD": ""
+    "ACCESS_TEAM_DOMAIN": "borenstudio.cloudflareaccess.com",
+    "ACCESS_AUD": "d0cdbe6a33a7662d1b51c50d9327b7e83f3e25b3fa67da08fe7515ac8f10dce5"
   }
 }

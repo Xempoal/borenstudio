@@ -217,34 +217,42 @@ No hay sistema de login propio. El panel se protege con Access, y **además** la
 API verifica el JWT del lado del servidor (`functions/_lib/access.js`), porque
 la política de Access cubre `borenstudio.com` pero no `*.pages.dev`.
 
-### Crear la aplicación
+### Lo que ya está configurado
 
-Dashboard → **Zero Trust** → **Access** → **Applications** → *Add an application*
-→ **Self-hosted**:
+| Cosa | Valor |
+|---|---|
+| Team domain | `borenstudio.cloudflareaccess.com` |
+| Aplicación | `Panel de cargas` (self-hosted) |
+| Ruta protegida | `borenstudio.com/carga/admin` (y todo lo que cuelga debajo) |
+| Duración de sesión | 24 h |
+| Método de login | Código por correo (One-time PIN) |
+| Política | *Allow* → `xempoal@gmail.com` |
 
-- **Application name:** `Panel de cargas`
-- **Session duration:** 24 horas
-- **Public hostname:** `borenstudio.com`, path `carga/admin`
-  (aplica también a todo lo que cuelga debajo, incluida la API)
-- **Policy:** *Allow* → **Emails** → tu correo (y el de quien más deba entrar)
-
-### Conectar la app con la verificación del servidor
-
-De la aplicación recién creada copia el **Application Audience (AUD) Tag**
-(Overview → *Application Audience Tag*) y tu **team domain**
-(Zero Trust → Settings → Custom Pages, o la URL `https://<equipo>.cloudflareaccess.com`).
-
-Ponlos en `wrangler.jsonc` → `vars`:
+Esos dos identificadores están en `wrangler.jsonc` → `vars`:
 
 ```jsonc
 "vars": {
-  "ACCESS_TEAM_DOMAIN": "tuequipo",              // o "tuequipo.cloudflareaccess.com"
-  "ACCESS_AUD": "a1b2c3...el-tag-largo"
+  "ACCESS_TEAM_DOMAIN": "borenstudio.cloudflareaccess.com",
+  "ACCESS_AUD": "d0cdbe6a...el-tag-largo"
 }
 ```
 
 No son secretos: son identificadores públicos. Pero **sin ellos el panel
 responde 503 a propósito** — falla cerrado en vez de quedar abierto.
+
+### Agregar o quitar personas
+
+Zero Trust → **Access** → **Applications** → *Panel de cargas* → pestaña
+**Policies** → *Solo Boren Studio* → agrega correos en el bloque **Emails**.
+
+No hace falta tocar código ni volver a desplegar: la política se aplica al
+instante.
+
+### Si algún día cambias la app de Access
+
+Si borras y recreas la aplicación, el **AUD tag cambia** y el panel se cierra
+con 401 (*"El token no es para esta aplicación"*). Copia el AUD nuevo a
+`wrangler.jsonc` y vuelve a desplegar.
 
 ---
 
