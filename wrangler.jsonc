@@ -19,10 +19,17 @@
     }
   ],
 
-  // Identificadores publicos de Cloudflare Access (no son secretos, pero
-  // sin ellos el panel /carga/admin responde 503 a proposito: falla cerrado).
-  "vars": {
-    "ACCESS_TEAM_DOMAIN": "borenstudio.cloudflareaccess.com",
-    "ACCESS_AUD": "d0cdbe6a33a7662d1b51c50d9327b7e83f3e25b3fa67da08fe7515ac8f10dce5"
-  }
+  // Estado chico que no cabe en las claves de R2: el contador de la cuota
+  // mensual y los bloqueos por PIN fallido. No es una base de datos del
+  // proyecto; los archivos y sus carpetas siguen viviendo solo en R2.
+  "kv_namespaces": [
+    {
+      "binding": "ESTADO",
+      "id": "eed7373c61644e9fad39c56355cfd191"
+    }
+  ],
+
+  // El panel ya no usa Cloudflare Access: entra con un PIN. El PIN y la llave
+  // que firma la sesion son secrets (PANEL_PIN, PANEL_SESSION_SECRET), nunca
+  // van aqui. Sin ellos el panel responde 503: falla cerrado.
 }

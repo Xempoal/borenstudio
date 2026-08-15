@@ -1,702 +1,622 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" class="sin-js">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Envía tus archivos — Boren Studio</title>
 <meta name="description" content="Sube fotos y videos de tu negocio a Boren Studio, en calidad original.">
 <meta name="robots" content="noindex, nofollow">
-<meta name="theme-color" content="#F2EDE2" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#1C1814" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#F4EFE4" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#17130F" media="(prefers-color-scheme: dark)">
 <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
 <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png">
 <link rel="manifest" href="/carga/manifest.webmanifest">
 
-<!-- Tipografía de marca, cargada sin bloquear el primer render: en una señal
-     mala la página se ve y funciona antes de que llegue la fuente. -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" media="print" onload="this.media='all'"
       href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Geist+Mono:wght@400;500&family=Geist:wght@400;500&display=swap">
-
-<style>
-:root{
-  --cream-100:#F2EDE2;--cream-200:#E9E2D2;--cream-300:#DDD3BF;
-  --carbon-900:#1C1814;--carbon-800:#2A241D;--carbon-700:#3A3128;
-  --copper-500:#B85C38;--copper-300:#D88A66;--copper-100:#F0DACB;
-  --exito:#3F7D58;--alerta:#A8442A;
-
-  --bg:var(--cream-100);--panel:#FBF8F2;
-  --ink:var(--carbon-900);--ink-soft:rgba(28,24,20,.62);--ink-faint:rgba(28,24,20,.38);
-  --line:rgba(28,24,20,.12);--line-fuerte:rgba(28,24,20,.24);
-  --accent:var(--copper-500);
-
-  --font-display:'DM Serif Display',Georgia,serif;
-  --font-sans:'Geist','Inter',system-ui,-apple-system,'Segoe UI',sans-serif;
-  --font-mono:'Geist Mono',ui-monospace,'SF Mono',Menlo,monospace;
-  --ease:cubic-bezier(.22,1,.36,1);
-  --r:14px;
-}
-@media (prefers-color-scheme:dark){
-  :root{
-    --bg:var(--carbon-900);--panel:var(--carbon-800);
-    --ink:var(--cream-100);--ink-soft:rgba(242,237,226,.62);--ink-faint:rgba(242,237,226,.38);
-    --line:rgba(242,237,226,.14);--line-fuerte:rgba(242,237,226,.28);
-    --accent:var(--copper-300);--exito:#6BAE84;--alerta:#E0876B;
-  }
-}
-*{box-sizing:border-box;margin:0;padding:0}
-html{-webkit-text-size-adjust:100%}
-body{
-  background:var(--bg);color:var(--ink);
-  font-family:var(--font-sans);font-size:16px;line-height:1.5;
-  -webkit-font-smoothing:antialiased;
-  min-height:100dvh;
-  padding:0 20px calc(40px + env(safe-area-inset-bottom));
-}
-:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:6px}
-img{display:block;max-width:100%}
-
-.contenedor{width:100%;max-width:620px;margin:0 auto}
-
-/* --- Cabecera --- */
-.top{display:flex;align-items:center;gap:11px;padding:26px 0 30px}
-.top .mark{
-  width:30px;height:30px;flex:0 0 30px;display:grid;place-items:center;
-  background:var(--ink);color:var(--bg);border-radius:4px;
-  font-family:var(--font-display);font-size:19px;line-height:1;padding-bottom:2px;
-}
-.top .nombre{font-family:var(--font-display);font-size:21px;letter-spacing:-.01em;line-height:1.1}
-.top .tag{
-  display:block;font-family:var(--font-mono);font-size:9px;letter-spacing:.18em;
-  text-transform:uppercase;color:var(--ink-soft);margin-top:2px;
-}
-
-/* --- Textos --- */
-h1{font-family:var(--font-display);font-weight:400;font-size:clamp(29px,7.5vw,40px);line-height:1.1;letter-spacing:-.015em}
-.intro{color:var(--ink-soft);margin-top:12px;font-size:15px;max-width:44ch}
-
-/* --- Bloques --- */
-.bloque{margin-top:30px}
-.etiqueta{
-  display:block;font-family:var(--font-mono);font-size:11px;letter-spacing:.12em;
-  text-transform:uppercase;color:var(--ink-soft);margin-bottom:9px;
-}
-input[type=text]{
-  width:100%;padding:15px 16px;font:inherit;color:var(--ink);
-  background:var(--panel);border:1px solid var(--line-fuerte);border-radius:var(--r);
-  transition:border-color .2s,box-shadow .2s;
-}
-input[type=text]::placeholder{color:var(--ink-faint)}
-input[type=text]:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px color-mix(in oklab,var(--accent) 18%,transparent)}
-input[type=text][aria-invalid="true"]{border-color:var(--alerta)}
-
-/* --- Zona de archivos --- */
-.zona{
-  position:relative;display:block;width:100%;
-  border:1.5px dashed var(--line-fuerte);border-radius:var(--r);
-  background:var(--panel);
-  padding:30px 22px;text-align:center;cursor:pointer;
-  transition:border-color .2s var(--ease),background .2s var(--ease),transform .2s var(--ease);
-  -webkit-tap-highlight-color:transparent;
-}
-.zona:hover,.zona:focus-within{border-color:var(--accent)}
-.zona.dentro{border-color:var(--accent);background:color-mix(in oklab,var(--accent) 8%,var(--panel));transform:scale(1.005)}
-.zona input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer}
-.zona .icono{width:34px;height:34px;margin:0 auto 12px;color:var(--accent)}
-.zona .principal{font-size:17px;font-weight:500}
-.zona .secundario{color:var(--ink-soft);font-size:13px;margin-top:5px}
-.solo-escritorio{display:none}
-@media(min-width:760px){.solo-escritorio{display:inline}}
-
-/* --- Lista de archivos --- */
-.lista{margin-top:16px;display:flex;flex-direction:column;gap:9px}
-.fila{
-  display:grid;grid-template-columns:38px 1fr auto;align-items:center;gap:13px;
-  background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:11px 13px;
-}
-.fila .miniatura{
-  width:38px;height:38px;border-radius:8px;background:var(--cream-300);
-  display:grid;place-items:center;overflow:hidden;flex:0 0 38px;color:var(--ink-soft);
-}
-@media (prefers-color-scheme:dark){.fila .miniatura{background:var(--carbon-700)}}
-.fila .miniatura img{width:100%;height:100%;object-fit:cover}
-.fila .miniatura svg{width:17px;height:17px}
-.fila .datos{min-width:0}
-.fila .nom{
-  font-size:14px;font-weight:500;
-  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
-}
-.fila .meta{font-family:var(--font-mono);font-size:11px;color:var(--ink-soft);margin-top:3px}
-.fila .meta.mal{color:var(--alerta)}
-.fila .meta.bien{color:var(--exito)}
-.fila.mal{border-color:color-mix(in oklab,var(--alerta) 45%,var(--line))}
-
-.barra{height:3px;border-radius:99px;background:var(--line);margin-top:7px;overflow:hidden}
-.barra i{display:block;height:100%;width:0;background:var(--accent);border-radius:99px;transition:width .25s linear}
-.barra.bien i{background:var(--exito)}
-.barra.mal i{background:var(--alerta)}
-
-.quitar{
-  width:30px;height:30px;display:grid;place-items:center;border:0;border-radius:8px;
-  background:transparent;color:var(--ink-faint);cursor:pointer;transition:color .2s,background .2s;
-}
-.quitar:hover{color:var(--alerta);background:color-mix(in oklab,var(--alerta) 10%,transparent)}
-.quitar svg{width:15px;height:15px}
-.tick{color:var(--exito);width:19px;height:19px}
-.pct{font-family:var(--font-mono);font-size:11px;color:var(--ink-soft);min-width:38px;text-align:right}
-
-.resumen{
-  display:flex;justify-content:space-between;align-items:baseline;gap:12px;
-  font-family:var(--font-mono);font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;
-  color:var(--ink-soft);margin-top:15px;
-}
-
-/* --- Botones --- */
-.btn{
-  display:inline-flex;align-items:center;justify-content:center;gap:10px;width:100%;
-  padding:17px 24px;border-radius:999px;border:1px solid var(--ink);
-  background:var(--ink);color:var(--bg);
-  font-family:var(--font-mono);font-size:12.5px;letter-spacing:.09em;text-transform:uppercase;font-weight:500;
-  cursor:pointer;transition:transform .3s var(--ease),background .3s var(--ease),opacity .2s;
-  -webkit-tap-highlight-color:transparent;
-}
-.btn:hover:not(:disabled){background:var(--accent);border-color:var(--accent);color:#fff}
-.btn:active:not(:disabled){transform:scale(.98)}
-.btn:disabled{opacity:.4;cursor:not-allowed}
-.btn.suave{background:transparent;color:var(--ink);border-color:var(--line-fuerte)}
-.btn.suave:hover:not(:disabled){background:transparent;border-color:var(--accent);color:var(--accent)}
-.btn svg{width:15px;height:15px;flex:0 0 15px}
-.acciones{margin-top:22px;display:flex;flex-direction:column;gap:11px}
-
-/* --- Avisos --- */
-.aviso{
-  display:flex;gap:11px;align-items:flex-start;
-  border-radius:12px;padding:13px 15px;font-size:14px;margin-top:16px;
-  border:1px solid color-mix(in oklab,var(--alerta) 40%,transparent);
-  background:color-mix(in oklab,var(--alerta) 10%,transparent);
-  color:var(--ink);
-}
-.aviso svg{width:17px;height:17px;flex:0 0 17px;margin-top:2px;color:var(--alerta)}
-.aviso[hidden]{display:none}
-
-/* --- Pantalla final --- */
-.final{text-align:center;padding:34px 0 10px}
-.final .sello{
-  width:64px;height:64px;margin:0 auto 22px;border-radius:50%;
-  display:grid;place-items:center;
-  background:color-mix(in oklab,var(--exito) 15%,transparent);color:var(--exito);
-}
-.final .sello svg{width:30px;height:30px}
-.final h2{font-family:var(--font-display);font-weight:400;font-size:clamp(26px,6.5vw,34px);line-height:1.15}
-.final p{color:var(--ink-soft);margin-top:12px;font-size:15px}
-.final .ruta{
-  font-family:var(--font-mono);font-size:12px;color:var(--ink-soft);
-  background:var(--panel);border:1px solid var(--line);border-radius:9px;
-  padding:9px 13px;margin-top:20px;display:inline-block;word-break:break-all;
-}
-
-.pie{
-  margin-top:44px;padding-top:22px;border-top:1px solid var(--line);
-  font-family:var(--font-mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;
-  color:var(--ink-faint);text-align:center;
-}
-[hidden]{display:none !important}
-@media (prefers-reduced-motion:reduce){*{transition:none !important;animation:none !important}}
-</style>
+<link rel="stylesheet" href="/carga/assets/estilos.css">
 </head>
-<body>
-<div class="contenedor">
 
-  <header class="top">
-    <div class="mark" aria-hidden="true">B</div>
-    <div>
-      <div class="nombre">Boren Studio</div>
-      <span class="tag">Carga de archivos</span>
+<body class="min-h-dvh antialiased">
+
+<noscript>
+  <div class="border-b border-[color-mix(in_oklab,var(--color-velado)_38%,transparent)] bg-[color-mix(in_oklab,var(--color-velado)_9%,transparent)] px-5 py-4 text-center text-sm">
+    Para poder enviar tus archivos necesitas activar JavaScript en tu navegador.
+  </div>
+</noscript>
+
+<div class="mx-auto w-full max-w-[38rem] px-5 pb-[calc(4rem+env(safe-area-inset-bottom))]">
+
+  <!-- ══ Cabecera ══ -->
+  <header class="revelar flex items-center gap-3 pt-7 pb-9">
+    <div class="grid size-8 shrink-0 place-items-center rounded-sm bg-tinta pb-0.5 font-display text-xl leading-none text-papel">B</div>
+    <div class="leading-none">
+      <div class="font-display text-lg tracking-tight">Boren Studio</div>
+      <span class="etiqueta mt-1 block">Recepción de material</span>
     </div>
   </header>
 
   <main>
-    <!-- ============ PASO 1: formulario ============ -->
+    <!-- ══════════ Paso 1 — Formulario ══════════ -->
     <section id="paso-form">
-      <h1>Envía tus archivos</h1>
-      <p class="intro">Fotos y videos de tu negocio, en calidad original. Sin cuentas ni contraseñas: llena el nombre, adjunta y listo.</p>
 
-      <div class="bloque">
-        <label class="etiqueta" for="negocio">Nombre de tu negocio</label>
+      <h1 class="revelar font-display text-[clamp(2.1rem,10vw,3.4rem)] leading-[0.95] tracking-[-0.02em]">
+        Envía tus<br><span class="text-cobre italic">archivos</span>
+      </h1>
+
+      <p class="revelar mt-5 max-w-[38ch] text-[0.95rem] leading-relaxed text-tinta-media">
+        Fotos y videos de tu negocio, en calidad original. Sin cuentas ni contraseñas:
+        escribe tu nombre, adjunta y listo.
+      </p>
+
+      <!-- Ficha técnica, como el encabezado de una hoja de contactos -->
+      <dl class="revelar filete mt-8 grid grid-cols-3 gap-px overflow-hidden bg-[color-mix(in_oklab,var(--color-tinta)_10%,transparent)]">
+        <div class="bg-papel px-1 py-4">
+          <dt class="etiqueta">Por envío</dt>
+          <dd class="mt-1.5 font-display text-xl leading-none">2 GB</dd>
+        </div>
+        <div class="bg-papel px-1 py-4">
+          <dt class="etiqueta">Archivos</dt>
+          <dd class="mt-1.5 font-display text-xl leading-none">20</dd>
+        </div>
+        <div class="bg-papel px-1 py-4">
+          <dt class="etiqueta">Se guardan</dt>
+          <dd class="mt-1.5 font-display text-xl leading-none">10 días</dd>
+        </div>
+      </dl>
+
+      <!-- Nombre del negocio -->
+      <div class="revelar mt-10">
+        <label class="etiqueta mb-2.5 block" for="negocio">01 — Tu negocio</label>
         <input type="text" id="negocio" name="negocio" placeholder="Ej. Hamburguesas Tony"
+               class="campo w-full rounded-none px-4 py-4 text-base"
                autocomplete="organization" maxlength="60" enterkeyhint="done" spellcheck="false">
       </div>
 
-      <div class="bloque">
-        <span class="etiqueta">Tus archivos</span>
-        <label class="zona" id="zona">
-          <input type="file" id="entrada" multiple accept="image/*,video/*" aria-label="Seleccionar fotos y videos">
-          <svg class="icono" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <path d="M12 16V4m0 0L7.5 8.5M12 4l4.5 4.5"/><path d="M3 15v3a3 3 0 0 0 3 3h12a3 3 0 0 0 3-3v-3"/>
+      <!-- Bandeja -->
+      <div class="revelar mt-8">
+        <span class="etiqueta mb-2.5 block">02 — Tu material</span>
+        <label class="bandeja block cursor-pointer px-6 py-9 text-center" id="bandeja">
+          <input type="file" id="entrada" multiple accept="image/*,video/*"
+                 class="absolute inset-0 cursor-pointer opacity-0" aria-label="Seleccionar fotos y videos">
+          <svg class="mx-auto mb-3.5 size-8 text-cobre" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M12 16.5V4m0 0L7.5 8.5M12 4l4.5 4.5"/><path d="M3.5 15v3.5A2 2 0 0 0 5.5 20.5h13a2 2 0 0 0 2-2V15"/>
           </svg>
-          <span class="principal">Selecciona fotos y videos</span>
-          <span class="secundario">
-            <span class="solo-escritorio">o arrástralos aquí · </span>Hasta 20 archivos · 2 GB cada uno
+          <span class="block font-display text-lg leading-none">Elige fotos y videos</span>
+          <span class="etiqueta mt-2.5 block normal-case tracking-[0.04em]">
+            <span class="hidden sm:inline">o arrástralos aquí — </span>toca para abrir tu galería
           </span>
         </label>
       </div>
 
-      <div class="lista" id="lista"></div>
-      <div class="resumen" id="resumen" hidden><span id="resumen-n"></span><span id="resumen-peso"></span></div>
+      <!-- Placas -->
+      <div class="mt-5 flex flex-col gap-2" id="lista"></div>
 
-      <div class="aviso" id="aviso" hidden role="alert">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true">
+      <!-- Totales -->
+      <div class="filete mt-5 flex items-baseline justify-between gap-4 pt-3.5" id="resumen" hidden>
+        <span class="etiqueta" id="resumen-n"></span>
+        <span class="font-mono text-xs" id="resumen-peso"></span>
+      </div>
+
+      <!-- Aviso -->
+      <div id="aviso" hidden role="alert"
+           class="mt-5 flex items-start gap-3 border border-[color-mix(in_oklab,var(--color-velado)_38%,transparent)] bg-[color-mix(in_oklab,var(--color-velado)_9%,transparent)] px-4 py-3.5 text-sm leading-relaxed">
+        <svg class="mt-0.5 size-4 shrink-0 text-velado" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true">
           <circle cx="12" cy="12" r="9"/><path d="M12 7.5v5.5M12 16.5h.01"/>
         </svg>
         <span id="aviso-texto"></span>
       </div>
 
-      <div class="acciones">
-        <button class="btn" id="btn-subir" type="button" disabled>
-          <span id="btn-texto">Subir archivos</span>
+      <!-- Acciones -->
+      <div class="revelar mt-7 flex flex-col gap-2.5">
+        <button class="boton w-full px-6 py-4.5" id="btn-subir" type="button" disabled>
+          <span id="btn-texto">Enviar material</span>
         </button>
-        <button class="btn suave" id="btn-reintentar" type="button" hidden>Reintentar los que fallaron</button>
+        <button class="boton boton-tenue w-full px-6 py-4.5" id="btn-reintentar" type="button" hidden>
+          Reintentar los que fallaron
+        </button>
+      </div>
+
+      <!-- Medidor de espacio del periodo -->
+      <div class="revelar mt-10" id="cuota" hidden>
+        <div class="flex items-baseline justify-between gap-3">
+          <span class="etiqueta">Espacio del periodo</span>
+          <span class="font-mono text-[0.7rem] text-tinta-media" id="cuota-texto"></span>
+        </div>
+        <div class="medidor mt-2" id="cuota-barra"><i style="width:0%"></i></div>
       </div>
     </section>
 
-    <!-- ============ PASO 2: confirmación ============ -->
-    <section id="paso-final" hidden>
-      <div class="final">
-        <div class="sello">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <path d="M4 12.5l5.5 5.5L20 7"/>
-          </svg>
-        </div>
-        <h2 id="final-titulo">Listo</h2>
-        <p id="final-texto"></p>
-        <div class="ruta" id="final-ruta"></div>
-        <div class="acciones">
-          <button class="btn suave" id="btn-otra" type="button">Subir más archivos</button>
-        </div>
+    <!-- ══════════ Paso 2 — Confirmación ══════════ -->
+    <section id="paso-final" hidden class="pt-6 text-center">
+      <div class="mx-auto mb-8 grid size-20 place-items-center rounded-full border border-[color-mix(in_oklab,var(--color-fijado)_40%,transparent)] bg-[color-mix(in_oklab,var(--color-fijado)_11%,transparent)]"
+           id="sello">
+        <svg class="size-9 text-fijado" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+             stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M4 12.5l5.5 5.5L20 7"/>
+        </svg>
       </div>
+
+      <h2 class="font-display text-[clamp(1.7rem,7.5vw,2.5rem)] leading-[1.05] tracking-[-0.015em]" id="final-titulo">Listo</h2>
+      <p class="mx-auto mt-4 max-w-[34ch] text-[0.95rem] leading-relaxed text-tinta-media" id="final-texto"></p>
+
+      <div class="filete mx-auto mt-9 max-w-sm pt-5">
+        <span class="etiqueta">Guardado en</span>
+        <p class="mt-2 font-mono text-xs break-all text-tinta-media" id="final-ruta"></p>
+      </div>
+
+      <button class="boton boton-tenue mt-8 w-full px-6 py-4.5" id="btn-otra" type="button">Enviar más material</button>
     </section>
   </main>
 
-  <p class="pie">Boren Studio · Los archivos se conservan 10 días</p>
+  <p class="etiqueta filete mt-14 pt-6 text-center normal-case tracking-[0.05em]">
+    Boren Studio — el material se conserva 10 días
+  </p>
 </div>
 
-<script>
-(function(){
-  "use strict";
+<script type="module">
+import { animate } from "/carga/assets/motion.js";
 
-  var MAX_ARCHIVOS = 20;
-  var MAX_BYTES    = 2 * 1024 * 1024 * 1024;  // 2 GB
-  var PARALELO     = 3;                        // subidas simultáneas
-  var REINTENTOS   = 2;                        // reintentos por archivo
+const raiz = document.documentElement;
+raiz.classList.remove("sin-js");
 
-  var $ = function(id){ return document.getElementById(id); };
+const $ = (id) => document.getElementById(id);
+const reducido = matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  var items = [];        // { id, file, estado, pct, msg, url, clave, xhr }
-  var carpeta = null;    // prefijo de la tanda, para que los reintentos caigan junto
-  var ocupado = false;
-  var contador = 0;
+/* ── Revelado de entrada: una sola secuencia escalonada al cargar ────────── */
+if (reducido) {
+  raiz.classList.add("animado");
+} else {
+  document.querySelectorAll(".revelar").forEach((el, i) => {
+    animate(el, { opacity: [0, 1], transform: ["translateY(12px)", "translateY(0px)"] },
+      { duration: 0.55, delay: 0.05 + i * 0.06, easing: [0.22, 1, 0.36, 1] });
+  });
+  // Si algo falla, que nada quede invisible.
+  setTimeout(() => raiz.classList.add("animado"), 1600);
+}
 
-  // ---------- utilidades ----------
-  function peso(b){
-    if(!b) return "0 B";
-    var u = ["B","KB","MB","GB"], i = Math.min(Math.floor(Math.log(b)/Math.log(1024)), 3);
-    return (b/Math.pow(1024,i)).toFixed(i === 0 ? 0 : 1) + " " + u[i];
-  }
-  function esImagen(f){ return /^image\//.test(f.type); }
-  function esVideo(f){ return /^video\//.test(f.type); }
+/* ── Constantes (deben coincidir con functions/api/firmar.js) ────────────── */
+const GB = 1024 ** 3;
+const MAX_ARCHIVOS = 20;
+const MAX_BYTES_ARCHIVO = 2 * GB;
+const MAX_BYTES_TANDA = 2 * GB;   // tope de la carga completa
+const PARALELO = 3;               // subidas simultáneas
+const REINTENTOS = 2;             // reintentos por archivo
 
-  function mostrarAviso(texto){
-    $("aviso-texto").textContent = texto;
-    $("aviso").hidden = false;
-  }
-  function limpiarAviso(){ $("aviso").hidden = true; }
+let items = [];
+let carpeta = null;
+let ocupado = false;
+let contador = 0;
+let disponiblePeriodo = null;     // bytes que quedan en el periodo
 
-  // ---------- selección de archivos ----------
-  function agregar(archivos){
-    limpiarAviso();
-    var rechazados = [];
+/* ── Utilidades ──────────────────────────────────────────────────────────── */
+const peso = (b) => {
+  if (!b) return "0 B";
+  const u = ["B", "KB", "MB", "GB"];
+  const i = Math.min(Math.floor(Math.log(b) / Math.log(1024)), 3);
+  return `${(b / 1024 ** i).toFixed(i === 0 ? 0 : 1)} ${u[i]}`;
+};
+const total = () => items.reduce((s, it) => s + it.file.size, 0);
+const esImagen = (f) => /^image\//.test(f.type);
+const esVideo = (f) => /^video\//.test(f.type);
+const dosDigitos = (n) => String(n).padStart(2, "0");
 
-    for(var i = 0; i < archivos.length; i++){
-      var f = archivos[i];
+function mostrarAviso(texto) {
+  $("aviso-texto").textContent = texto;
+  $("aviso").hidden = false;
+  if (!reducido) animate($("aviso"), { opacity: [0, 1] }, { duration: 0.25 });
+}
+const limpiarAviso = () => { $("aviso").hidden = true; };
 
-      if(items.length >= MAX_ARCHIVOS){
-        rechazados.push("solo caben " + MAX_ARCHIVOS + " archivos por envío");
-        break;
-      }
-      if(f.size > MAX_BYTES){
-        rechazados.push('"' + f.name + '" pesa ' + peso(f.size) + " (el límite es 2 GB)");
-        continue;
-      }
-      if(f.size === 0){
-        rechazados.push('"' + f.name + '" está vacío');
-        continue;
-      }
-      // Mismo nombre y mismo peso = el usuario lo eligió dos veces.
-      var repetido = items.some(function(it){
-        return it.file.name === f.name && it.file.size === f.size;
-      });
-      if(repetido) continue;
+/* ── Espacio disponible del periodo ──────────────────────────────────────── */
+async function cargarCuota() {
+  try {
+    const r = await fetch("/api/firmar", { cache: "no-store" });
+    const d = await r.json();
+    if (!d.ok) return;
+    disponiblePeriodo = d.disponible;
 
-      items.push({ id: ++contador, file: f, estado: "listo", pct: 0, msg: peso(f.size) });
+    const tope = d.usado + d.disponible;
+    const pct = tope > 0 ? Math.min(100, (d.usado / tope) * 100) : 0;
+    const lleno = d.disponible <= 0;
+
+    $("cuota-texto").textContent = lleno
+      ? "Sin espacio en este periodo"
+      : `${peso(d.disponible)} disponibles`;
+    $("cuota-barra").dataset.lleno = lleno ? "si" : "no";
+    $("cuota-barra").firstElementChild.style.width = `${pct}%`;
+    $("cuota").hidden = false;
+
+    if (lleno) {
+      mostrarAviso("Por ahora no hay espacio disponible. Escríbele a Boren Studio para que te abra lugar.");
+    }
+  } catch { /* si no se puede leer, no estorbamos: el servidor valida igual */ }
+}
+
+/* ── Selección de archivos ───────────────────────────────────────────────── */
+function agregar(archivos) {
+  limpiarAviso();
+  const rechazados = [];
+
+  for (const f of archivos) {
+    if (items.length >= MAX_ARCHIVOS) {
+      rechazados.push(`solo caben ${MAX_ARCHIVOS} archivos por envío`);
+      break;
+    }
+    if (f.size > MAX_BYTES_ARCHIVO) {
+      rechazados.push(`"${f.name}" pesa ${peso(f.size)} y el máximo es 2 GB`);
+      continue;
+    }
+    if (f.size === 0) { rechazados.push(`"${f.name}" está vacío`); continue; }
+    if (items.some((it) => it.file.name === f.name && it.file.size === f.size)) continue;
+
+    if (total() + f.size > MAX_BYTES_TANDA) {
+      rechazados.push(`"${f.name}" no cabe: el envío completo no puede pasar de 2 GB`);
+      continue;
+    }
+    if (disponiblePeriodo !== null && total() + f.size > disponiblePeriodo) {
+      rechazados.push(`"${f.name}" no cabe en el espacio que queda este periodo`);
+      continue;
     }
 
-    if(rechazados.length) mostrarAviso("No se agregó: " + rechazados.join("; ") + ".");
-    pintar();
+    items.push({ id: ++contador, file: f, estado: "listo", pct: 0, msg: peso(f.size) });
   }
 
-  function quitar(id){
-    items = items.filter(function(it){ return it.id !== id; });
-    limpiarAviso();
-    pintar();
-  }
-
-  // ---------- pintado ----------
-  var ICONO_VIDEO = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 7.5A2.5 2.5 0 0 1 5.5 5h7A2.5 2.5 0 0 1 15 7.5v9A2.5 2.5 0 0 1 12.5 19h-7A2.5 2.5 0 0 1 3 16.5z"/><path d="M15 10.5l5-3v9l-5-3z"/></svg>';
-  var ICONO_ARCHIVO = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/></svg>';
-  var ICONO_X = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>';
-  var ICONO_TICK = '<svg class="tick" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5l5.5 5.5L20 7"/></svg>';
-
-  function pintar(){
-    var lista = $("lista");
-    lista.textContent = "";
-
-    items.forEach(function(it){
-      var fila = document.createElement("div");
-      fila.className = "fila" + (it.estado === "error" ? " mal" : "");
-      fila.dataset.id = it.id;
-
-      // Miniatura
-      var mini = document.createElement("div");
-      mini.className = "miniatura";
-      if(esImagen(it.file)){
-        var img = document.createElement("img");
-        img.alt = "";
-        img.loading = "lazy";
-        img.src = URL.createObjectURL(it.file);
-        img.onload = function(){ URL.revokeObjectURL(img.src); };
-        mini.appendChild(img);
-      } else {
-        mini.innerHTML = esVideo(it.file) ? ICONO_VIDEO : ICONO_ARCHIVO;
-      }
-
-      // Nombre + estado
-      var datos = document.createElement("div");
-      datos.className = "datos";
-
-      var nom = document.createElement("div");
-      nom.className = "nom";
-      nom.textContent = it.file.name;
-      nom.title = it.file.name;
-      datos.appendChild(nom);
-
-      var meta = document.createElement("div");
-      meta.className = "meta" + (it.estado === "error" ? " mal" : it.estado === "ok" ? " bien" : "");
-      meta.textContent = it.msg;
-      datos.appendChild(meta);
-
-      if(it.estado === "subiendo" || it.estado === "ok" || it.estado === "error"){
-        var barra = document.createElement("div");
-        barra.className = "barra" + (it.estado === "ok" ? " bien" : it.estado === "error" ? " mal" : "");
-        var relleno = document.createElement("i");
-        relleno.style.width = (it.estado === "ok" ? 100 : Math.round(it.pct * 100)) + "%";
-        barra.appendChild(relleno);
-        datos.appendChild(barra);
-      }
-
-      // Acción a la derecha
-      var derecha;
-      if(it.estado === "ok"){
-        derecha = document.createElement("span");
-        derecha.innerHTML = ICONO_TICK;
-      } else if(it.estado === "subiendo"){
-        derecha = document.createElement("span");
-        derecha.className = "pct";
-        derecha.textContent = Math.round(it.pct * 100) + "%";
-      } else if(!ocupado){
-        derecha = document.createElement("button");
-        derecha.type = "button";
-        derecha.className = "quitar";
-        derecha.setAttribute("aria-label", "Quitar " + it.file.name);
-        derecha.innerHTML = ICONO_X;
-        derecha.addEventListener("click", function(){ quitar(it.id); });
-      } else {
-        derecha = document.createElement("span");
-      }
-
-      fila.appendChild(mini);
-      fila.appendChild(datos);
-      fila.appendChild(derecha);
-      lista.appendChild(fila);
-    });
-
-    // Resumen
-    var total = items.reduce(function(s, it){ return s + it.file.size; }, 0);
-    $("resumen").hidden = items.length === 0;
-    $("resumen-n").textContent = items.length + (items.length === 1 ? " archivo" : " archivos");
-    $("resumen-peso").textContent = peso(total);
-
-    actualizarBoton();
-  }
-
-  /** Repinta una sola fila: en una tanda de 20 archivos, redibujar todo por
-      cada evento de progreso hace saltar la lista en el celular. */
-  function pintarFila(it){
-    var fila = document.querySelector('.fila[data-id="' + it.id + '"]');
-    if(!fila) return pintar();
-
-    var relleno = fila.querySelector(".barra i");
-    if(relleno) relleno.style.width = Math.round(it.pct * 100) + "%";
-
-    var pct = fila.querySelector(".pct");
-    if(pct) pct.textContent = Math.round(it.pct * 100) + "%";
-
-    var meta = fila.querySelector(".meta");
-    if(meta) meta.textContent = it.msg;
-  }
-
-  function actualizarBoton(){
-    var negocio = $("negocio").value.trim();
-    $("btn-subir").disabled = ocupado || items.length === 0 || negocio.length < 2;
-  }
-
-  // ---------- subida ----------
-  function firmar(pendientes){
-    return fetch("/api/firmar", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        negocio: $("negocio").value.trim(),
-        carpeta: carpeta || undefined,
-        archivos: pendientes.map(function(it){
-          return { nombre: it.file.name, tamano: it.file.size, tipo: it.file.type || "" };
-        })
-      })
-    }).then(function(r){
-      return r.json().catch(function(){ return {}; }).then(function(d){
-        if(!r.ok || !d.ok) throw new Error(d.error || "No se pudieron preparar las subidas.");
-        return d;
-      });
-    });
-  }
-
-  /** PUT directo a R2 con XMLHttpRequest: fetch no reporta progreso de subida. */
-  function subirUno(it){
-    return new Promise(function(resolver, rechazar){
-      var xhr = new XMLHttpRequest();
-      it.xhr = xhr;
-      xhr.open("PUT", it.url, true);
-      if(it.file.type) xhr.setRequestHeader("Content-Type", it.file.type);
-
-      xhr.upload.onprogress = function(e){
-        if(e.lengthComputable){
-          it.pct = e.loaded / e.total;
-          it.msg = peso(e.loaded) + " de " + peso(it.file.size);
-          pintarFila(it);
-        }
-      };
-      xhr.onload = function(){
-        if(xhr.status >= 200 && xhr.status < 300) resolver();
-        else{
-          var err = new Error("HTTP " + xhr.status);
-          err.estado = xhr.status;
-          rechazar(err);
-        }
-      };
-      xhr.onerror   = function(){ rechazar(new Error("red")); };
-      xhr.ontimeout = function(){ rechazar(new Error("tiempo")); };
-      xhr.onabort   = function(){ rechazar(new Error("cancelado")); };
-      xhr.send(it.file);
-    });
-  }
-
-  function esperar(ms){ return new Promise(function(r){ setTimeout(r, ms); }); }
-
-  function conReintentos(it){
-    it.estado = "subiendo";
-    it.pct = 0;
-    it.msg = "Subiendo…";
-    pintar();
-
-    var intento = 0;
-    function probar(){
-      return subirUno(it).then(function(){
-        it.estado = "ok";
-        it.pct = 1;
-        it.msg = "Enviado · " + peso(it.file.size);
-        pintar();
-      }).catch(function(e){
-        intento++;
-        if(intento <= REINTENTOS && e.estado !== 403){
-          it.msg = "Reintentando (" + intento + " de " + REINTENTOS + ")…";
-          it.pct = 0;
-          pintarFila(it);
-          return esperar(1200 * intento).then(probar);
-        }
-        it.estado = "error";
-        it.msg =
-          e.estado === 403 ? "El enlace venció. Vuelve a intentar." :
-          e.message === "red" ? "Se cortó la conexión." :
-          e.message === "tiempo" ? "Tardó demasiado." :
-          "No se pudo enviar (" + e.message + ").";
-        pintar();
-      });
-    }
-    return probar();
-  }
-
-  /** Cola con tope de N simultáneos: en 4G lento, 20 PUT a la vez se ahogan. */
-  function cola(lista, limite, tarea){
-    var i = 0;
-    function trabajador(){
-      if(i >= lista.length) return Promise.resolve();
-      return tarea(lista[i++]).then(trabajador);
-    }
-    var hilos = [];
-    for(var k = 0; k < Math.min(limite, lista.length); k++) hilos.push(trabajador());
-    return Promise.all(hilos);
-  }
-
-  function subir(soloFallidos){
-    if(ocupado) return;
-
-    var negocio = $("negocio").value.trim();
-    if(negocio.length < 2){
-      $("negocio").setAttribute("aria-invalid", "true");
-      $("negocio").focus();
-      mostrarAviso("Escribe el nombre de tu negocio para continuar.");
-      return;
-    }
-    $("negocio").removeAttribute("aria-invalid");
-
-    if(navigator.onLine === false){
-      mostrarAviso("No hay conexión a internet. Revisa tu señal y vuelve a intentar.");
-      return;
-    }
-
-    var pendientes = soloFallidos
-      ? items.filter(function(it){ return it.estado === "error"; })
-      : items.slice();
-    if(pendientes.length === 0) return;
-
-    ocupado = true;
-    limpiarAviso();
-    $("btn-reintentar").hidden = true;
-    $("negocio").disabled = true;
-    $("entrada").disabled = true;
-    $("btn-texto").textContent = "Subiendo…";
-    pintar();
-
-    firmar(pendientes).then(function(datos){
-      carpeta = datos.carpeta;
-      // El servidor devuelve las URLs en el mismo orden en que las pedimos.
-      pendientes.forEach(function(it, k){
-        it.url = datos.archivos[k].url;
-        it.clave = datos.archivos[k].clave;
-      });
-      return cola(pendientes, PARALELO, conReintentos);
-    }).then(function(){
-      var ok = items.filter(function(it){ return it.estado === "ok"; });
-      var mal = items.filter(function(it){ return it.estado === "error"; });
-
-      ocupado = false;
-      $("negocio").disabled = false;
-      $("entrada").disabled = false;
-      $("btn-texto").textContent = "Subir archivos";
-
-      if(mal.length === 0){
-        finalizar(ok.length);
-      } else {
-        pintar();
-        mostrarAviso(
-          mal.length + (mal.length === 1 ? " archivo no se pudo enviar." : " archivos no se pudieron enviar.") +
-          (ok.length ? " Los otros " + ok.length + " ya están a salvo." : "")
-        );
-        $("btn-reintentar").hidden = false;
-        $("btn-subir").hidden = true;
-      }
-    }).catch(function(e){
-      ocupado = false;
-      $("negocio").disabled = false;
-      $("entrada").disabled = false;
-      $("btn-texto").textContent = "Subir archivos";
-      pintar();
-      mostrarAviso(e.message || "Algo salió mal. Vuelve a intentar.");
-    });
-  }
-
-  function finalizar(n){
-    $("final-titulo").textContent = "Listo, recibimos tus " + n + (n === 1 ? " archivo" : " archivos");
-    $("final-texto").textContent = "Ya los tenemos en calidad original. No hace falta que hagas nada más — te escribimos en cuanto los revisemos.";
-    $("final-ruta").textContent = carpeta || "";
-    $("final-ruta").hidden = !carpeta;
-    $("paso-form").hidden = true;
-    $("paso-final").hidden = false;
-    window.scrollTo(0, 0);
-  }
-
-  function reiniciar(){
-    items = [];
-    carpeta = null;
-    contador = 0;
-    $("entrada").value = "";
-    limpiarAviso();
-    $("btn-subir").hidden = false;
-    $("btn-reintentar").hidden = true;
-    $("paso-final").hidden = true;
-    $("paso-form").hidden = false;
-    pintar();
-    window.scrollTo(0, 0);
-  }
-
-  // ---------- eventos ----------
-  $("entrada").addEventListener("change", function(e){
-    agregar(e.target.files);
-    e.target.value = ""; // permite volver a elegir el mismo archivo tras quitarlo
-  });
-
-  $("negocio").addEventListener("input", function(){
-    $("negocio").removeAttribute("aria-invalid");
-    actualizarBoton();
-  });
-
-  $("btn-subir").addEventListener("click", function(){ subir(false); });
-  $("btn-reintentar").addEventListener("click", function(){ subir(true); });
-  $("btn-otra").addEventListener("click", reiniciar);
-
-  // Arrastrar y soltar (escritorio)
-  var zona = $("zona");
-  ["dragenter","dragover"].forEach(function(ev){
-    zona.addEventListener(ev, function(e){
-      e.preventDefault();
-      if(!ocupado) zona.classList.add("dentro");
-    });
-  });
-  ["dragleave","drop"].forEach(function(ev){
-    zona.addEventListener(ev, function(e){
-      e.preventDefault();
-      zona.classList.remove("dentro");
-    });
-  });
-  zona.addEventListener("drop", function(e){
-    if(ocupado) return;
-    if(e.dataTransfer && e.dataTransfer.files.length) agregar(e.dataTransfer.files);
-  });
-  // Fuera de la zona, soltar un archivo no debe navegar hacia él.
-  window.addEventListener("dragover", function(e){ e.preventDefault(); });
-  window.addEventListener("drop", function(e){ e.preventDefault(); });
-
-  window.addEventListener("offline", function(){
-    if(ocupado) mostrarAviso("Se perdió la conexión. Reintentamos solos en cuanto vuelva.");
-  });
-
-  // No dejar que cierren la pestaña a media subida.
-  window.addEventListener("beforeunload", function(e){
-    if(ocupado){ e.preventDefault(); e.returnValue = ""; }
-  });
-
+  if (rechazados.length) mostrarAviso(`No se agregó: ${rechazados.join("; ")}.`);
   pintar();
-})();
+}
+
+function quitar(id) {
+  items = items.filter((it) => it.id !== id);
+  limpiarAviso();
+  pintar();
+}
+
+/* ── Pintado ─────────────────────────────────────────────────────────────── */
+const SVG_VIDEO = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" class="size-4"><path d="M3 7.5A2.5 2.5 0 0 1 5.5 5h7A2.5 2.5 0 0 1 15 7.5v9A2.5 2.5 0 0 1 12.5 19h-7A2.5 2.5 0 0 1 3 16.5z"/><path d="M15 10.5l5-3v9l-5-3z"/></svg>';
+const SVG_DOC = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" class="size-4"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/></svg>';
+const SVG_X = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" class="size-3.5"><path d="M6 6l12 12M18 6L6 18"/></svg>';
+const SVG_TICK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" class="size-4 text-fijado"><path d="M4 12.5l5.5 5.5L20 7"/></svg>';
+
+const ESTADO_PLACA = { listo: "listo", subiendo: "subiendo", ok: "fijada", error: "velada" };
+
+function pintar() {
+  const lista = $("lista");
+  lista.textContent = "";
+
+  items.forEach((it, indice) => {
+    const fila = document.createElement("div");
+    fila.className = "placa grid grid-cols-[1.6rem_2.5rem_1fr_auto] items-center gap-3 px-3 py-2.5";
+    fila.dataset.id = it.id;
+    fila.dataset.estado = ESTADO_PLACA[it.estado];
+
+    // Número de placa
+    const num = document.createElement("span");
+    num.className = "font-mono text-[0.65rem] text-tinta-tenue";
+    num.textContent = dosDigitos(indice + 1);
+
+    // Miniatura
+    const mini = document.createElement("div");
+    mini.className = "grid size-10 shrink-0 place-items-center overflow-hidden bg-papel-hondo text-tinta-tenue";
+    if (esImagen(it.file)) {
+      const img = document.createElement("img");
+      img.alt = "";
+      img.loading = "lazy";
+      img.decoding = "async";
+      img.className = "size-full object-cover";
+      img.src = URL.createObjectURL(it.file);
+      img.onload = () => URL.revokeObjectURL(img.src);
+      mini.appendChild(img);
+    } else {
+      mini.innerHTML = esVideo(it.file) ? SVG_VIDEO : SVG_DOC;
+    }
+
+    // Datos
+    const datos = document.createElement("div");
+    datos.className = "min-w-0";
+
+    const nom = document.createElement("div");
+    nom.className = "truncate text-[0.82rem] leading-tight";
+    nom.textContent = it.file.name;
+    nom.title = it.file.name;
+    datos.appendChild(nom);
+
+    const meta = document.createElement("div");
+    meta.className = "mt-1 font-mono text-[0.65rem] " +
+      (it.estado === "error" ? "text-velado" : it.estado === "ok" ? "text-fijado" : "text-tinta-tenue");
+    meta.textContent = it.msg;
+    datos.appendChild(meta);
+
+    if (it.estado !== "listo") {
+      const tinta = document.createElement("div");
+      tinta.className = "tinta mt-2";
+      tinta.dataset.estado = ESTADO_PLACA[it.estado];
+      const relleno = document.createElement("i");
+      relleno.style.width = `${it.estado === "ok" ? 100 : Math.round(it.pct * 100)}%`;
+      tinta.appendChild(relleno);
+      datos.appendChild(tinta);
+    }
+
+    // Acción
+    let der;
+    if (it.estado === "ok") {
+      der = document.createElement("span");
+      der.innerHTML = SVG_TICK;
+    } else if (it.estado === "subiendo") {
+      der = document.createElement("span");
+      der.className = "font-mono text-[0.65rem] text-tinta-media w-9 text-right";
+      der.textContent = `${Math.round(it.pct * 100)}%`;
+    } else if (!ocupado) {
+      der = document.createElement("button");
+      der.type = "button";
+      der.className = "grid size-7 place-items-center text-tinta-tenue transition-colors hover:text-velado";
+      der.setAttribute("aria-label", `Quitar ${it.file.name}`);
+      der.innerHTML = SVG_X;
+      der.addEventListener("click", () => quitar(it.id));
+    } else {
+      der = document.createElement("span");
+    }
+
+    fila.append(num, mini, datos, der);
+    lista.appendChild(fila);
+
+    if (!reducido && it.estado === "listo") {
+      animate(fila, { opacity: [0, 1], transform: ["translateY(6px)", "translateY(0px)"] },
+        { duration: 0.3, easing: [0.22, 1, 0.36, 1] });
+    }
+  });
+
+  const t = total();
+  $("resumen").hidden = items.length === 0;
+  $("resumen-n").textContent = `${items.length} ${items.length === 1 ? "archivo" : "archivos"}`;
+  $("resumen-peso").textContent = `${peso(t)} / 2 GB`;
+
+  actualizarBoton();
+}
+
+/** Repinta una sola placa: redibujar las 20 en cada evento de progreso
+    hace saltar la lista en el celular. */
+function pintarFila(it) {
+  const fila = document.querySelector(`.placa[data-id="${it.id}"]`);
+  if (!fila) return pintar();
+  const relleno = fila.querySelector(".tinta > i");
+  if (relleno) relleno.style.width = `${Math.round(it.pct * 100)}%`;
+  const pct = fila.querySelector(".w-9");
+  if (pct) pct.textContent = `${Math.round(it.pct * 100)}%`;
+  const meta = fila.querySelector(".font-mono");
+  if (meta) meta.textContent = it.msg;
+}
+
+function actualizarBoton() {
+  $("btn-subir").disabled = ocupado || items.length === 0 || $("negocio").value.trim().length < 2;
+}
+
+/* ── Subida ──────────────────────────────────────────────────────────────── */
+async function firmar(pendientes) {
+  const r = await fetch("/api/firmar", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      negocio: $("negocio").value.trim(),
+      carpeta: carpeta || undefined,
+      archivos: pendientes.map((it) => ({
+        nombre: it.file.name, tamano: it.file.size, tipo: it.file.type || "",
+      })),
+    }),
+  });
+  const d = await r.json().catch(() => ({}));
+  if (!r.ok || !d.ok) throw new Error(d.error || "No se pudieron preparar las subidas.");
+  return d;
+}
+
+/** PUT directo a R2. XMLHttpRequest y no fetch: fetch no reporta progreso de subida. */
+function subirUno(it) {
+  return new Promise((resolver, rechazar) => {
+    const xhr = new XMLHttpRequest();
+    it.xhr = xhr;
+    xhr.open("PUT", it.url, true);
+    if (it.file.type) xhr.setRequestHeader("Content-Type", it.file.type);
+
+    xhr.upload.onprogress = (e) => {
+      if (!e.lengthComputable) return;
+      it.pct = e.loaded / e.total;
+      it.msg = `${peso(e.loaded)} de ${peso(it.file.size)}`;
+      pintarFila(it);
+    };
+    xhr.onload = () => {
+      if (xhr.status >= 200 && xhr.status < 300) return resolver();
+      const err = new Error(`HTTP ${xhr.status}`);
+      err.estado = xhr.status;
+      rechazar(err);
+    };
+    xhr.onerror = () => rechazar(new Error("red"));
+    xhr.ontimeout = () => rechazar(new Error("tiempo"));
+    xhr.onabort = () => rechazar(new Error("cancelado"));
+    xhr.send(it.file);
+  });
+}
+
+const esperar = (ms) => new Promise((r) => setTimeout(r, ms));
+
+async function conReintentos(it) {
+  it.estado = "subiendo"; it.pct = 0; it.msg = "Subiendo…";
+  pintar();
+
+  for (let intento = 0; intento <= REINTENTOS; intento++) {
+    try {
+      await subirUno(it);
+      it.estado = "ok"; it.pct = 1; it.msg = `Recibido — ${peso(it.file.size)}`;
+      pintar();
+      return;
+    } catch (e) {
+      const ultimo = intento === REINTENTOS || e.estado === 403;
+      if (!ultimo) {
+        it.msg = `Reintentando (${intento + 1} de ${REINTENTOS})…`;
+        it.pct = 0;
+        pintarFila(it);
+        await esperar(1200 * (intento + 1));
+        continue;
+      }
+      it.estado = "error";
+      it.msg =
+        e.estado === 403 ? "El enlace venció. Vuelve a intentar." :
+        e.message === "red" ? "Se cortó la conexión." :
+        e.message === "tiempo" ? "Tardó demasiado." :
+        `No se pudo enviar (${e.message}).`;
+      pintar();
+      return;
+    }
+  }
+}
+
+/** Cola con tope de N simultáneos: en 4G lento, 20 PUT a la vez se ahogan. */
+async function cola(lista, limite, tarea) {
+  let i = 0;
+  const trabajador = async () => { while (i < lista.length) await tarea(lista[i++]); };
+  await Promise.all(Array.from({ length: Math.min(limite, lista.length) }, trabajador));
+}
+
+async function subir(soloFallidos) {
+  if (ocupado) return;
+
+  const negocio = $("negocio").value.trim();
+  if (negocio.length < 2) {
+    $("negocio").setAttribute("aria-invalid", "true");
+    $("negocio").focus();
+    mostrarAviso("Escribe el nombre de tu negocio para continuar.");
+    return;
+  }
+  $("negocio").removeAttribute("aria-invalid");
+
+  if (navigator.onLine === false) {
+    mostrarAviso("No hay conexión a internet. Revisa tu señal y vuelve a intentar.");
+    return;
+  }
+
+  const pendientes = soloFallidos ? items.filter((it) => it.estado === "error") : [...items];
+  if (!pendientes.length) return;
+
+  ocupado = true;
+  limpiarAviso();
+  $("btn-reintentar").hidden = true;
+  $("negocio").disabled = true;
+  $("entrada").disabled = true;
+  $("btn-texto").textContent = "Enviando…";
+  pintar();
+
+  try {
+    const datos = await firmar(pendientes);
+    carpeta = datos.carpeta;
+    // El servidor devuelve las URLs en el mismo orden en que las pedimos.
+    pendientes.forEach((it, k) => {
+      it.url = datos.archivos[k].url;
+      it.clave = datos.archivos[k].clave;
+    });
+    if (datos.cuota) disponiblePeriodo = datos.cuota.disponible;
+
+    await cola(pendientes, PARALELO, conReintentos);
+
+    const ok = items.filter((it) => it.estado === "ok");
+    const mal = items.filter((it) => it.estado === "error");
+
+    restaurarControles();
+
+    if (!mal.length) {
+      finalizar(ok.length);
+    } else {
+      pintar();
+      mostrarAviso(
+        `${mal.length} ${mal.length === 1 ? "archivo no se pudo enviar" : "archivos no se pudieron enviar"}.` +
+        (ok.length ? ` Los otros ${ok.length} ya están a salvo.` : "")
+      );
+      $("btn-reintentar").hidden = false;
+      $("btn-subir").hidden = true;
+    }
+  } catch (e) {
+    restaurarControles();
+    pintar();
+    mostrarAviso(e.message || "Algo salió mal. Vuelve a intentar.");
+    cargarCuota();
+  }
+}
+
+function restaurarControles() {
+  ocupado = false;
+  $("negocio").disabled = false;
+  $("entrada").disabled = false;
+  $("btn-texto").textContent = "Enviar material";
+}
+
+function finalizar(n) {
+  $("final-titulo").textContent = `Listo, recibimos tus ${n} ${n === 1 ? "archivo" : "archivos"}`;
+  $("final-texto").textContent =
+    "Ya los tenemos en calidad original. No hace falta que hagas nada más — te escribimos en cuanto los revisemos.";
+  $("final-ruta").textContent = carpeta || "";
+  $("paso-form").hidden = true;
+  $("paso-final").hidden = false;
+  window.scrollTo(0, 0);
+
+  if (!reducido) {
+    animate($("sello"), { transform: ["scale(0.7)", "scale(1)"], opacity: [0, 1] },
+      { duration: 0.5, easing: [0.34, 1.56, 0.64, 1] });
+    $("paso-final").querySelectorAll("h2, p, .filete, button").forEach((el, i) => {
+      animate(el, { opacity: [0, 1], transform: ["translateY(10px)", "translateY(0px)"] },
+        { duration: 0.45, delay: 0.15 + i * 0.07, easing: [0.22, 1, 0.36, 1] });
+    });
+  }
+}
+
+function reiniciar() {
+  items = []; carpeta = null; contador = 0;
+  $("entrada").value = "";
+  limpiarAviso();
+  $("btn-subir").hidden = false;
+  $("btn-reintentar").hidden = true;
+  $("paso-final").hidden = true;
+  $("paso-form").hidden = false;
+  pintar();
+  cargarCuota();
+  window.scrollTo(0, 0);
+}
+
+/* ── Eventos ─────────────────────────────────────────────────────────────── */
+$("entrada").addEventListener("change", (e) => {
+  agregar(e.target.files);
+  e.target.value = ""; // permite reelegir el mismo archivo tras quitarlo
+});
+$("negocio").addEventListener("input", () => {
+  $("negocio").removeAttribute("aria-invalid");
+  actualizarBoton();
+});
+$("btn-subir").addEventListener("click", () => subir(false));
+$("btn-reintentar").addEventListener("click", () => subir(true));
+$("btn-otra").addEventListener("click", reiniciar);
+
+const bandeja = $("bandeja");
+["dragenter", "dragover"].forEach((ev) =>
+  bandeja.addEventListener(ev, (e) => { e.preventDefault(); if (!ocupado) bandeja.dataset.dentro = "si"; }));
+["dragleave", "drop"].forEach((ev) =>
+  bandeja.addEventListener(ev, (e) => { e.preventDefault(); bandeja.dataset.dentro = "no"; }));
+bandeja.addEventListener("drop", (e) => {
+  if (!ocupado && e.dataTransfer?.files.length) agregar(e.dataTransfer.files);
+});
+// Fuera de la bandeja, soltar un archivo no debe navegar hacia él.
+addEventListener("dragover", (e) => e.preventDefault());
+addEventListener("drop", (e) => e.preventDefault());
+
+addEventListener("offline", () => {
+  if (ocupado) mostrarAviso("Se perdió la conexión. Reintentamos solos en cuanto vuelva.");
+});
+addEventListener("beforeunload", (e) => {
+  if (ocupado) { e.preventDefault(); e.returnValue = ""; }
+});
+
+pintar();
+cargarCuota();
 </script>
 </body>
 </html>
