@@ -26,7 +26,7 @@ import {
 } from "../_lib/cuota.js";
 
 // Limites de la tanda. Para cambiarlos, ver README-carga.md.
-export const MAX_ARCHIVOS = 20;
+export const MAX_ARCHIVOS = 100;
 export const MAX_BYTES_ARCHIVO = 2 * GB; // 2 GB por archivo
 const VIGENCIA_SEGUNDOS = 3600; // 1 hora
 
@@ -63,7 +63,7 @@ export async function onRequestPost({ request, env }) {
     return error("No mandaste ningun archivo.");
   }
   if (archivos.length > MAX_ARCHIVOS) {
-    return error(`Maximo ${MAX_ARCHIVOS} archivos por tanda.`);
+    return error(`Maximo ${MAX_ARCHIVOS} archivos por envio.`);
   }
 
   let totalTanda = 0;

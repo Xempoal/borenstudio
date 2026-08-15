@@ -7,8 +7,8 @@ dentro del bucket de R2 `cargas-clientes`, y todo se borra solo a los 10 días.
 - **Portal del cliente:** <https://borenstudio.com/carga>
 - **Panel interno:** <https://borenstudio.com/carga/admin> (se entra con un PIN)
 
-Topes vigentes: **2 GB por envío**, **20 archivos por envío** y **9.99 GB por
-periodo de 32 días**.
+Topes vigentes: **2 GB por envío**, **100 archivos por envío** y **9.99 GB por
+periodo**. El periodo corre del **día 15 de cada mes al 15 del siguiente**.
 
 ---
 
@@ -301,24 +301,36 @@ lo que realmente pasa.
 
 | Límite | Valor | Servidor | Cliente |
 |---|---|---|---|
-| Archivos por envío | 20 | `functions/api/firmar.js` → `MAX_ARCHIVOS` | `carga/index.html` → `MAX_ARCHIVOS` |
+| Archivos por envío | 100 | `functions/api/firmar.js` → `MAX_ARCHIVOS` | `carga/index.html` → `MAX_ARCHIVOS` |
 | Peso de un archivo | 2 GB | `functions/api/firmar.js` → `MAX_BYTES_ARCHIVO` | `carga/index.html` → `MAX_BYTES_ARCHIVO` |
 | Peso del envío completo | 2 GB | `functions/_lib/cuota.js` → `TOPE_TANDA` | `carga/index.html` → `MAX_BYTES_TANDA` |
 | Cuota del periodo | 9.99 GB | `functions/_lib/cuota.js` → `TOPE_MENSUAL` | — |
-| Largo del periodo | 32 días | `functions/_lib/cuota.js` → `DIAS_VENTANA` | — |
+| Día de renovación | 15 | `functions/_lib/cuota.js` → `DIA_RENOVACION` | — |
 | Vigencia de las URLs | 1 h | `functions/api/firmar.js` → `VIGENCIA_SEGUNDOS` | — |
 | Subidas en paralelo | 3 | — | `carga/index.html` → `PARALELO` |
 | Reintentos por archivo | 2 | — | `carga/index.html` → `REINTENTOS` |
 
-Los textos visibles ("2 GB", "20", "10 días" en la ficha técnica) están escritos
-a mano en el HTML: actualízalos también.
+Los textos visibles ("Hasta 100 archivos · 2 GB en total") están escritos a
+mano en `carga/index.html`, en dos lugares: la tarjeta de formatos aceptados y
+el pie de la zona de arrastre. Actualízalos también.
+
+**La cuota del periodo no se muestra al cliente**, solo en el panel: al cliente
+no le sirve saber cuánto espacio le queda a la agencia, y si está lleno se
+entera con un mensaje claro al intentar subir.
 
 ### Cómo funciona la cuota del periodo
 
-La ventana arranca el **14 de agosto de 2026** (`INICIO_PRIMERA_VENTANA` en
-`functions/_lib/cuota.js`) y dura 32 días. Al consultarla, si ya se pasó el
-plazo, el contador vuelve a cero solo — sin importar cuánto se haya subido.
-No hay cron ni tarea programada: se calcula al vuelo.
+El periodo va del **día 15 de un mes al 15 del siguiente**, en hora de Ciudad
+de México. No se guarda ninguna fecha de corte: `inicioPeriodo()` calcula al
+vuelo cuál es el 15 más reciente, y si lo guardado en KV pertenece a un
+periodo anterior, el contador arranca de cero. No hay cron ni tarea
+programada.
+
+Para cambiar el día, edita `DIA_RENOVACION` en `functions/_lib/cuota.js`.
+
+> El cálculo asume que Ciudad de México es UTC-6 todo el año, cosa que es
+> cierta desde que México abolió el horario de verano en 2022. Si eso
+> cambiara, hay que revisar `OFFSET_MX_HORAS`.
 
 **Los GB se descuentan al firmar, no al terminar la subida.** Es lo que evita
 que veinte subidas simultáneas rebasen el límite antes de poder bloquear
@@ -336,6 +348,10 @@ npx wrangler kv key put cuota --path /tmp/c.json --namespace-id eed7373c61644e9f
 
 > Si subes `MAX_BYTES_ARCHIVO` por encima de 2 GB: R2 acepta hasta **5 GB** en
 > un `PUT` simple. Más que eso exige subida multiparte, que es otro diseño.
+>
+> `MAX_ARCHIVOS` a 100 es cómodo, pero cada archivo dibuja una miniatura con
+> `URL.createObjectURL`. Se liberan al quitarlos; si algún día lo subes muy por
+> encima de 100, conviene medir la memoria en un teléfono de gama baja.
 >
 > Si subes `PARALELO` por encima de 3, en 4G lento las conexiones se ahogan
 > entre sí y el progreso se ve congelado. 3 es un valor probado, no arbitrario.

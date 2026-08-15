@@ -1,67 +1,53 @@
 @import "tailwindcss";
 
-/* Tailwind escanea estos archivos para saber que clases incluir. */
 @source "../carga/index.html";
 @source "../carga/admin/index.html";
 
 /* ==========================================================================
    Boren Studio — portal de carga
-   Dirección: laboratorio fotográfico editorial.
 
-   Papel cálido, tinta carbón, cobre como foil. Cada archivo se presenta como
-   una placa numerada de una hoja de contactos, y el progreso sube como tinta
-   dentro de la placa. Regla tipográfica clara: serif para los números y los
-   títulos, monoespaciada para los metadatos, sans solo para leer.
+   Interfaz clara sobre blanco, con violeta como único acento. Superficies
+   suaves, bordes de un pixel y esquinas redondeadas; el color se reserva
+   para lo accionable, de modo que en una pantalla llena de archivos la vista
+   siempre encuentre primero el botón.
+
+   Diseño comprometido con el modo claro: no hay variante oscura a propósito,
+   para que se vea igual en cualquier teléfono.
    ========================================================================== */
 
 @theme {
-  /* --- Papel y tinta --- */
-  --color-papel: #f4efe4;
-  --color-papel-alto: #fbf8f1;
-  --color-papel-hondo: #e8e0cf;
-  --color-tinta: #181410;
-  --color-tinta-media: #574e42;
-  --color-tinta-tenue: #9b9084;
+  /* --- Superficies --- */
+  --color-lienzo: #ffffff;
+  --color-nieve: #fafafc;
+  --color-linea: #e9e8ef;
+  --color-linea-fuerte: #d8d6e2;
 
-  /* --- Foil de cobre --- */
-  --color-cobre: #b85c38;
-  --color-cobre-claro: #d88a66;
-  --color-cobre-velo: #f2ddd0;
+  /* --- Texto --- */
+  --color-texto: #17161c;
+  --color-suave: #6c6979;
+  --color-tenue: #9d9aab;
+
+  /* --- Acento --- */
+  --color-violeta: #6d45f0;
+  --color-violeta-hondo: #5a33dd;
+  --color-violeta-tenue: #f4f1fe;
+  --color-violeta-linea: #ded4fc;
 
   /* --- Señales --- */
-  --color-fijado: #3f7d58;
-  --color-velado: #a8442a;
+  --color-listo: #16a06a;
+  --color-alerta: #e0484d;
+  --color-alerta-tenue: #fdf2f2;
 
   /* --- Tipografía --- */
-  --font-display: "DM Serif Display", "Iowan Old Style", Georgia, serif;
-  --font-sans: "Geist", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-sans: "Geist", "Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
   --font-mono: "Geist Mono", ui-monospace, "SF Mono", Menlo, monospace;
 
-  /* --- Curvas --- */
-  --ease-papel: cubic-bezier(0.22, 1, 0.36, 1);
-  --ease-tinta: cubic-bezier(0.65, 0, 0.35, 1);
-}
+  --ease-suave: cubic-bezier(0.22, 1, 0.36, 1);
 
-/* La misma paleta, revelada en oscuro. No es un invert: el papel se vuelve
-   carbón y el cobre sube de brillo para no apagarse contra el fondo. */
-@custom-variant oscuro (&:where(.oscuro, .oscuro *));
-
-@layer theme {
-  @media (prefers-color-scheme: dark) {
-    :root {
-      --color-papel: #17130f;
-      --color-papel-alto: #221c16;
-      --color-papel-hondo: #0f0c09;
-      --color-tinta: #f2ede2;
-      --color-tinta-media: #b0a698;
-      --color-tinta-tenue: #6d6459;
-      --color-cobre: #d88a66;
-      --color-cobre-claro: #e8a986;
-      --color-cobre-velo: #33231a;
-      --color-fijado: #6bae84;
-      --color-velado: #e0876b;
-    }
-  }
+  /* --- Sombras: muy bajas, solo para despegar del fondo --- */
+  --shadow-carta: 0 1px 2px rgba(23, 22, 28, 0.04);
+  --shadow-boton: 0 1px 2px rgba(109, 69, 240, 0.24);
+  --shadow-flotante: 0 -1px 0 var(--color-linea);
 }
 
 @layer base {
@@ -70,262 +56,235 @@
   }
 
   body {
-    background-color: var(--color-papel);
-    color: var(--color-tinta);
+    background-color: var(--color-lienzo);
+    color: var(--color-texto);
     font-family: var(--font-sans);
-    /* Halo tibio arriba: da la sensación de una lámpara sobre la mesa. */
-    background-image: radial-gradient(
-      120% 70% at 50% -10%,
-      color-mix(in oklab, var(--color-cobre) 9%, transparent) 0%,
-      transparent 60%
-    );
-    background-attachment: fixed;
-  }
-
-  /* Grano de película sobre todo. Va en un pseudo-elemento fijo para que no
-     se mueva con el scroll: si se moviera parecería una textura, y el punto
-     es que parezca la emulsión del papel. */
-  body::after {
-    content: "";
-    position: fixed;
-    inset: 0;
-    z-index: 60;
-    pointer-events: none;
-    opacity: 0.035;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23g)'/%3E%3C/svg%3E");
   }
 
   ::selection {
-    background: var(--color-cobre);
-    color: var(--color-papel-alto);
+    background: var(--color-violeta);
+    color: #fff;
   }
 
   :focus-visible {
-    outline: 2px solid var(--color-cobre);
-    outline-offset: 3px;
-    border-radius: 3px;
+    outline: 2px solid var(--color-violeta);
+    outline-offset: 2px;
+    border-radius: 6px;
   }
 
-  /* Números tabulares en todo lo que cuenta bytes y porcentajes, para que no
-     bailen los dígitos mientras sube un archivo. */
-  .font-mono,
-  [class*="tabular"] {
+  /* Los dígitos no deben bailar mientras cambia un porcentaje o un peso. */
+  .tabular {
     font-variant-numeric: tabular-nums;
   }
 }
 
 @layer components {
-  /* --- Filete editorial: la línea de cabecera de una hoja de contactos --- */
-  .filete {
-    border-top: 1px solid color-mix(in oklab, var(--color-tinta) 14%, transparent);
-  }
-
-  /* --- Etiqueta de metadato --- */
-  .etiqueta {
-    font-family: var(--font-mono);
-    font-size: 0.625rem;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    color: var(--color-tinta-tenue);
-  }
-
-  /* --- Placa: la tarjeta de cada archivo --- */
-  .placa {
-    position: relative;
-    background: var(--color-papel-alto);
-    border: 1px solid color-mix(in oklab, var(--color-tinta) 11%, transparent);
+  /* --- Botón principal --- */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    border-radius: 0.625rem;
+    background: var(--color-violeta);
+    color: #fff;
+    font-size: 0.9375rem;
+    font-weight: 500;
+    box-shadow: var(--shadow-boton);
     transition:
-      border-color 0.35s var(--ease-papel),
-      transform 0.35s var(--ease-papel);
-  }
-  .placa::before {
-    /* Muesca de cobre en la esquina, como la marca de un revelado. */
-    content: "";
-    position: absolute;
-    top: -1px;
-    left: -1px;
-    width: 10px;
-    height: 10px;
-    border-top: 2px solid var(--color-cobre);
-    border-left: 2px solid var(--color-cobre);
-    opacity: 0;
-    transition: opacity 0.35s var(--ease-papel);
-  }
-  .placa[data-estado="subiendo"]::before,
-  .placa[data-estado="fijada"]::before {
-    opacity: 1;
-  }
-  .placa[data-estado="velada"] {
-    border-color: color-mix(in oklab, var(--color-velado) 45%, transparent);
-  }
-
-  /* --- Tinta: la barra de progreso, que sube en vez de correr --- */
-  .tinta {
-    position: relative;
-    height: 2px;
-    overflow: hidden;
-    background: color-mix(in oklab, var(--color-tinta) 10%, transparent);
-  }
-  .tinta > i {
-    display: block;
-    height: 100%;
-    width: 0;
-    background: linear-gradient(
-      90deg,
-      var(--color-cobre) 0%,
-      var(--color-cobre-claro) 100%
-    );
-    transition: width 0.3s linear;
-  }
-  .tinta[data-estado="fijada"] > i {
-    background: var(--color-fijado);
-  }
-  .tinta[data-estado="velada"] > i {
-    background: var(--color-velado);
-  }
-
-  /* --- Botón principal: bloque de tinta que se llena de cobre --- */
-  .boton {
-    position: relative;
-    isolation: isolate;
-    overflow: hidden;
-    font-family: var(--font-mono);
-    font-size: 0.75rem;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    background: var(--color-tinta);
-    color: var(--color-papel);
-    border: 1px solid var(--color-tinta);
-    transition:
-      transform 0.3s var(--ease-papel),
-      opacity 0.2s;
+      background 0.18s var(--ease-suave),
+      transform 0.18s var(--ease-suave),
+      opacity 0.18s;
     -webkit-tap-highlight-color: transparent;
   }
-  .boton::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    z-index: -1;
-    background: var(--color-cobre);
-    transform: translateY(101%);
-    transition: transform 0.45s var(--ease-papel);
+  .btn:hover:not(:disabled) {
+    background: var(--color-violeta-hondo);
   }
-  .boton:hover:not(:disabled)::before {
-    transform: translateY(0);
-  }
-  .boton:hover:not(:disabled) {
-    border-color: var(--color-cobre);
-  }
-  .boton:active:not(:disabled) {
+  .btn:active:not(:disabled) {
     transform: scale(0.985);
   }
-  .boton:disabled {
-    opacity: 0.35;
+  .btn:disabled {
+    opacity: 0.4;
     cursor: not-allowed;
+    box-shadow: none;
   }
 
-  /* --- Botón secundario: solo el contorno --- */
-  .boton-tenue {
-    background: transparent;
-    color: var(--color-tinta);
-    border-color: color-mix(in oklab, var(--color-tinta) 22%, transparent);
+  /* --- Botón secundario --- */
+  .btn-borde {
+    background: var(--color-lienzo);
+    color: var(--color-texto);
+    border: 1px solid var(--color-linea-fuerte);
+    box-shadow: var(--shadow-carta);
   }
-  .boton-tenue::before {
-    display: none;
-  }
-  .boton-tenue:hover:not(:disabled) {
-    border-color: var(--color-cobre);
-    color: var(--color-cobre);
+  .btn-borde:hover:not(:disabled) {
+    background: var(--color-nieve);
+    border-color: var(--color-tenue);
   }
 
   /* --- Campo de texto --- */
   .campo {
-    background: var(--color-papel-alto);
-    border: 1px solid color-mix(in oklab, var(--color-tinta) 20%, transparent);
-    color: var(--color-tinta);
+    width: 100%;
+    border-radius: 0.625rem;
+    border: 1px solid var(--color-linea-fuerte);
+    background: var(--color-lienzo);
+    color: var(--color-texto);
+    box-shadow: var(--shadow-carta);
     transition:
-      border-color 0.25s,
-      box-shadow 0.25s;
+      border-color 0.18s,
+      box-shadow 0.18s;
   }
   .campo::placeholder {
-    color: var(--color-tinta-tenue);
+    color: var(--color-tenue);
   }
   .campo:focus {
     outline: none;
-    border-color: var(--color-cobre);
-    box-shadow: 0 0 0 3px color-mix(in oklab, var(--color-cobre) 16%, transparent);
+    border-color: var(--color-violeta);
+    box-shadow: 0 0 0 3px var(--color-violeta-tenue);
   }
   .campo[aria-invalid="true"] {
-    border-color: var(--color-velado);
+    border-color: var(--color-alerta);
   }
 
-  /* --- Casilla del PIN --- */
-  .digito {
-    font-family: var(--font-display);
-    font-size: 1.75rem;
-    text-align: center;
-    background: var(--color-papel-alto);
-    color: var(--color-tinta);
-    border: 1px solid color-mix(in oklab, var(--color-tinta) 20%, transparent);
-    caret-color: var(--color-cobre);
-    transition:
-      border-color 0.2s,
-      box-shadow 0.2s,
-      background 0.2s;
+  /* --- Carta: cualquier bloque con borde --- */
+  .carta {
+    border: 1px solid var(--color-linea);
+    border-radius: 0.75rem;
+    background: var(--color-lienzo);
   }
-  .digito:focus {
-    outline: none;
-    border-color: var(--color-cobre);
-    box-shadow: 0 0 0 3px color-mix(in oklab, var(--color-cobre) 16%, transparent);
-  }
-  .digito[data-lleno="si"] {
-    background: var(--color-cobre-velo);
-    border-color: color-mix(in oklab, var(--color-cobre) 55%, transparent);
+  .carta-tinta {
+    border-color: var(--color-violeta-linea);
+    background: var(--color-violeta-tenue);
   }
 
   /* --- Zona de arrastre --- */
-  .bandeja {
+  .zona {
     position: relative;
-    background: var(--color-papel-alto);
-    border: 1px dashed color-mix(in oklab, var(--color-tinta) 24%, transparent);
+    border: 1.5px dashed var(--color-violeta-linea);
+    border-radius: 0.875rem;
+    background: color-mix(in oklab, var(--color-violeta-tenue) 45%, #fff);
     transition:
-      border-color 0.3s var(--ease-papel),
-      background 0.3s var(--ease-papel);
+      border-color 0.2s var(--ease-suave),
+      background 0.2s var(--ease-suave);
     -webkit-tap-highlight-color: transparent;
   }
-  .bandeja:hover,
-  .bandeja:focus-within {
-    border-color: var(--color-cobre);
+  .zona:hover,
+  .zona:focus-within {
+    border-color: var(--color-violeta);
   }
-  .bandeja[data-dentro="si"] {
-    border-color: var(--color-cobre);
+  .zona[data-dentro="si"] {
+    border-color: var(--color-violeta);
     border-style: solid;
-    background: var(--color-cobre-velo);
+    background: var(--color-violeta-tenue);
   }
 
-  /* --- Medidor de cuota --- */
+  /* --- Renglón de archivo --- */
+  .renglon {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 0.875rem;
+    border: 1px solid var(--color-linea);
+    border-radius: 0.625rem;
+    background: var(--color-lienzo);
+    padding: 0.625rem 0.75rem;
+    transition: border-color 0.2s;
+  }
+  .renglon[data-estado="error"] {
+    border-color: color-mix(in oklab, var(--color-alerta) 40%, transparent);
+    background: var(--color-alerta-tenue);
+  }
+
+  /* --- Barra de progreso --- */
+  .barra {
+    height: 5px;
+    border-radius: 999px;
+    background: var(--color-linea);
+    overflow: hidden;
+  }
+  .barra > i {
+    display: block;
+    height: 100%;
+    width: 0;
+    border-radius: 999px;
+    background: var(--color-violeta);
+    transition: width 0.25s linear;
+  }
+  .barra[data-estado="ok"] > i {
+    background: var(--color-listo);
+  }
+  .barra[data-estado="error"] > i {
+    background: var(--color-alerta);
+  }
+
+  /* --- Medidor de cuota (solo panel) --- */
   .medidor {
-    height: 3px;
-    background: color-mix(in oklab, var(--color-tinta) 10%, transparent);
+    height: 8px;
+    border-radius: 999px;
+    background: var(--color-linea);
     overflow: hidden;
   }
   .medidor > i {
     display: block;
     height: 100%;
-    background: var(--color-cobre);
-    transition: width 0.6s var(--ease-papel);
+    border-radius: 999px;
+    background: var(--color-violeta);
+    transition: width 0.6s var(--ease-suave);
   }
-  .medidor[data-lleno="si"] > i {
-    background: var(--color-velado);
+  .medidor[data-nivel="alto"] > i {
+    background: #e8a33d;
+  }
+  .medidor[data-nivel="lleno"] > i {
+    background: var(--color-alerta);
+  }
+
+  /* --- Casilla del PIN --- */
+  .digito {
+    text-align: center;
+    font-size: 1.375rem;
+    font-weight: 500;
+    border-radius: 0.625rem;
+    border: 1px solid var(--color-linea-fuerte);
+    background: var(--color-lienzo);
+    color: var(--color-texto);
+    caret-color: var(--color-violeta);
+    box-shadow: var(--shadow-carta);
+    transition:
+      border-color 0.18s,
+      box-shadow 0.18s,
+      background 0.18s;
+  }
+  .digito:focus {
+    outline: none;
+    border-color: var(--color-violeta);
+    box-shadow: 0 0 0 3px var(--color-violeta-tenue);
+  }
+  .digito[data-lleno="si"] {
+    background: var(--color-violeta-tenue);
+    border-color: var(--color-violeta-linea);
+  }
+
+  /* --- Marca --- */
+  /* La "B" va en serif como en el resto de la marca. Se usa la serif del
+     sistema para no descargar otra fuente por un solo carácter. */
+  .marca {
+    display: grid;
+    place-items: center;
+    border-radius: 0.5rem;
+    background: var(--color-texto);
+    color: #fff;
+    font-family: "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+    font-weight: 600;
+    line-height: 1;
+    padding-bottom: 0.06em;
   }
 }
 
 @layer utilities {
-  /* Estado inicial de lo que Motion va a revelar. Si el JS no corre, esta
-     regla se anula abajo para que el contenido nunca quede invisible. */
+  /* Estado inicial de lo que se revela al cargar. Si el JS no corre, la
+     regla de abajo lo deja visible: nada puede quedarse en blanco. */
   .revelar {
     opacity: 0;
-    transform: translateY(12px);
+    transform: translateY(8px);
   }
   html.sin-js .revelar,
   html.animado .revelar {

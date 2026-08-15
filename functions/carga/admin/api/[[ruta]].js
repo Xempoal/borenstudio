@@ -123,6 +123,7 @@ async function carpetas(env) {
       disponible: cuota.disponible,
       tope: TOPE_MENSUAL,
       seLiberaEl: cuota.fin,
+      dias: cuota.dias,
     },
   });
 }
