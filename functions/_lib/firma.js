@@ -6,7 +6,9 @@
  * video de celular en calidad original.
  */
 
-import { AwsClient } from "aws4fetch";
+// Copia integrada al repo, no el paquete de npm: Cloudflare no corre
+// `npm install` en este proyecto. Ver el encabezado de aws4fetch.js.
+import { AwsClient } from "./aws4fetch.js";
 
 export const BUCKET = "cargas-clientes";
 

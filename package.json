@@ -5,12 +5,12 @@
   "description": "Sitio de Boren Studio (Cloudflare Pages) + portal de carga de archivos para clientes.",
   "scripts": {
     "dev": "wrangler pages dev",
-    "deploy": "wrangler pages deploy"
+    "deploy": "wrangler pages deploy",
+    "vendor:aws4fetch": "node scripts/vendor-aws4fetch.mjs"
   },
-  "dependencies": {
-    "aws4fetch": "^1.0.20"
-  },
+  "//": "aws4fetch va como devDependency a proposito: la copia que se usa en produccion es functions/_lib/aws4fetch.js, integrada al repo, porque el proyecto de Pages no corre 'npm install'.",
   "devDependencies": {
+    "aws4fetch": "^1.0.20",
     "wrangler": "^4.123.0"
   }
 }

@@ -53,6 +53,7 @@ No hay base de datos: **el estado vive en las claves de R2**.
 | `functions/api/firmar.js` | Valida y devuelve URLs prefirmadas (PUT, 1 h) |
 | `functions/carga/admin/api/[[ruta]].js` | API del panel: carpetas, archivos, zip |
 | `functions/_lib/firma.js` | Firma SigV4 contra el endpoint S3 de R2 |
+| `functions/_lib/aws4fetch.js` | Copia de aws4fetch integrada al repo (ver abajo) |
 | `functions/_lib/slug.js` | Slugs, sanitizado de nombres, validación de prefijos |
 | `functions/_lib/access.js` | Verifica el JWT de Cloudflare Access |
 | `functions/_lib/zip.js` | ZIP64 en streaming para "descargar toda la carpeta" |
@@ -62,6 +63,36 @@ No hay base de datos: **el estado vive en las claves de R2**.
 
 > Todo lo que está bajo `functions/_lib/` **no se enruta**: Pages ignora las
 > carpetas que empiezan con `_`. Son módulos internos, no endpoints.
+
+### Por qué aws4fetch está copiada dentro del repo
+
+El proyecto de Pages **no tiene build command**. Cloudflare lo dice en el log:
+
+```
+No build command specified. Skipping build step.
+```
+
+Es decir: no corre `npm install`, así que al empaquetar las Functions el
+bundler no encuentra el paquete y el deploy falla con
+`Could not resolve "aws4fetch"`.
+
+En vez de agregarle un paso de build a un sitio que nunca lo tuvo (más lento
+y una pieza más que se puede romper), la librería vive copiada en
+`functions/_lib/aws4fetch.js`. Son 11 KB sin dependencias, licencia MIT.
+
+Para actualizarla:
+
+```bash
+npm install aws4fetch@latest
+npm run vendor:aws4fetch      # regenera el archivo con su encabezado
+```
+
+**No la edites a mano.** En `package.json` aparece como `devDependency`
+justamente para dejar claro que la copia del repo es la que corre en
+producción.
+
+> Si algún día le pones un build command real al proyecto (`npm ci`, por
+> ejemplo), puedes volver al import normal `from "aws4fetch"` y borrar la copia.
 
 ---
 
