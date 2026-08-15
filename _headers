@@ -20,3 +20,28 @@
 /assets/*
   Cache-Control: public, max-age=31536000, immutable
   X-Content-Type-Options: nosniff
+
+# ---------------------------------------------------------------------------
+# Portal de carga de clientes (incluye el panel /carga/admin).
+#
+# Siempre fresco: la PWA no lleva service worker, y una copia vieja de esta
+# página serviría URLs prefirmadas ya vencidas.
+#
+# UNA sola regla con CSP a propósito. Si se parte en /carga* y /carga/admin*,
+# el panel recibe DOS cabeceras Content-Security-Policy y el navegador aplica
+# la INTERSECCIÓN de ambas, no la más específica: img-src se quedaría en
+# 'self' data: y las miniaturas de R2 dejarían de cargar sin error visible.
+#
+# Por eso la política cubre los dos casos de una vez:
+#   img-src     blob: para las miniaturas locales antes de subir,
+#               R2 para las miniaturas del panel.
+#   connect-src R2 porque el navegador sube DIRECTO al bucket.
+/carga*
+  X-Frame-Options: DENY
+  X-Content-Type-Options: nosniff
+  X-Robots-Tag: noindex, nofollow
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: geolocation=(), microphone=(), camera=(), interest-cohort=()
+  Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
+  Cache-Control: no-store, must-revalidate
+  Content-Security-Policy: default-src 'self'; img-src 'self' data: blob: https://*.r2.cloudflarestorage.com; media-src 'self' blob:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; script-src 'self' 'unsafe-inline'; connect-src 'self' https://*.r2.cloudflarestorage.com; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests

@@ -1,4 +1,8 @@
 User-agent: *
 Allow: /
 
+# Portal de carga de clientes: es un link privado que se comparte a mano.
+Disallow: /carga
+Disallow: /carga/
+
 Sitemap: https://borenstudio.com/sitemap.xml

@@ -1,0 +1,11 @@
+# Copia este archivo a .dev.vars para desarrollo local (`npm run dev`).
+# .dev.vars esta en .gitignore: NUNCA se sube al repo.
+# En produccion estos valores viven como secrets de Pages, no aqui.
+
+R2_ACCOUNT_ID=
+R2_ACCESS_KEY_ID=
+R2_SECRET_ACCESS_KEY=
+
+# Identificadores publicos de Cloudflare Access (no son secretos).
+ACCESS_TEAM_DOMAIN=
+ACCESS_AUD=

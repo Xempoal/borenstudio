@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Cargas de clientes — Boren Studio</title>
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#F2EDE2" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#1C1814" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<style>
+:root{
+  --cream-100:#F2EDE2;--cream-300:#DDD3BF;
+  --carbon-900:#1C1814;--carbon-800:#2A241D;--carbon-700:#3A3128;
+  --copper-500:#B85C38;--copper-300:#D88A66;
+  --bg:var(--cream-100);--panel:#FBF8F2;
+  --ink:var(--carbon-900);--ink-soft:rgba(28,24,20,.62);--ink-faint:rgba(28,24,20,.38);
+  --line:rgba(28,24,20,.12);--line-fuerte:rgba(28,24,20,.24);
+  --accent:var(--copper-500);--alerta:#A8442A;
+  --font-display:'DM Serif Display',Georgia,serif;
+  --font-sans:'Geist','Inter',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --font-mono:'Geist Mono',ui-monospace,'SF Mono',Menlo,monospace;
+  --ease:cubic-bezier(.22,1,.36,1);
+}
+@media (prefers-color-scheme:dark){
+  :root{
+    --bg:var(--carbon-900);--panel:var(--carbon-800);
+    --ink:var(--cream-100);--ink-soft:rgba(242,237,226,.62);--ink-faint:rgba(242,237,226,.38);
+    --line:rgba(242,237,226,.14);--line-fuerte:rgba(242,237,226,.28);
+    --accent:var(--copper-300);--alerta:#E0876B;
+  }
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{
+  background:var(--bg);color:var(--ink);font-family:var(--font-sans);font-size:16px;line-height:1.5;
+  -webkit-font-smoothing:antialiased;min-height:100dvh;
+  padding:0 18px calc(50px + env(safe-area-inset-bottom));
+}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:6px}
+img{display:block;max-width:100%}
+.contenedor{width:100%;max-width:860px;margin:0 auto}
+
+.top{
+  display:flex;align-items:center;justify-content:space-between;gap:14px;
+  padding:22px 0 20px;border-bottom:1px solid var(--line);margin-bottom:24px;
+}
+.top .marca{display:flex;align-items:center;gap:10px}
+.top .mark{
+  width:28px;height:28px;flex:0 0 28px;display:grid;place-items:center;
+  background:var(--ink);color:var(--bg);border-radius:4px;
+  font-family:var(--font-display);font-size:18px;line-height:1;padding-bottom:2px;
+}
+.top .titulo{font-family:var(--font-display);font-size:19px;line-height:1.1}
+.top .quien{font-family:var(--font-mono);font-size:10.5px;color:var(--ink-faint);text-align:right;word-break:break-all;max-width:45vw}
+
+h1{font-family:var(--font-display);font-weight:400;font-size:clamp(26px,6vw,34px);line-height:1.15;letter-spacing:-.015em}
+.sub{color:var(--ink-soft);font-size:14px;margin-top:8px}
+
+.migas{
+  display:flex;align-items:center;gap:9px;font-family:var(--font-mono);font-size:11px;
+  letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:16px;
+}
+.migas button{
+  background:none;border:0;color:var(--accent);font:inherit;cursor:pointer;
+  display:inline-flex;align-items:center;gap:6px;padding:4px 0;
+}
+.migas svg{width:12px;height:12px}
+
+.tarjetas{display:flex;flex-direction:column;gap:10px;margin-top:22px}
+.tarjeta{
+  display:grid;grid-template-columns:1fr auto;align-items:center;gap:14px;
+  width:100%;text-align:left;
+  background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:15px 16px;
+  cursor:pointer;font:inherit;color:inherit;
+  transition:border-color .2s var(--ease),transform .2s var(--ease);
+  -webkit-tap-highlight-color:transparent;
+}
+.tarjeta:hover{border-color:var(--accent)}
+.tarjeta:active{transform:scale(.99)}
+.tarjeta .negocio{font-size:16.5px;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tarjeta .datos{font-family:var(--font-mono);font-size:11.5px;color:var(--ink-soft);margin-top:5px}
+.tarjeta .flecha{color:var(--ink-faint);width:17px;height:17px}
+
+.rejilla{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(146px,1fr));gap:11px;margin-top:20px;
+}
+.pieza{
+  background:var(--panel);border:1px solid var(--line);border-radius:13px;overflow:hidden;
+  display:flex;flex-direction:column;
+}
+.pieza .lienzo{
+  aspect-ratio:1;background:var(--cream-300);display:grid;place-items:center;
+  color:var(--ink-faint);position:relative;
+}
+@media (prefers-color-scheme:dark){.pieza .lienzo{background:var(--carbon-700)}}
+.pieza .lienzo img{width:100%;height:100%;object-fit:cover}
+.pieza .lienzo svg{width:30px;height:30px}
+.pieza .info{padding:10px 11px 11px;display:flex;flex-direction:column;gap:8px;flex:1}
+.pieza .nom{
+  font-size:12.5px;line-height:1.35;word-break:break-word;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
+}
+.pieza .tam{font-family:var(--font-mono);font-size:10.5px;color:var(--ink-soft);margin-top:auto}
+.pieza .bajar{
+  display:flex;align-items:center;justify-content:center;gap:7px;
+  padding:8px;border-radius:8px;border:1px solid var(--line-fuerte);
+  font-family:var(--font-mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--ink);text-decoration:none;transition:border-color .2s,color .2s;
+}
+.pieza .bajar:hover{border-color:var(--accent);color:var(--accent)}
+.pieza .bajar svg{width:12px;height:12px}
+
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:10px;width:100%;
+  padding:15px 22px;border-radius:999px;border:1px solid var(--ink);
+  background:var(--ink);color:var(--bg);text-decoration:none;
+  font-family:var(--font-mono);font-size:12px;letter-spacing:.09em;text-transform:uppercase;font-weight:500;
+  cursor:pointer;transition:background .3s var(--ease),transform .3s var(--ease);
+  -webkit-tap-highlight-color:transparent;
+}
+.btn:hover{background:var(--accent);border-color:var(--accent);color:#fff}
+.btn:active{transform:scale(.98)}
+.btn svg{width:15px;height:15px;flex:0 0 15px}
+.acciones{margin-top:22px}
+
+.estado{
+  text-align:center;padding:52px 20px;color:var(--ink-soft);font-size:14.5px;
+}
+.estado.mal{color:var(--alerta)}
+.giro{
+  width:24px;height:24px;margin:0 auto 14px;border-radius:50%;
+  border:2px solid var(--line);border-top-color:var(--accent);animation:girar .8s linear infinite;
+}
+@keyframes girar{to{transform:rotate(360deg)}}
+[hidden]{display:none !important}
+@media (prefers-reduced-motion:reduce){*{transition:none !important;animation:none !important}}
+</style>
+</head>
+<body>
+<div class="contenedor">
+
+  <header class="top">
+    <div class="marca">
+      <div class="mark" aria-hidden="true">B</div>
+      <div class="titulo">Cargas de clientes</div>
+    </div>
+    <div class="quien" id="quien"></div>
+  </header>
+
+  <main id="vista">
+    <div class="estado"><div class="giro"></div>Cargando…</div>
+  </main>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  var API = "/carga/admin/api";
+  var vista = document.getElementById("vista");
+  // Escribir location.hash dispara hashchange; sin esto cada navegación
+  // se cargaría dos veces.
+  var propio = false;
+  function fijarHash(valor){
+    if(location.hash.slice(1) === valor) return;
+    propio = true;
+    location.hash = valor;
+  }
+
+  var ICONO_VIDEO = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 7.5A2.5 2.5 0 0 1 5.5 5h7A2.5 2.5 0 0 1 15 7.5v9A2.5 2.5 0 0 1 12.5 19h-7A2.5 2.5 0 0 1 3 16.5z"/><path d="M15 10.5l5-3v9l-5-3z"/></svg>';
+  var ICONO_DOC = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/></svg>';
+  var ICONO_BAJAR = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11m0 0l-4-4m4 4l4-4"/><path d="M4 17v2a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-2"/></svg>';
+  var ICONO_ATRAS = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>';
+  var ICONO_FLECHA = '<svg class="flecha" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg>';
+
+  function peso(b){
+    if(!b) return "0 B";
+    var u = ["B","KB","MB","GB","TB"], i = Math.min(Math.floor(Math.log(b)/Math.log(1024)), 4);
+    return (b/Math.pow(1024,i)).toFixed(i === 0 ? 0 : 1) + " " + u[i];
+  }
+
+  function pedir(ruta){
+    return fetch(API + ruta, { headers: { Accept: "application/json" }, cache: "no-store" })
+      .then(function(r){
+        return r.json().catch(function(){ return {}; }).then(function(d){
+          if(!r.ok || !d.ok) throw new Error(d.error || ("Error " + r.status));
+          return d;
+        });
+      });
+  }
+
+  function cargando(texto){
+    vista.textContent = "";
+    var d = document.createElement("div");
+    d.className = "estado";
+    d.innerHTML = '<div class="giro"></div>';
+    d.appendChild(document.createTextNode(texto));
+    vista.appendChild(d);
+  }
+
+  function fallo(mensaje){
+    vista.textContent = "";
+    var d = document.createElement("div");
+    d.className = "estado mal";
+    d.textContent = mensaje;
+    vista.appendChild(d);
+  }
+
+  // ---------- lista de carpetas ----------
+  function verCarpetas(){
+    cargando("Cargando carpetas…");
+    fijarHash("");
+
+    pedir("/carpetas").then(function(d){
+      vista.textContent = "";
+
+      var h1 = document.createElement("h1");
+      h1.textContent = d.carpetas.length
+        ? d.carpetas.length + (d.carpetas.length === 1 ? " carpeta" : " carpetas")
+        : "Sin cargas todavía";
+      vista.appendChild(h1);
+
+      var sub = document.createElement("p");
+      sub.className = "sub";
+      sub.textContent = d.carpetas.length
+        ? "Más recientes primero. Todo se borra solo a los 10 días."
+        : "Cuando un cliente suba archivos en borenstudio.com/carga, aparecerán aquí.";
+      vista.appendChild(sub);
+
+      if(d.truncado){
+        var t = document.createElement("p");
+        t.className = "sub";
+        t.textContent = "Hay más objetos de los que caben en una lista; se muestran los primeros 10 000.";
+        vista.appendChild(t);
+      }
+
+      var cont = document.createElement("div");
+      cont.className = "tarjetas";
+
+      d.carpetas.forEach(function(c){
+        var b = document.createElement("button");
+        b.type = "button";
+        b.className = "tarjeta";
+
+        var izq = document.createElement("div");
+        var n = document.createElement("div");
+        n.className = "negocio";
+        n.textContent = c.negocio;
+        var m = document.createElement("div");
+        m.className = "datos";
+        m.textContent = c.fecha + "  ·  " + c.cantidad + (c.cantidad === 1 ? " archivo" : " archivos") + "  ·  " + peso(c.bytes);
+        izq.appendChild(n);
+        izq.appendChild(m);
+
+        var fl = document.createElement("span");
+        fl.innerHTML = ICONO_FLECHA;
+
+        b.appendChild(izq);
+        b.appendChild(fl);
+        b.addEventListener("click", function(){ verCarpeta(c.prefijo); });
+        cont.appendChild(b);
+      });
+
+      vista.appendChild(cont);
+    }).catch(function(e){ fallo(e.message); });
+  }
+
+  // ---------- detalle de una carpeta ----------
+  function verCarpeta(prefijo){
+    cargando("Abriendo carpeta…");
+    fijarHash(encodeURIComponent(prefijo));
+
+    pedir("/carpeta?p=" + encodeURIComponent(prefijo)).then(function(d){
+      vista.textContent = "";
+
+      var migas = document.createElement("div");
+      migas.className = "migas";
+      var atras = document.createElement("button");
+      atras.type = "button";
+      atras.innerHTML = ICONO_ATRAS + "<span>Todas las carpetas</span>";
+      atras.addEventListener("click", verCarpetas);
+      migas.appendChild(atras);
+      vista.appendChild(migas);
+
+      var h1 = document.createElement("h1");
+      h1.textContent = d.negocio;
+      vista.appendChild(h1);
+
+      var sub = document.createElement("p");
+      sub.className = "sub";
+      sub.textContent = d.fecha + "  ·  " + d.cantidad + (d.cantidad === 1 ? " archivo" : " archivos") + "  ·  " + peso(d.bytes);
+      vista.appendChild(sub);
+
+      var acciones = document.createElement("div");
+      acciones.className = "acciones";
+      var zip = document.createElement("a");
+      zip.className = "btn";
+      zip.href = API + "/zip?p=" + encodeURIComponent(prefijo);
+      zip.innerHTML = ICONO_BAJAR + "<span>Descargar toda la carpeta</span>";
+      acciones.appendChild(zip);
+      vista.appendChild(acciones);
+
+      var rejilla = document.createElement("div");
+      rejilla.className = "rejilla";
+
+      d.archivos.forEach(function(a){
+        var p = document.createElement("div");
+        p.className = "pieza";
+
+        var lienzo = document.createElement("div");
+        lienzo.className = "lienzo";
+        if(a.vista){
+          var img = document.createElement("img");
+          img.src = a.vista;
+          img.alt = a.nombre;
+          img.loading = "lazy";
+          img.decoding = "async";
+          // Si la vista previa falla (HEIC en Chrome, por ejemplo), caemos al icono.
+          img.onerror = function(){ lienzo.innerHTML = ICONO_DOC; };
+          lienzo.appendChild(img);
+        } else {
+          lienzo.innerHTML = a.tipo === "video" ? ICONO_VIDEO : ICONO_DOC;
+        }
+
+        var info = document.createElement("div");
+        info.className = "info";
+
+        var nom = document.createElement("div");
+        nom.className = "nom";
+        nom.textContent = a.nombre;
+        nom.title = a.nombre;
+
+        var tam = document.createElement("div");
+        tam.className = "tam";
+        tam.textContent = peso(a.bytes);
+
+        var bajar = document.createElement("a");
+        bajar.className = "bajar";
+        bajar.href = a.descarga;
+        bajar.innerHTML = ICONO_BAJAR + "<span>Descargar</span>";
+
+        info.appendChild(nom);
+        info.appendChild(tam);
+        info.appendChild(bajar);
+        p.appendChild(lienzo);
+        p.appendChild(info);
+        rejilla.appendChild(p);
+      });
+
+      vista.appendChild(rejilla);
+      window.scrollTo(0, 0);
+    }).catch(function(e){ fallo(e.message); });
+  }
+
+  // ---------- arranque ----------
+  fetch(API + "/sesion", { cache: "no-store" })
+    .then(function(r){ return r.json(); })
+    .then(function(d){ if(d && d.email) document.getElementById("quien").textContent = d.email; })
+    .catch(function(){});
+
+  var inicial = decodeURIComponent(location.hash.slice(1));
+  if(inicial) verCarpeta(inicial); else verCarpetas();
+
+  // Solo reaccionamos al botón "atrás" del navegador, no a nuestros cambios.
+  window.addEventListener("hashchange", function(){
+    if(propio){ propio = false; return; }
+    var p = decodeURIComponent(location.hash.slice(1));
+    if(p) verCarpeta(p); else verCarpetas();
+  });
+})();
+</script>
+</body>
+</html>

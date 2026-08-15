@@ -1,0 +1,28 @@
+{
+  // Proyecto de Cloudflare Pages de borenstudio.com.
+  // Sitio estatico: la raiz del repo ES la salida del build (no hay bundler).
+  //
+  // Aqui NO van credenciales. Las llaves S3 de R2 viven como secrets del
+  // proyecto (`wrangler pages secret put`). Ver README-carga.md.
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "borenstudio",
+  "compatibility_date": "2026-08-01",
+  "compatibility_flags": ["nodejs_compat"],
+  "pages_build_output_dir": ".",
+
+  // Binding usado SOLO por el panel de administrador (listar y armar el zip).
+  // Las subidas de los clientes nunca pasan por aqui: van directo a R2 con URL prefirmada.
+  "r2_buckets": [
+    {
+      "binding": "CARGAS",
+      "bucket_name": "cargas-clientes"
+    }
+  ],
+
+  // Identificadores publicos de Cloudflare Access (no son secretos, pero
+  // sin ellos el panel /carga/admin responde 503 a proposito: falla cerrado).
+  "vars": {
+    "ACCESS_TEAM_DOMAIN": "",
+    "ACCESS_AUD": ""
+  }
+}
