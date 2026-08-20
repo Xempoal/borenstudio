@@ -3,7 +3,6 @@
   'use strict';
 
   var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var finePointer = window.matchMedia('(pointer: fine)').matches;
   var hero = document.querySelector('.hero');
   var heroTitle = document.querySelector('.hero-title');
   var heroArt = document.querySelector('.tech-orbit');
@@ -83,21 +82,6 @@
       var target = document.querySelector(window.location.hash);
       if (target) target.scrollIntoView({ block: 'start', behavior: reduced ? 'auto' : 'smooth' });
     }, 180);
-  }
-
-  /* Project-card perspective follows the pointer, then eases home. */
-  if (finePointer && !reduced) {
-    projects.forEach(function (card) {
-      card.addEventListener('mousemove', function (event) {
-        var r = card.getBoundingClientRect();
-        var x = (event.clientX - r.left) / r.width - .5;
-        var y = (event.clientY - r.top) / r.height - .5;
-        card.style.transform = 'perspective(1100px) rotateX(' + (y * -2.2) + 'deg) rotateY(' + (x * 2.2) + 'deg)';
-      });
-      card.addEventListener('mouseleave', function () {
-        card.style.transform = '';
-      });
-    });
   }
 
   /* Indicate the section currently in view in the desktop navigation. */
