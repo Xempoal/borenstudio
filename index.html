@@ -344,17 +344,11 @@ section{position:relative;padding:140px 0;transition:background 700ms var(--ease
 body.no-scroll{overflow:hidden}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:0.01ms!important;transition-duration:1ms!important}.split-line .char{transform:none;opacity:1}}
 </style>
-<link rel="stylesheet" href="assets/redesign.css">
+<link rel="stylesheet" href="assets/redesign.css?v=3">
 </head>
 <body data-hero="a" data-scroll-theme="on">
 <a href="#top" class="skip-link">Saltar al contenido</a>
 
-<div class="bg-mesh" aria-hidden="true"></div>
-<canvas id="bgFx" class="bg-fx" aria-hidden="true"></canvas>
-<div class="bg-grid" aria-hidden="true"></div>
-<div class="bg-grain" aria-hidden="true"></div>
-<div class="orb a"></div>
-<div class="orb b"></div>
 <div class="cursor-ring" id="ring"></div>
 <div class="cursor-dot" id="dot"></div>
 <div class="progress" id="progress"></div>
@@ -384,45 +378,42 @@ body.no-scroll{overflow:hidden}
   <div class="wrap hero-grid">
     <div class="hero-left">
       <span class="status reveal"><span class="dot"></span> Disponibles · Nuevos proyectos 2026</span>
-      <h1 class="hero-title" data-split>
-        <span class="split-line">Construimos</span>
-        <span class="split-line"><em class="it">producto digital</em></span>
-        <span class="split-line">con criterio.</span>
+      <h1 class="hero-title" aria-label="Construimos producto digital con criterio">
+        <span class="hero-line hero-line-top">Construimos</span>
+        <span class="hero-lockup">
+          <span class="hero-product">producto</span>
+          <span class="hero-digital">digital</span>
+        </span>
+        <span class="hero-line hero-line-bottom">con criterio.</span>
       </h1>
-      <p class="hero-lede reveal" style="--i:5"><strong>Boren Studio</strong> — diseño y desarrollo de landing pages, tiendas online, PWAs, SaaS, apps móviles y automatizaciones. Rápidos y <strong>siempre al pendiente</strong> de tu proyecto.</p>
-      <div class="hero-cta reveal" style="--i:6">
-        <a href="https://wa.me/525636146876?text=Hola%20Boren%20Studio%2C%20quiero%20cotizar%20un%20proyecto" target="_blank" rel="noopener" class="btn" data-cursor data-magnetic>
-          Cotizar por WhatsApp
-        </a>
-        <a href="#proyectos" class="btn btn-ghost" data-cursor data-magnetic>Ver proyectos</a>
+      <div class="hero-intro reveal" style="--i:4">
+        <p class="hero-lede"><strong>Boren Studio</strong> — diseño y desarrollo de landing pages, tiendas online, PWAs, SaaS, apps móviles y automatizaciones. Rápidos y <strong>siempre al pendiente</strong> de tu proyecto.</p>
+        <div class="hero-cta">
+          <a href="https://wa.me/525636146876?text=Hola%20Boren%20Studio%2C%20quiero%20cotizar%20un%20proyecto" target="_blank" rel="noopener" class="btn" data-cursor data-magnetic>Cotizar proyecto <span aria-hidden="true">↗</span></a>
+          <a href="#proyectos" class="text-link" data-cursor>Ver trabajo <span aria-hidden="true">↓</span></a>
+        </div>
       </div>
-      <div class="hero-stats reveal" style="--i:7">
+      <div class="hero-stats reveal" style="--i:5">
         <div class="stat"><div class="num" data-count="54">0</div><div class="lbl">Proyectos entregados</div></div>
         <div class="stat"><div class="num" data-count="6">0</div><div class="lbl">Horas resp. promedio</div></div>
         <div class="stat"><div class="num"><span data-count="99">0</span><span class="copper">%</span></div><div class="lbl">Clientes satisfechos</div></div>
         <div class="stat"><div class="num"><span class="copper">∞</span></div><div class="lbl">Soporte cercano</div></div>
       </div>
     </div>
-    <div class="hero-right reveal" style="--i:4">
-      <div class="tech-orbit">
-        <div class="orbit-ring r1"></div>
-        <div class="orbit-ring r2"></div>
-        <div class="orbit-ring r3"></div>
-        <span class="orbit-tag" style="top:10%;left:12%">React</span>
-        <span class="orbit-tag" style="top:7%;right:14%">JavaScript</span>
-        <span class="orbit-tag" style="top:34%;left:3%">HTML5</span>
-        <span class="orbit-tag" style="top:36%;right:5%">CSS3</span>
-        <span class="orbit-tag" style="bottom:32%;left:8%">Node.js</span>
-        <span class="orbit-tag" style="bottom:30%;right:10%">TypeScript</span>
-        <span class="orbit-tag" style="bottom:13%;left:22%">Next.js</span>
-        <span class="orbit-tag" style="bottom:11%;right:18%">Python</span>
-        <div class="orbit-center" id="orbitCenter">React</div>
-        <div class="orbit-glow"></div>
-        <div class="orbit-ui">// stack vivo</div>
+    <div class="hero-right reveal" style="--i:3" aria-hidden="true">
+      <div class="signal-card">
+        <div class="signal-head"><span>BOR—LAB / 26</span><span class="signal-live"><i></i> LIVE</span></div>
+        <div class="signal-stage">
+          <div class="signal-rings"><i></i><i></i><i></i></div>
+          <div class="signal-mark">B</div>
+          <span class="signal-note note-a">DESIGN</span>
+          <span class="signal-note note-b">CODE</span>
+          <span class="signal-note note-c">LAUNCH</span>
+        </div>
+        <div class="signal-foot"><span>Ideas → productos</span><b>ONLINE</b></div>
       </div>
     </div>
   </div>
-  <pre class="snippet" style="top:120px;right:40px;" id="snip1"></pre>
 </section>
 
 <!-- SYS STRIP -->
@@ -437,7 +428,7 @@ body.no-scroll{overflow:hidden}
 </section>
 
 <!-- SERVICIOS -->
-<section id="servicios" data-theme-section="light" class="services-pin" style="padding:0">
+<section id="servicios" data-theme-section="light" class="services-grid-section">
   <div class="pin-stage">
     <div class="pin-label">— Servicios · 01—07</div>
     <h2 class="pin-title">Todo lo que tu marca <em>necesita</em>.</h2>
