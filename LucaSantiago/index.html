@@ -594,6 +594,38 @@ html:not(.js) [data-ap]{opacity:1; transform:none;}
   font-size:.9rem; color:rgba(253,247,234,.78);
   font-style:italic;
 }
+.confirma .boton{margin-top:22px;}
+.rsvp-modal{
+  width:min(460px,calc(100vw - 28px));max-height:min(90dvh,680px);
+  padding:0;border:0;border-radius:24px;overflow:auto;
+  color:var(--tinta);background:#fffdf7;box-shadow:0 28px 80px rgba(30,18,12,.38);
+}
+.rsvp-modal::backdrop{background:rgba(42,29,21,.72);backdrop-filter:blur(5px);}
+.rsvp-contenido{position:relative;padding:38px 28px 30px;text-align:center;}
+.rsvp-cerrar{
+  position:absolute;right:14px;top:14px;width:44px;height:44px;border:0;border-radius:50%;
+  display:grid;place-items:center;background:var(--crema);color:var(--tinta);font-size:1.5rem;
+  cursor:pointer;touch-action:manipulation;
+}
+.rsvp-contenido .titulo{padding:0 28px;margin-bottom:10px;}
+.rsvp-ayuda{margin:0 auto 24px;max-width:330px;color:var(--tinta-suave);font-size:.95rem;}
+.rsvp-etiqueta{display:block;text-align:left;font-size:.82rem;font-weight:700;margin:0 0 7px;}
+.rsvp-input{
+  width:100%;min-height:52px;padding:13px 15px;border:2px solid rgba(123,84,51,.26);
+  border-radius:13px;background:#fff;color:var(--tinta);font:500 1rem var(--texto);
+}
+.rsvp-input:focus{border-color:var(--olivo);outline:3px solid rgba(110,139,74,.18);}
+.rsvp-acciones{display:flex;gap:10px;margin-top:18px;}
+.rsvp-acciones .boton{flex:1;margin:0;}
+.rsvp-secundario{background:var(--crema);color:var(--tinta);box-shadow:none;}
+.rsvp-estado{min-height:24px;margin:15px 0 0;font-size:.9rem;color:var(--granero-hondo);}
+.rsvp-estado.exito{color:var(--olivo-hondo);font-weight:700;}
+.rsvp-privacidad{margin:14px 0 0;color:var(--tinta-suave);font-size:.75rem;}
+.campo-trampa{position:absolute!important;left:-10000px!important;width:1px!important;height:1px!important;overflow:hidden!important;}
+@media (max-width:420px){
+  .rsvp-contenido{padding:36px 20px 24px;}
+  .rsvp-acciones{flex-direction:column-reverse;}
+}
 
 /* =====================================================================
    7 · CIERRE
@@ -1084,6 +1116,41 @@ body{background:linear-gradient(180deg,#fffaf0 0%,var(--marfil) 100%);}
 
 
 
+<!-- ============================ CONFIRMAR ASISTENCIA ============================ -->
+<section class="bloque confirma" id="confirmar-asistencia">
+  <div class="envoltura">
+    <p class="nota" data-ap="sube">¿nos acompañas?</p>
+    <h2 class="titulo" data-ap="sube" style="--dl:80ms">Confirma tu asistencia</h2>
+    <div class="filete" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21s-7-4.4-7-11a4 4 0 017-2.7A4 4 0 0119 10c0 6.6-7 11-7 11z"/></svg></div>
+    <p class="cuerpo" data-ap="sube" style="--dl:140ms">Nos ayudará mucho saber que vienes. Solo necesitamos tu nombre completo.</p>
+    <button class="boton boton-miel" id="abrirRsvp" type="button" data-ap="sube" style="--dl:220ms">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg>
+      Confirmar asistencia
+    </button>
+  </div>
+</section>
+
+<dialog class="rsvp-modal" id="rsvpModal" aria-labelledby="rsvpTitulo">
+  <div class="rsvp-contenido">
+    <button class="rsvp-cerrar" id="cerrarRsvp" type="button" aria-label="Cerrar">×</button>
+    <p class="nota">¡qué alegría!</p>
+    <h2 class="titulo" id="rsvpTitulo">Confirma tu asistencia</h2>
+    <p class="rsvp-ayuda">Escribe el nombre completo de la persona que confirma.</p>
+    <form id="rsvpForm" novalidate>
+      <label class="rsvp-etiqueta" for="rsvpNombre">Nombre completo</label>
+      <input class="rsvp-input" id="rsvpNombre" name="nombre" type="text" minlength="3" maxlength="100" autocomplete="name" autocapitalize="words" placeholder="Ej. María López Hernández" required>
+      <label class="campo-trampa" aria-hidden="true">Sitio web<input name="website" type="text" tabindex="-1" autocomplete="off"></label>
+      <div class="rsvp-acciones">
+        <button class="boton rsvp-secundario" id="cancelarRsvp" type="button">Cancelar</button>
+        <button class="boton boton-miel" id="enviarRsvp" type="submit">Confirmar</button>
+      </div>
+      <p class="rsvp-estado" id="rsvpEstado" role="status" aria-live="polite"></p>
+      <p class="rsvp-privacidad">Tu nombre solo se usará para organizar la asistencia al evento.</p>
+    </form>
+  </div>
+</dialog>
+
+
 <!-- ============================ CIERRE ============================ -->
 <footer class="cierre">
   <div class="envoltura">
@@ -1246,6 +1313,75 @@ body{background:linear-gradient(180deg,#fffaf0 0%,var(--marfil) 100%);}
       a.click();
       document.body.removeChild(a);
       setTimeout(function(){ URL.revokeObjectURL(a.href); }, 1500);
+    });
+  }
+
+  /* ---------- 5. Confirmar asistencia ---------- */
+  var abrirRsvp = document.getElementById('abrirRsvp');
+  var cerrarRsvp = document.getElementById('cerrarRsvp');
+  var cancelarRsvp = document.getElementById('cancelarRsvp');
+  var rsvpModal = document.getElementById('rsvpModal');
+  var rsvpForm = document.getElementById('rsvpForm');
+  var rsvpNombre = document.getElementById('rsvpNombre');
+  var rsvpEstado = document.getElementById('rsvpEstado');
+  var enviarRsvp = document.getElementById('enviarRsvp');
+
+  function abrirConfirmacion(){
+    rsvpEstado.textContent = '';
+    rsvpEstado.classList.remove('exito');
+    enviarRsvp.textContent = 'Confirmar';
+    if (typeof rsvpModal.showModal === 'function') rsvpModal.showModal();
+    else rsvpModal.setAttribute('open','');
+    setTimeout(function(){ rsvpNombre.focus(); }, 120);
+  }
+  function cerrarConfirmacion(){
+    if (typeof rsvpModal.close === 'function') rsvpModal.close();
+    else rsvpModal.removeAttribute('open');
+  }
+
+  if (abrirRsvp && rsvpModal && rsvpForm){
+    abrirRsvp.addEventListener('click', abrirConfirmacion);
+    cerrarRsvp.addEventListener('click', cerrarConfirmacion);
+    cancelarRsvp.addEventListener('click', cerrarConfirmacion);
+
+    rsvpModal.addEventListener('click', function(e){
+      var caja = rsvpModal.getBoundingClientRect();
+      if (e.clientX < caja.left || e.clientX > caja.right || e.clientY < caja.top || e.clientY > caja.bottom) cerrarConfirmacion();
+    });
+
+    rsvpForm.addEventListener('submit', async function(e){
+      e.preventDefault();
+      var nombre = rsvpNombre.value.replace(/\s+/g,' ').trim();
+      if (nombre.length < 3){
+        rsvpEstado.textContent = 'Escribe tu nombre completo.';
+        rsvpNombre.focus();
+        return;
+      }
+
+      enviarRsvp.disabled = true;
+      enviarRsvp.textContent = 'Confirmando…';
+      rsvpEstado.textContent = '';
+      rsvpEstado.classList.remove('exito');
+
+      try {
+        var respuesta = await fetch('./api/confirmar', {
+          method:'POST',
+          headers:{'Content-Type':'application/json','Accept':'application/json'},
+          body:JSON.stringify({ nombre:nombre, website:rsvpForm.elements.website.value })
+        });
+        var datos = await respuesta.json().catch(function(){ return {}; });
+        if (!respuesta.ok || !datos.ok) throw new Error(datos.error || 'No pudimos guardar la confirmación.');
+        rsvpEstado.textContent = '¡Gracias, ' + datos.nombre + '! Tu asistencia quedó confirmada.';
+        rsvpEstado.classList.add('exito');
+        rsvpForm.reset();
+        enviarRsvp.textContent = 'Confirmado ✓';
+        setTimeout(cerrarConfirmacion, 2200);
+      } catch (err) {
+        rsvpEstado.textContent = err.message || 'Revisa tu conexión e inténtalo otra vez.';
+        enviarRsvp.textContent = 'Confirmar';
+      } finally {
+        enviarRsvp.disabled = false;
+      }
     });
   }
 })();

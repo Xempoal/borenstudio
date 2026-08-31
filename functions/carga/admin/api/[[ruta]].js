@@ -31,6 +31,7 @@ const VIGENCIA_DESCARGA = 3600; // 1 h
 
 const RE_IMAGEN = /\.(jpe?g|png|webp|gif|avif|heic|heif|bmp|tiff?)$/i;
 const RE_VIDEO = /\.(mp4|mov|m4v|webm|avi|mkv|3gp|hevc)$/i;
+const PREFIJO_CONFIRMACIONES = "luca:rsvp:";
 
 /* ------------------------------------------------------------------ */
 /* Utilidades                                                          */
@@ -52,6 +53,30 @@ async function listarTodo(bucket, prefix) {
   } while (cursor);
 
   return { objetos, truncado };
+}
+
+async function confirmaciones(env) {
+  if (!env.ESTADO) return error("Falta el binding KV 'ESTADO'.", 503);
+
+  const claves = [];
+  let cursor;
+  do {
+    const r = await env.ESTADO.list({ prefix: PREFIJO_CONFIRMACIONES, cursor, limit: 1000 });
+    claves.push(...r.keys);
+    cursor = r.list_complete ? undefined : r.cursor;
+  } while (cursor && claves.length < 5000);
+
+  const registros = [];
+  for (let i = 0; i < claves.length; i += 100) {
+    const lote = claves.slice(i, i + 100);
+    const valores = await Promise.all(lote.map((k) => env.ESTADO.get(k.name, "json")));
+    for (const v of valores) {
+      if (v?.nombre && v?.confirmadoEn) registros.push(v);
+    }
+  }
+
+  registros.sort((a, b) => String(b.confirmadoEn).localeCompare(String(a.confirmadoEn)));
+  return json({ ok: true, total: registros.length, confirmaciones: registros });
 }
 
 /** "hamburguesas-tony" -> "Hamburguesas Tony" (solo para mostrar). */
@@ -265,6 +290,8 @@ export async function onRequestGet({ request, env, params }) {
   }
 
   if (!abierta) return error("Necesitas entrar con el PIN.", 401);
+
+  if (ruta === "confirmaciones") return confirmaciones(env);
 
   if (!env.CARGAS) {
     return error("Falta el binding R2 'CARGAS' en el proyecto de Pages.", 503);

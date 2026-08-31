@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Panel de cargas — Boren Studio</title>
+<title>Panel Boren Studio — Cargas y confirmaciones</title>
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#FFFFFF">
 <meta name="color-scheme" content="light">
@@ -29,7 +29,7 @@
 <section id="candado" hidden class="grid flex-1 place-items-center px-5 py-12">
   <div class="w-full max-w-[21rem] text-center">
     <div class="revelar marca mx-auto mb-6 size-11 text-xl">B</div>
-    <h1 class="revelar text-[1.6rem] leading-tight font-bold tracking-[-0.02em]">Panel de cargas</h1>
+    <h1 class="revelar text-[1.6rem] leading-tight font-bold tracking-[-0.02em]">Panel Boren Studio</h1>
     <p class="revelar mt-2 text-[0.9rem] text-suave">Escribe tu PIN para entrar</p>
 
     <form id="form-pin" class="revelar mt-8" autocomplete="off">
@@ -58,8 +58,8 @@
       <div class="flex items-center gap-3">
         <div class="marca size-9 text-lg">B</div>
         <div class="leading-tight">
-          <div class="text-[0.95rem] font-semibold tracking-tight">Panel de cargas</div>
-          <div class="text-xs text-suave">Material de clientes</div>
+          <div class="text-[0.95rem] font-semibold tracking-tight">Panel Boren Studio</div>
+          <div class="text-xs text-suave">Cargas y confirmaciones</div>
         </div>
       </div>
       <button id="btn-salir" type="button"
@@ -73,7 +73,7 @@
 
   <footer class="border-t border-linea">
     <div class="mx-auto flex w-full max-w-[70rem] items-center justify-center gap-2.5 px-5 py-5 text-[0.82rem] text-tenue">
-      <span>Boren Studio · Panel de cargas</span>
+      <span>Boren Studio · Panel administrativo</span>
       <span class="marca size-5 text-[0.62rem]">B</span>
     </div>
   </footer>
@@ -109,6 +109,11 @@ const escapar = (t) => String(t).replace(/[&<>"]/g, (c) =>
 /* Para la cuota usamos dos decimales: con uno solo, el tope de 9.99 GB se
    redondea a "10.0 GB" y parece un límite distinto del que está configurado. */
 const pesoGB = (b) => `${(b / 1024 ** 3).toFixed(2)} GB`;
+const fechaConfirmacion = (valor) => new Intl.DateTimeFormat("es-MX", {
+  dateStyle: "medium",
+  timeStyle: "short",
+  timeZone: "America/Mexico_City",
+}).format(new Date(valor));
 
 /* ══════════ Candado ══════════ */
 const casillas = [...$("casillas").querySelectorAll("input")];
@@ -299,15 +304,42 @@ function tarjetasCuota(c) {
 
 /* ── Lista de entregas ── */
 async function verCarpetas() {
-  cargando("Cargando entregas…");
+  cargando("Cargando panel…");
   fijarHash("");
 
   try {
-    const d = await pedir("/carpetas");
+    const [d, rsvp] = await Promise.all([pedir("/carpetas"), pedir("/confirmaciones")]);
     const v = vista();
     const n = d.carpetas.length;
+    const listaConfirmaciones = rsvp.confirmaciones.map((c, i) => `
+      <li class="flex items-start justify-between gap-4 border-t border-linea py-3 first:border-t-0">
+        <div class="min-w-0">
+          <div class="truncate text-[0.92rem] font-semibold">${escapar(c.nombre)}</div>
+          <div class="mt-1 text-[0.76rem] text-suave tabular">${fechaConfirmacion(c.confirmadoEn)}</div>
+        </div>
+        <span class="shrink-0 text-[0.72rem] font-medium text-violeta">Confirmó</span>
+      </li>`).join("");
 
     v.innerHTML = `
+      <section class="revelar carta mb-8 overflow-hidden p-5 sm:p-6">
+        <div class="flex items-end justify-between gap-5">
+          <div>
+            <div class="text-[0.76rem] font-semibold tracking-[0.12em] text-violeta uppercase">Invitación Luca Santiago</div>
+            <h2 class="mt-2 text-[clamp(1.45rem,4.5vw,2rem)] leading-tight font-bold tracking-[-0.022em]">
+              Confirmaciones de asistencia
+            </h2>
+          </div>
+          <div class="shrink-0 text-right">
+            <div class="text-[2.5rem] leading-none font-bold tracking-tight tabular">${rsvp.total}</div>
+            <div class="mt-1 text-[0.72rem] text-suave">${rsvp.total === 1 ? "persona" : "personas"}</div>
+          </div>
+        </div>
+        <div class="mt-5 max-h-[24rem] overflow-y-auto rounded-xl bg-nieve px-4">
+          ${rsvp.total ? `<ol>${listaConfirmaciones}</ol>`
+              : `<p class="py-7 text-center text-[0.86rem] text-suave">Todavía no hay confirmaciones.</p>`}
+        </div>
+      </section>
+
       <div class="revelar">
         <h2 class="text-[clamp(1.5rem,4.5vw,2rem)] leading-tight font-bold tracking-[-0.022em]">
           ${n ? `${n} ${n === 1 ? "entrega" : "entregas"}` : "Sin entregas todavía"}
