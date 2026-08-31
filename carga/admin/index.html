@@ -59,13 +59,21 @@
         <div class="marca size-9 text-lg">B</div>
         <div class="leading-tight">
           <div class="text-[0.95rem] font-semibold tracking-tight">Panel Boren Studio</div>
-          <div class="text-xs text-suave">Cargas y confirmaciones</div>
+          <div class="text-xs text-suave">Material de clientes</div>
         </div>
       </div>
-      <button id="btn-salir" type="button"
-              class="rounded-lg px-3 py-2 text-[0.85rem] font-medium text-suave transition-colors hover:bg-nieve hover:text-texto">
-        Salir
-      </button>
+      <div class="flex items-center gap-1 sm:gap-2">
+        <button id="btn-confirmaciones" type="button"
+                class="inline-flex items-center gap-1.5 rounded-lg px-2.5 py-2 text-[0.78rem] font-medium text-suave transition-colors hover:bg-violeta-tenue hover:text-violeta sm:px-3 sm:text-[0.85rem]">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="size-4" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M17 11l2 2 4-5"/></svg>
+          <span class="hidden sm:inline">Confirmaciones de invitados</span>
+          <span class="sm:hidden">Invitados</span>
+        </button>
+        <button id="btn-salir" type="button"
+                class="rounded-lg px-2.5 py-2 text-[0.78rem] font-medium text-suave transition-colors hover:bg-nieve hover:text-texto sm:px-3 sm:text-[0.85rem]">
+          Salir
+        </button>
+      </div>
     </div>
   </header>
 
@@ -225,7 +233,8 @@ function abrirPanel() {
   limpiarPin(false);
   casillas.forEach((c) => (c.disabled = false));
   $("btn-entrar-texto").textContent = "Entrar";
-  verCarpetas();
+  const inicial = decodeURIComponent(location.hash.slice(1));
+  inicial === "confirmaciones" ? verConfirmaciones() : inicial ? verCarpeta(inicial) : verCarpetas();
 }
 
 $("btn-salir").addEventListener("click", async () => {
@@ -233,6 +242,8 @@ $("btn-salir").addEventListener("click", async () => {
   location.hash = "";
   mostrarCandado();
 });
+
+$("btn-confirmaciones").addEventListener("click", verConfirmaciones);
 
 /* ══════════ Datos ══════════ */
 const SVG_VIDEO = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" class="size-8"><path d="M3 7.5A2.5 2.5 0 0 1 5.5 5h7A2.5 2.5 0 0 1 15 7.5v9A2.5 2.5 0 0 1 12.5 19h-7A2.5 2.5 0 0 1 3 16.5z"/><path d="M15 10.5l5-3v9l-5-3z"/></svg>';
@@ -304,42 +315,15 @@ function tarjetasCuota(c) {
 
 /* ── Lista de entregas ── */
 async function verCarpetas() {
-  cargando("Cargando panel…");
+  cargando("Cargando entregas…");
   fijarHash("");
 
   try {
-    const [d, rsvp] = await Promise.all([pedir("/carpetas"), pedir("/confirmaciones")]);
+    const d = await pedir("/carpetas");
     const v = vista();
     const n = d.carpetas.length;
-    const listaConfirmaciones = rsvp.confirmaciones.map((c, i) => `
-      <li class="flex items-start justify-between gap-4 border-t border-linea py-3 first:border-t-0">
-        <div class="min-w-0">
-          <div class="truncate text-[0.92rem] font-semibold">${escapar(c.nombre)}</div>
-          <div class="mt-1 text-[0.76rem] text-suave tabular">${fechaConfirmacion(c.confirmadoEn)}</div>
-        </div>
-        <span class="shrink-0 text-[0.72rem] font-medium text-violeta">Confirmó</span>
-      </li>`).join("");
 
     v.innerHTML = `
-      <section class="revelar carta mb-8 overflow-hidden p-5 sm:p-6">
-        <div class="flex items-end justify-between gap-5">
-          <div>
-            <div class="text-[0.76rem] font-semibold tracking-[0.12em] text-violeta uppercase">Invitación Luca Santiago</div>
-            <h2 class="mt-2 text-[clamp(1.45rem,4.5vw,2rem)] leading-tight font-bold tracking-[-0.022em]">
-              Confirmaciones de asistencia
-            </h2>
-          </div>
-          <div class="shrink-0 text-right">
-            <div class="text-[2.5rem] leading-none font-bold tracking-tight tabular">${rsvp.total}</div>
-            <div class="mt-1 text-[0.72rem] text-suave">${rsvp.total === 1 ? "persona" : "personas"}</div>
-          </div>
-        </div>
-        <div class="mt-5 max-h-[24rem] overflow-y-auto rounded-xl bg-nieve px-4">
-          ${rsvp.total ? `<ol>${listaConfirmaciones}</ol>`
-              : `<p class="py-7 text-center text-[0.86rem] text-suave">Todavía no hay confirmaciones.</p>`}
-        </div>
-      </section>
-
       <div class="revelar">
         <h2 class="text-[clamp(1.5rem,4.5vw,2rem)] leading-tight font-bold tracking-[-0.022em]">
           ${n ? `${n} ${n === 1 ? "entrega" : "entregas"}` : "Sin entregas todavía"}
@@ -370,6 +354,53 @@ async function verCarpetas() {
     }
 
     revelar(v.querySelectorAll(".revelar"));
+  } catch (e) { fallo(e.message); }
+}
+
+/* ── Confirmaciones de invitados ── */
+async function verConfirmaciones() {
+  cargando("Cargando confirmaciones…");
+  fijarHash("confirmaciones");
+
+  try {
+    const d = await pedir("/confirmaciones");
+    const v = vista();
+    const filas = d.confirmaciones.map((c, i) => `
+      <li class="revelar flex items-start gap-4 border-t border-linea py-4 first:border-t-0">
+        <span class="grid size-9 shrink-0 place-items-center rounded-full bg-violeta-tenue text-[0.78rem] font-semibold text-violeta tabular">${i + 1}</span>
+        <div class="min-w-0 flex-1">
+          <div class="break-words text-[0.98rem] font-semibold tracking-tight">${escapar(c.nombre)}</div>
+          <div class="mt-1 text-[0.76rem] text-suave tabular">Confirmó el ${fechaConfirmacion(c.confirmadoEn)}</div>
+        </div>
+        <span class="shrink-0 rounded-full bg-violeta-tenue px-2.5 py-1 text-[0.7rem] font-semibold text-violeta">Confirmado</span>
+      </li>`).join("");
+
+    v.innerHTML = `
+      <button type="button" id="btn-volver-cargas"
+              class="revelar mb-6 inline-flex items-center gap-2 rounded-lg px-2 py-1.5 -ml-2 text-[0.85rem] font-medium text-suave transition-colors hover:bg-nieve hover:text-texto">
+        ${SVG_ATRAS}<span>Volver a cargas de clientes</span>
+      </button>
+
+      <div class="revelar flex items-end justify-between gap-5">
+        <div>
+          <div class="text-[0.76rem] font-semibold tracking-[0.12em] text-violeta uppercase">Invitación Luca Santiago</div>
+          <h2 class="mt-2 text-[clamp(1.55rem,5vw,2.2rem)] leading-tight font-bold tracking-[-0.025em]">Confirmaciones de invitados</h2>
+          <p class="mt-2 text-[0.88rem] text-suave">Esta lista está separada de los archivos que envían tus clientes.</p>
+        </div>
+        <div class="shrink-0 text-right">
+          <div class="text-[2.8rem] leading-none font-bold tracking-tight tabular">${d.total}</div>
+          <div class="mt-1 text-[0.72rem] text-suave">${d.total === 1 ? "persona" : "personas"}</div>
+        </div>
+      </div>
+
+      <section class="revelar carta mt-8 overflow-hidden px-5 sm:px-6">
+        ${d.total ? `<ol>${filas}</ol>`
+            : `<div class="py-16 text-center"><p class="text-[0.95rem] font-medium">Todavía no hay confirmaciones.</p><p class="mt-2 text-[0.82rem] text-suave">Cuando un invitado confirme, su nombre aparecerá aquí.</p></div>`}
+      </section>`;
+
+    $("btn-volver-cargas").addEventListener("click", verCarpetas);
+    revelar(v.querySelectorAll(".revelar"));
+    scrollTo(0, 0);
   } catch (e) { fallo(e.message); }
 }
 
@@ -448,7 +479,7 @@ addEventListener("hashchange", () => {
   if (propio) { propio = false; return; }
   if (!$("candado").hidden) return;
   const p = decodeURIComponent(location.hash.slice(1));
-  p ? verCarpeta(p) : verCarpetas();
+  p === "confirmaciones" ? verConfirmaciones() : p ? verCarpeta(p) : verCarpetas();
 });
 
 try {
@@ -457,7 +488,7 @@ try {
   if (d.sesion) {
     $("panel").hidden = false;
     const inicial = decodeURIComponent(location.hash.slice(1));
-    inicial ? verCarpeta(inicial) : verCarpetas();
+    inicial === "confirmaciones" ? verConfirmaciones() : inicial ? verCarpeta(inicial) : verCarpetas();
   } else {
     mostrarCandado(d.bloqueadoMs || 0);
   }
