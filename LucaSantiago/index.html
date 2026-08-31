@@ -12,16 +12,16 @@
 <meta property="og:title" content="Mi bautizo y mi primer año · Luca Santiago">
 <meta property="og:description" content="Domingo 13 de septiembre de 2026 · Xalapa, Veracruz">
 <meta property="og:url" content="https://borenstudio.com/LucaSantiago/">
-<meta property="og:image" content="https://borenstudio.com/LucaSantiago/luca-1600.jpg">
-<meta property="og:image:type" content="image/jpeg">
-<meta property="og:image:width" content="1600">
-<meta property="og:image:height" content="1600">
-<meta property="og:image:alt" content="Luca Santiago">
+<meta property="og:image" content="https://borenstudio.com/LucaSantiago/invitacion-whatsapp.png">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Invitación de Luca Santiago">
 <meta property="og:locale" content="es_MX">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Mi bautizo y mi primer año · Luca Santiago">
 <meta name="twitter:description" content="Domingo 13 de septiembre de 2026 · Xalapa, Veracruz">
-<meta name="twitter:image" content="https://borenstudio.com/LucaSantiago/luca-1600.jpg">
+<meta name="twitter:image" content="https://borenstudio.com/LucaSantiago/invitacion-whatsapp.png">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -514,6 +514,42 @@ html:not(.js) [data-ap]{opacity:1; transform:none;}
 .boton-miel:active{box-shadow:0 1px 0 #B87C22;}
 
 /* =====================================================================
+   DRESS CODE
+   ===================================================================== */
+.vestimenta{
+  padding:58px 0;
+  background:linear-gradient(180deg,#F4E5C8 0%,var(--crema) 100%);
+}
+.codigo-card{
+  position:relative;
+  padding:36px 28px 32px;
+  overflow:hidden;
+  text-align:center;
+  background:#fffdf7;
+  border:2px dashed rgba(180,69,60,.55);
+  border-radius:22px;
+  box-shadow:var(--sombra-suave);
+}
+.codigo-card::before,.codigo-card::after{
+  content:"";position:absolute;width:82px;height:82px;border-radius:50%;
+  background:rgba(110,139,74,.08);pointer-events:none;
+}
+.codigo-card::before{left:-34px;top:-38px;}
+.codigo-card::after{right:-34px;bottom:-38px;}
+.sombrero{
+  width:76px;height:76px;margin:0 auto 14px;border-radius:50%;
+  display:grid;place-items:center;background:var(--crema);color:var(--nogal);
+}
+.sombrero svg{width:54px;height:54px;}
+.codigo-card .titulo{margin-bottom:12px;}
+.codigo-texto{max-width:390px;margin:0 auto;color:var(--tinta-suave);font-size:1rem;}
+.codigo-opcional{
+  display:inline-block;margin-top:17px;padding:7px 14px;border-radius:999px;
+  background:var(--olivo);color:#fff;font-size:.76rem;font-weight:700;
+  letter-spacing:.08em;text-transform:uppercase;
+}
+
+/* =====================================================================
    5 · ORDEN DEL DÍA
    ===================================================================== */
 .jornada{background:linear-gradient(180deg, var(--crema) 0%, var(--marfil) 100%);}
@@ -994,6 +1030,26 @@ body{background:linear-gradient(180deg,#fffaf0 0%,var(--marfil) 100%);}
         </a>
       </div>
     </article>
+  </div>
+</section>
+
+
+<!-- ============================ DRESS CODE ============================ -->
+<section class="vestimenta">
+  <div class="envoltura">
+    <div class="codigo-card" data-ap="crece">
+      <div class="sombrero" aria-hidden="true">
+        <svg viewBox="0 0 80 80" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M24 42c3-8 5-17 6-27 7 5 13 5 20 0 1 10 3 19 6 27"/>
+          <path d="M18 39c12 6 32 6 44 0 5 2 9 6 8 10-16 8-44 8-60 0-1-4 3-8 8-10z"/>
+          <path d="M27 34c8 4 18 4 26 0"/>
+        </svg>
+      </div>
+      <p class="nota">si se animan...</p>
+      <h2 class="titulo">Dress code granjero</h2>
+      <p class="codigo-texto">Si pueden, vengan con su mejor look de granjero: sombrero, mezclilla, botas o camisa a cuadros. Lo importante es que se sientan cómodos y nos acompañen.</p>
+      <span class="codigo-opcional">Totalmente opcional</span>
+    </div>
   </div>
 </section>
 
