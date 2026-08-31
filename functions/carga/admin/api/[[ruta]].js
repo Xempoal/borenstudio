@@ -23,7 +23,7 @@ import {
 } from "../../../_lib/panel.js";
 import { prefijoValido } from "../../../_lib/slug.js";
 import { crearCliente, firmarGet, credencialesFaltantes } from "../../../_lib/firma.js";
-import { crearZip } from "../../../_lib/zip.js";
+import { calcularTamanoZip, crearZip } from "../../../_lib/zip.js";
 import { leerCuota, TOPE_MENSUAL } from "../../../_lib/cuota.js";
 
 const TOPE_OBJETOS = 10000;
@@ -208,19 +208,29 @@ async function zip(env, prefijo) {
   const entradas = objetos.map((o) => ({
     clave: o.key,
     nombre: `${slug}_${ts}/${o.key.slice(prefijo.length)}`,
+    tamanoEsperado: o.size,
   }));
 
-  const cuerpo = crearZip(entradas, async (entrada) => {
+  const fuente = crearZip(entradas, async (entrada) => {
     const obj = await env.CARGAS.get(entrada.clave);
     return obj ? obj.body : null;
   });
+  const tamano = calcularTamanoZip(entradas);
+  let cuerpo = fuente;
+
+  // En Workers, FixedLengthStream hace que el runtime envíe Content-Length y
+  // corta la respuesta si el stream produce más o menos bytes de los debidos.
+  if (typeof FixedLengthStream === "function") {
+    const fijo = new FixedLengthStream(tamano);
+    fuente.pipeTo(fijo.writable).catch(() => {});
+    cuerpo = fijo.readable;
+  }
 
   return new Response(cuerpo, {
     headers: {
       "content-type": "application/zip",
       "content-disposition": `attachment; filename="${slug}_${ts}.zip"`,
       "cache-control": "no-store",
-      // Sin content-length: el tamano solo se sabe al terminar de escribirlo.
       "x-content-type-options": "nosniff",
     },
   });

@@ -9,6 +9,7 @@
     "css": "tailwindcss -i src/estilos.css -o carga/assets/estilos.css --minify",
     "css:watch": "tailwindcss -i src/estilos.css -o carga/assets/estilos.css --watch",
     "motion": "esbuild node_modules/motion/dist/es/mini.mjs --bundle --format=esm --minify --target=es2022 --outfile=carga/assets/motion.js",
+    "test:zip": "node scripts/test-zip.mjs",
     "vendor:aws4fetch": "node scripts/vendor-aws4fetch.mjs",
     "build": "npm run css && npm run motion && npm run vendor:aws4fetch"
   },

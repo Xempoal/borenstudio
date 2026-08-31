@@ -20,7 +20,7 @@ const CLAVE = "cuota";
 
 export const GB = 1024 * 1024 * 1024;
 export const TOPE_MENSUAL = Math.floor(9.99 * GB); // 9.99 GB
-export const TOPE_TANDA = 2 * GB; // 2 GB por envío
+export const TOPE_TANDA = 3 * GB; // 3 GB por envío
 export const DIA_RENOVACION = 15;
 
 /**

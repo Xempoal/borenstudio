@@ -7,7 +7,7 @@ dentro del bucket de R2 `cargas-clientes`, y todo se borra solo a los 10 días.
 - **Portal del cliente:** <https://borenstudio.com/carga>
 - **Panel interno:** <https://borenstudio.com/carga/admin> (se entra con un PIN)
 
-Topes vigentes: **2 GB por envío**, **100 archivos por envío** y **9.99 GB por
+Topes vigentes: **3 GB por envío**, **100 archivos por envío** y **9.99 GB por
 periodo**. El periodo corre del **día 15 de cada mes al 15 del siguiente**.
 
 ---
@@ -63,7 +63,7 @@ No hay base de datos: **el estado vive en las claves de R2**.
 | `src/estilos.css` | Fuente de Tailwind (se compila a mano, ver abajo) |
 | `carga/assets/estilos.css` | CSS ya compilado — **no editar** |
 | `carga/assets/motion.js` | Motion (mini) empaquetado — **no editar** |
-| `functions/_lib/zip.js` | ZIP64 en streaming para "descargar toda la carpeta" |
+| `functions/_lib/zip.js` | ZIP estándar en streaming para "descargar toda la carpeta" |
 | `functions/_lib/http.js` | Helpers de respuesta y chequeo de origen |
 | `infra/cors.json` | Configuración CORS aplicada al bucket |
 | `infra/lifecycle.json` | Regla de borrado a los 10 días |
@@ -302,15 +302,15 @@ lo que realmente pasa.
 | Límite | Valor | Servidor | Cliente |
 |---|---|---|---|
 | Archivos por envío | 100 | `functions/api/firmar.js` → `MAX_ARCHIVOS` | `carga/index.html` → `MAX_ARCHIVOS` |
-| Peso de un archivo | 2 GB | `functions/api/firmar.js` → `MAX_BYTES_ARCHIVO` | `carga/index.html` → `MAX_BYTES_ARCHIVO` |
-| Peso del envío completo | 2 GB | `functions/_lib/cuota.js` → `TOPE_TANDA` | `carga/index.html` → `MAX_BYTES_TANDA` |
+| Peso de un archivo | 3 GB | `functions/api/firmar.js` → `MAX_BYTES_ARCHIVO` | `carga/index.html` → `MAX_BYTES_ARCHIVO` |
+| Peso del envío completo | 3 GB | `functions/_lib/cuota.js` → `TOPE_TANDA` | `carga/index.html` → `MAX_BYTES_TANDA` |
 | Cuota del periodo | 9.99 GB | `functions/_lib/cuota.js` → `TOPE_MENSUAL` | — |
 | Día de renovación | 15 | `functions/_lib/cuota.js` → `DIA_RENOVACION` | — |
 | Vigencia de las URLs | 1 h | `functions/api/firmar.js` → `VIGENCIA_SEGUNDOS` | — |
 | Subidas en paralelo | 3 | — | `carga/index.html` → `PARALELO` |
 | Reintentos por archivo | 2 | — | `carga/index.html` → `REINTENTOS` |
 
-Los textos visibles ("Hasta 100 archivos · 2 GB en total") están escritos a
+Los textos visibles ("Hasta 100 archivos · 3 GB en total") están escritos a
 mano en `carga/index.html`, en dos lugares: la tarjeta de formatos aceptados y
 el pie de la zona de arrastre. Actualízalos también.
 
@@ -346,7 +346,7 @@ echo '{"inicio":1755147600000,"usado":0}' > /tmp/c.json
 npx wrangler kv key put cuota --path /tmp/c.json --namespace-id eed7373c61644e9fad39c56355cfd191
 ```
 
-> Si subes `MAX_BYTES_ARCHIVO` por encima de 2 GB: R2 acepta hasta **5 GB** en
+> Si subes `MAX_BYTES_ARCHIVO` por encima de 3 GB: R2 acepta hasta **5 GB** en
 > un `PUT` simple. Más que eso exige subida multiparte, que es otro diseño.
 >
 > `MAX_ARCHIVOS` a 100 es cómodo, pero cada archivo dibuja una miniatura con
@@ -406,7 +406,7 @@ npx wrangler pages deploy --project-name borenstudio
   cacheada serviría URLs prefirmadas ya vencidas. El manifest da la instalación
   como app; el service worker no hace falta.
 - **`XMLHttpRequest` en vez de `fetch`.** `fetch` no reporta progreso de subida.
-  Sin barra por archivo, un cliente subiendo 2 GB desde el celular no sabe si
+  Sin barra por archivo, un cliente subiendo 3 GB desde el celular no sabe si
   la cosa avanza o está colgada.
 - **El bloqueo del PIN es por dispositivo antes que global.** Un tope solo
   global convierte el candado en un botón para dejarte fuera 3 horas.
@@ -418,6 +418,7 @@ npx wrangler pages deploy --project-name borenstudio
 - **Sin notificaciones.** No hay bot, ni correo, ni webhook: el panel es la
   única forma de ver qué llegó. Menos piezas que se pueden romper y un secret
   menos que rotar.
-- **El ZIP del panel es ZIP64 sin comprimir.** Fotos y videos ya vienen
+- **El ZIP del panel es ZIP estándar sin comprimir.** Fotos y videos ya vienen
   comprimidos; comprimir solo quema CPU. Se arma en streaming porque una
-  carpeta de varios GB no cabe en la memoria de un Worker.
+  carpeta de varios GB no cabe en la memoria de un Worker. Como cada envío se
+  limita a 3 GB, no hace falta ZIP64 y el formato clásico es más compatible.

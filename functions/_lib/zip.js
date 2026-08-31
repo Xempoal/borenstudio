@@ -1,12 +1,13 @@
 /**
- * ZIP64 en streaming, metodo STORE (sin comprimir).
+ * ZIP estandar en streaming, metodo STORE (sin comprimir).
  *
- * Por que asi:
- *  - STORE: fotos y videos ya vienen comprimidos; comprimir solo quema CPU.
- *  - Streaming: no cabe una carpeta de varios GB en memoria del Worker.
- *  - ZIP64 siempre: un solo video de celular puede pasar los 4 GB.
- *  - Descriptor de datos (bit 3): el CRC se calcula al vuelo, mientras pasan
- *    los bytes, asi que no lo conocemos al escribir la cabecera local.
+ * Las fotos y videos ya vienen comprimidos, asi que STORE evita gastar CPU.
+ * El cuerpo se transmite objeto por objeto: nunca se carga una carpeta entera
+ * en la memoria del Worker.
+ *
+ * El portal limita cada tanda a 3 GB. Eso permite usar ZIP clasico (limite de
+ * 4 GB) en vez de forzar ZIP64. ZIP clasico tiene mucha mejor compatibilidad
+ * con el Explorador de Windows, macOS, Android y aplicaciones de mensajeria.
  */
 
 const TABLA_CRC = (() => {
@@ -27,7 +28,6 @@ function crc32(bytes, previo = 0) {
   return ~c >>> 0;
 }
 
-/** Escritor secuencial little-endian sobre un buffer de tamano fijo. */
 class Buf {
   constructor(n) {
     this.b = new Uint8Array(n);
@@ -35,18 +35,13 @@ class Buf {
     this.o = 0;
   }
   u16(x) {
-    this.v.setUint16(this.o, x, true);
+    this.v.setUint16(this.o, Number(x) & 0xffff, true);
     this.o += 2;
     return this;
   }
   u32(x) {
-    this.v.setUint32(this.o, x >>> 0, true);
+    this.v.setUint32(this.o, Number(x) >>> 0, true);
     this.o += 4;
-    return this;
-  }
-  u64(x) {
-    this.v.setBigUint64(this.o, BigInt(x), true);
-    this.o += 8;
     return this;
   }
   bytes(a) {
@@ -56,12 +51,14 @@ class Buf {
   }
 }
 
-const SIN_ZIP64_32 = 0xffffffff;
-const FLAGS = 0x0008 | 0x0800; // descriptor de datos + nombres en UTF-8
-const VERSION = 45; // requiere ZIP64
+const MAX_U16 = 0xffff;
+const MAX_U32 = 0xffffffff;
+const FLAGS = 0x0008 | 0x0800; // descriptor de datos + nombres UTF-8
+const VERSION = 20; // ZIP 2.0: descriptor de datos
 
 /** Fecha/hora en formato MS-DOS. */
 function fechaDos(d = new Date()) {
+  const anio = Math.min(2107, Math.max(1980, d.getFullYear()));
   const hora =
     (Math.floor(d.getSeconds() / 2) & 0x1f) |
     ((d.getMinutes() & 0x3f) << 5) |
@@ -69,151 +66,170 @@ function fechaDos(d = new Date()) {
   const fecha =
     (d.getDate() & 0x1f) |
     (((d.getMonth() + 1) & 0x0f) << 5) |
-    ((Math.max(0, d.getFullYear() - 1980) & 0x7f) << 9);
+    (((anio - 1980) & 0x7f) << 9);
   return { hora, fecha };
 }
 
 function cabeceraLocal(nombre, dos) {
-  // 30 fijos + nombre + 20 del campo extra ZIP64
-  const b = new Buf(30 + nombre.length + 20);
+  const b = new Buf(30 + nombre.length);
   b.u32(0x04034b50)
     .u16(VERSION)
     .u16(FLAGS)
     .u16(0) // STORE
     .u16(dos.hora)
     .u16(dos.fecha)
-    .u32(0) // CRC: va en el descriptor
-    .u32(SIN_ZIP64_32) // tam. comprimido -> ZIP64
-    .u32(SIN_ZIP64_32) // tam. sin comprimir -> ZIP64
+    .u32(0) // CRC y tamanos van en el descriptor
+    .u32(0)
+    .u32(0)
     .u16(nombre.length)
-    .u16(20) // longitud del campo extra
-    .bytes(nombre)
-    .u16(0x0001) // ZIP64
-    .u16(16)
-    .u64(0) // se rellenan en el descriptor
-    .u64(0);
+    .u16(0)
+    .bytes(nombre);
   return b.b;
 }
 
 function descriptorDatos(crc, tamano) {
-  const b = new Buf(24);
-  b.u32(0x08074b50).u32(crc).u64(tamano).u64(tamano);
+  const b = new Buf(16);
+  b.u32(0x08074b50).u32(crc).u32(tamano).u32(tamano);
   return b.b;
 }
 
 function cabeceraCentral(e, dos) {
-  const b = new Buf(46 + e.nombre.length + 28);
+  const b = new Buf(46 + e.nombre.length);
   b.u32(0x02014b50)
-    .u16(VERSION) // version que lo creo
-    .u16(VERSION) // version necesaria
+    .u16(VERSION)
+    .u16(VERSION)
     .u16(FLAGS)
     .u16(0) // STORE
     .u16(dos.hora)
     .u16(dos.fecha)
     .u32(e.crc)
-    .u32(SIN_ZIP64_32)
-    .u32(SIN_ZIP64_32)
+    .u32(e.tamano)
+    .u32(e.tamano)
     .u16(e.nombre.length)
-    .u16(28) // campo extra ZIP64
+    .u16(0) // extra
     .u16(0) // comentario
-    .u16(0) // disco
+    .u16(0) // disco donde empieza
     .u16(0) // atributos internos
     .u32(0) // atributos externos
-    .u32(SIN_ZIP64_32) // offset -> ZIP64
-    .bytes(e.nombre)
-    .u16(0x0001)
-    .u16(24)
-    .u64(e.tamano)
-    .u64(e.tamano)
-    .u64(e.inicio);
+    .u32(e.inicio)
+    .bytes(e.nombre);
   return b.b;
 }
 
-function cierre(entradas, inicioCentral, tamanoCentral) {
-  const n = entradas.length;
-  const b = new Buf(56 + 20 + 22);
-  // EOCD64
-  b.u32(0x06064b50)
-    .u64(44) // tamano del registro restante
-    .u16(VERSION)
-    .u16(VERSION)
-    .u32(0) // disco
-    .u32(0) // disco del directorio central
-    .u64(n)
-    .u64(n)
-    .u64(tamanoCentral)
-    .u64(inicioCentral);
-  // Localizador del EOCD64
-  b.u32(0x07064b50).u32(0).u64(inicioCentral + tamanoCentral).u32(1);
-  // EOCD clasico, todo a "mirame el ZIP64"
+function cierre(cantidad, inicioCentral, tamanoCentral) {
+  const b = new Buf(22);
   b.u32(0x06054b50)
-    .u16(0xffff)
-    .u16(0xffff)
-    .u16(0xffff)
-    .u16(0xffff)
-    .u32(SIN_ZIP64_32)
-    .u32(SIN_ZIP64_32)
+    .u16(0) // numero de disco: ZIP de un solo volumen
+    .u16(0) // disco donde empieza el directorio central
+    .u16(cantidad)
+    .u16(cantidad)
+    .u32(tamanoCentral)
+    .u32(inicioCentral)
     .u16(0);
   return b.b;
 }
 
+function asegurarRango(valor, etiqueta) {
+  if (!Number.isSafeInteger(valor) || valor < 0 || valor > MAX_U32) {
+    throw new Error(`${etiqueta} excede el limite del ZIP de 4 GB.`);
+  }
+}
+
+/** Tamaño exacto del ZIP STORE; permite al navegador detectar cortes. */
+export function calcularTamanoZip(entradas) {
+  if (entradas.length > MAX_U16) throw new Error("El ZIP contiene demasiados archivos.");
+  const codificador = new TextEncoder();
+  const total = entradas.reduce((acumulado, e) => {
+    if (e.tamanoEsperado == null) throw new Error("Falta el tamaño de un archivo del ZIP.");
+    asegurarRango(e.tamanoEsperado, `El archivo ${e.nombre}`);
+    const largoNombre = codificador.encode(e.nombre).length;
+    if (largoNombre > MAX_U16) throw new Error("Un nombre de archivo es demasiado largo.");
+    return acumulado + 30 + largoNombre + e.tamanoEsperado + 16 + 46 + largoNombre;
+  }, 22);
+  asegurarRango(total, "El ZIP completo");
+  return total;
+}
+
 /**
- * @param {{nombre: string}[]} entradas  nombre = ruta dentro del zip
+ * @param {{nombre:string,tamanoEsperado?:number}[]} entradas
  * @param {(entrada) => Promise<ReadableStream|null>} abrir
  * @returns {ReadableStream<Uint8Array>}
  */
 export function crearZip(entradas, abrir) {
+  if (entradas.length > MAX_U16) throw new Error("El ZIP contiene demasiados archivos.");
+
   const codificador = new TextEncoder();
   const dos = fechaDos();
+  const preparadas = entradas.map((e) => {
+    const nombre = codificador.encode(e.nombre);
+    if (nombre.length > MAX_U16) throw new Error("Un nombre de archivo es demasiado largo.");
+    if (e.tamanoEsperado != null) asegurarRango(e.tamanoEsperado, `El archivo ${e.nombre}`);
+    return { ...e, nombreBytes: nombre };
+  });
+
+  // El panel conoce los tamaños de R2. Validamos el ZIP completo antes de
+  // enviar el primer byte para nunca entregar una descarga truncada.
+  if (preparadas.every((e) => e.tamanoEsperado != null)) calcularTamanoZip(preparadas);
 
   async function* generar() {
     const central = [];
-    let offset = 0n;
+    let offset = 0;
 
-    for (const entrada of entradas) {
+    for (const entrada of preparadas) {
       let cuerpo;
       try {
         cuerpo = await abrir(entrada);
       } catch {
         cuerpo = null;
       }
-      if (!cuerpo) continue; // el objeto desaparecio (lifecycle); lo saltamos
+      if (!cuerpo) throw new Error(`No se pudo leer ${entrada.nombre}; vuelve a generar la descarga.`);
 
-      const nombre = codificador.encode(entrada.nombre);
       const inicio = offset;
-
-      const lfh = cabeceraLocal(nombre, dos);
+      const lfh = cabeceraLocal(entrada.nombreBytes, dos);
       yield lfh;
-      offset += BigInt(lfh.length);
+      offset += lfh.length;
 
       let crc = 0;
-      let tamano = 0n;
+      let tamano = 0;
       const lector = cuerpo.getReader();
-      while (true) {
-        const { done, value } = await lector.read();
-        if (done) break;
-        crc = crc32(value, crc);
-        tamano += BigInt(value.length);
-        yield value;
+      try {
+        while (true) {
+          const { done, value } = await lector.read();
+          if (done) break;
+          crc = crc32(value, crc);
+          tamano += value.length;
+          asegurarRango(tamano, `El archivo ${entrada.nombre}`);
+          yield value;
+        }
+      } finally {
+        lector.releaseLock();
       }
-      offset += tamano;
 
+      if (entrada.tamanoEsperado != null && tamano !== entrada.tamanoEsperado) {
+        throw new Error(`El archivo ${entrada.nombre} cambio durante la descarga.`);
+      }
+
+      offset += tamano;
       const dd = descriptorDatos(crc, tamano);
       yield dd;
-      offset += BigInt(dd.length);
+      offset += dd.length;
+      asegurarRango(offset, "El contenido del ZIP");
 
-      central.push({ nombre, crc, tamano, inicio });
+      central.push({ nombre: entrada.nombreBytes, crc, tamano, inicio });
     }
 
     const inicioCentral = offset;
-    let tamanoCentral = 0n;
+    let tamanoCentral = 0;
     for (const e of central) {
       const cd = cabeceraCentral(e, dos);
       yield cd;
-      tamanoCentral += BigInt(cd.length);
+      tamanoCentral += cd.length;
     }
 
-    yield cierre(central, inicioCentral, tamanoCentral);
+    asegurarRango(inicioCentral, "El inicio del directorio central");
+    asegurarRango(tamanoCentral, "El directorio central");
+    asegurarRango(inicioCentral + tamanoCentral, "El ZIP completo");
+    yield cierre(central.length, inicioCentral, tamanoCentral);
   }
 
   const it = generar();

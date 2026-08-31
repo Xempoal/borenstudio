@@ -75,7 +75,7 @@
         <div>
           <h2 class="text-[0.9rem] font-semibold">Formatos aceptados</h2>
           <p class="mt-1.5 text-[0.82rem] leading-relaxed text-suave">JPG, PNG, HEIC, MP4, MOV, AVI</p>
-          <p class="mt-1 text-[0.82rem] leading-relaxed text-suave">Hasta 100 archivos · 2 GB en total</p>
+          <p class="mt-1 text-[0.82rem] leading-relaxed text-suave">Hasta 100 archivos · 3 GB en total</p>
         </div>
       </div>
 
@@ -126,7 +126,7 @@
             <p class="mt-4 text-lg font-semibold tracking-tight">Arrastra tus archivos aquí</p>
             <p class="mt-1 text-[0.88rem] text-suave">o selecciona archivos desde tu dispositivo</p>
             <span class="btn pointer-events-none mt-5 inline-flex px-5 py-2.5">Seleccionar archivos</span>
-            <p class="mt-5 text-[0.78rem] text-tenue">Fotos y videos · Hasta 100 archivos · 2 GB en total</p>
+            <p class="mt-5 text-[0.78rem] text-tenue">Fotos y videos · Hasta 100 archivos · 3 GB en total</p>
           </label>
 
           <!-- Encabezado de la lista -->
@@ -251,8 +251,8 @@ if (reducido) {
 /* ── Límites (deben coincidir con functions/api/firmar.js) ──────────────── */
 const GB = 1024 ** 3;
 const MAX_ARCHIVOS = 100;
-const MAX_BYTES_ARCHIVO = 2 * GB;
-const MAX_BYTES_TANDA = 2 * GB;   // el envío completo
+const MAX_BYTES_ARCHIVO = 3 * GB;
+const MAX_BYTES_TANDA = 3 * GB;   // el envío completo
 const PARALELO = 3;               // subidas simultáneas
 const REINTENTOS = 2;             // reintentos por archivo
 
@@ -298,12 +298,12 @@ function agregar(archivos) {
     }
     if (f.size === 0) { rechazados.push(`"${f.name}" está vacío`); continue; }
     if (f.size > MAX_BYTES_ARCHIVO) {
-      rechazados.push(`"${f.name}" pesa ${peso(f.size)} y el máximo es 2 GB`);
+      rechazados.push(`"${f.name}" pesa ${peso(f.size)} y el máximo es 3 GB`);
       continue;
     }
     if (items.some((it) => it.file.name === f.name && it.file.size === f.size)) continue;
     if (total() + f.size > MAX_BYTES_TANDA) {
-      rechazados.push(`"${f.name}" no cabe: el envío completo no puede pasar de 2 GB`);
+      rechazados.push(`"${f.name}" no cabe: el envío completo no puede pasar de 3 GB`);
       continue;
     }
     items.push({ id: ++contador, file: f, estado: "listo", pct: 0, msg: "" });

@@ -27,7 +27,7 @@ import {
 
 // Limites de la tanda. Para cambiarlos, ver README-carga.md.
 export const MAX_ARCHIVOS = 100;
-export const MAX_BYTES_ARCHIVO = 2 * GB; // 2 GB por archivo
+export const MAX_BYTES_ARCHIVO = 3 * GB; // 3 GB por archivo
 const VIGENCIA_SEGUNDOS = 3600; // 1 hora
 
 function peso(bytes) {
@@ -75,17 +75,17 @@ export async function onRequestPost({ request, env }) {
     }
     if (tamano > MAX_BYTES_ARCHIVO) {
       return error(
-        `"${String(a.nombre || "archivo").slice(0, 60)}" pesa mas de 2 GB.`,
+        `"${String(a.nombre || "archivo").slice(0, 60)}" pesa mas de 3 GB.`,
         413
       );
     }
     totalTanda += tamano;
   }
 
-  // --- Tope por carga: 2 GB en total ---
+  // --- Tope por carga: 3 GB en total ---
   if (totalTanda > TOPE_TANDA) {
     return error(
-      `Esta carga pesa ${peso(totalTanda)} y el maximo por envio es 2 GB. ` +
+      `Esta carga pesa ${peso(totalTanda)} y el maximo por envio es 3 GB. ` +
         `Quita algunos archivos y manda el resto en un segundo envio.`,
       413,
       { limite: "tanda", totalTanda, topeTanda: TOPE_TANDA }
