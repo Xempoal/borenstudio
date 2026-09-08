@@ -14,5 +14,20 @@ a{color:inherit;text-decoration:none}button{font:inherit}img{max-width:100%;disp
 @media(max-width:700px){html{scroll-padding-top:20px}.header{height:78px;padding:0 6%}.wordmark{font-size:28px}.wordmark span{font-size:10px}.header nav{gap:20px;font-size:12px}.header nav>a:not(.nav-contact){display:none}.nav-contact{gap:7px}.hero{height:90svh;min-height:660px;max-height:900px;padding:104px 6% 25px}.hero-top{font-size:11px}.hero-location{max-width:120px}.hero h1{font-size:80px;line-height:.88;margin-top:auto;margin-bottom:130px}.hero h1>span{padding-left:22px}.hero-bottom{gap:20px;align-items:center}.hero-bottom p{font-size:14px}.hero-bottom em{font-size:19px}.circle-link{gap:0}.circle-link>span:first-child{display:none}.circle{width:46px;height:46px}.motion-control{bottom:100px;right:6%}.scene-fallback{font-size:370px;right:8%;top:25%}.section-pad{padding:65px 6%}.intro,.studio,.faq{grid-template-columns:1fr;gap:36px}.intro-body{padding-top:0}.intro h2,h2{font-size:44px}.section-label{margin-bottom:24px}.large-copy{font-size:18px;margin-bottom:30px}summary{font-size:21px;padding:20px 0}.section-heading{display:block;margin-bottom:32px}.section-heading p{margin-top:23px}.project-wide .project-image{aspect-ratio:1.4;padding:5%}.project-pair{grid-template-columns:1fr;gap:35px;margin-top:35px}.project-pair .project:last-child{margin-top:0}.project-image{padding:5%;aspect-ratio:1.4}.project-caption{display:flex}.project-caption h3{font-size:24px}.project-caption p{text-align:right;margin-top:0;font-size:11px}.project-open{width:37px;height:37px;bottom:10px;right:10px}.project-open svg{width:19px}.studio h2,.faq h2{font-size:42px}.studio-photo{max-width:460px}.studio-photo img{aspect-ratio:4/5}.questions summary{font-size:15px}.contact h2{font-size:66px}.contact>p{font-size:12px;max-width:27ch;margin-left:auto;margin-right:auto}.contact-link{font-size:18px;gap:35px}.contact-bottom{margin-top:60px;gap:15px;font-size:11px}footer{padding:26px 6%;flex-wrap:wrap}footer .wordmark{font-size:27px}footer p{font-size:10px}.back-top{font-size:11px}.back-top svg{width:16px}footer p{order:3;flex-basis:100%}}
 @media(max-width:370px){.hero h1{font-size:68px}.hero-bottom em{font-size:17px}.hero-bottom p{font-size:13px}.intro h2,h2,.studio h2,.faq h2{font-size:37px}.contact h2{font-size:58px}.project-caption{display:block}.project-caption p{text-align:left;margin-top:8px}}
 .studio-photo img{height:auto}
+.header .nav-contact{background:var(--lime);color:var(--ink);padding:12px 18px;border-radius:4px;font-weight:600;gap:12px}
+.header .nav-contact:hover{background:var(--paper);color:var(--ink)}
+.service-guide{max-width:34ch;margin:32px 0 0;font-size:17px;line-height:1.8}
+.intro-heading{align-self:start;position:sticky;top:50px}
+.services summary{align-items:flex-start;gap:16px}
+.services summary>span{min-width:0}
+.services summary svg{margin-top:4px}
+.services summary small{display:block;font:400 13px/1.6 var(--body);margin-top:9px}
+.service-description p{margin-bottom:18px}
+.service-description p:last-child{margin-bottom:28px}
+.whatsapp-float{position:fixed;right:24px;bottom:24px;z-index:30;display:flex;align-items:center;justify-content:center;gap:16px;min-height:50px;padding:12px 20px;background:var(--lime);color:var(--ink);border:1px solid var(--ink);border-radius:4px;font-size:14px;font-weight:600;box-shadow:0 4px 20px #14161320;transition:background .2s}
+.whatsapp-float:hover{background:var(--paper)}
+footer{padding-bottom:100px}
+html{scroll-padding-bottom:100px}
+@media(max-width:700px){.header .nav-contact{padding:10px;font-size:11px;gap:6px}.header .nav-contact svg{width:16px;height:16px}.header .wordmark{font-size:26px}.intro-heading{position:static}.service-guide{font-size:15px}.services summary{font-size:20px}.whatsapp-float{right:16px;bottom:max(16px,env(safe-area-inset-bottom));font-size:13px;min-height:48px;padding:10px 16px}.services summary small{font-size:12px}}
 @media(max-width:700px){.scene-fallback{font-size:180px;top:165px;right:20%}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{transition:none!important;animation:none!important}}
