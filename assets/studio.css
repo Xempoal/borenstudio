@@ -76,6 +76,12 @@ svg { display: block; }
 .split .line { display: block; white-space: nowrap; }
 .js .split:not(.is-split) { visibility: hidden; }
 
+/* Hero title: last line types and deletes rotating phrases */
+.typed-wrap .line { white-space: normal; }
+.caret { display: inline-block; width: .075em; height: .72em; margin-left: .05em; background: currentColor; vertical-align: baseline; animation: caret 1s steps(1) infinite; }
+.hero-title.typing .caret, .hero-title.paused .caret { animation: none; }
+@keyframes caret { 50% { opacity: 0; } }
+
 /* ---------- Buttons ---------- */
 .hl { position: relative; display: inline-grid; overflow: hidden; line-height: 1.3; }
 .hl > span { grid-area: 1 / 1; transition: transform .6s var(--ease); }
@@ -329,6 +335,7 @@ html:not(.js) .site-in { display: none; }
   .btn-cta { height: 36px; padding: 0 14px; border-radius: 10px; }
   .hero-home { min-height: 0; padding: 104px 0 0; display: flex; flex-direction: column; }
   .hero-home .desc { width: auto; max-width: 440px; margin-top: 32px; }
+  .typed-wrap { min-height: 1.95em; }
   .hero-media { position: relative; left: auto; top: auto; order: 2; width: 100%; margin-top: -4vw; }
   .motion-control { bottom: 24px; }
   .rs-scale { border-radius: 40px 40px 0 0; clip-path: inset(0 var(--rs-inset, 0px) 0 var(--rs-inset, 0px) round 40px 40px 0 0); }
@@ -382,4 +389,5 @@ html:not(.js) .site-in { display: none; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; }
   .site-in { display: none; }
+  .caret { animation: none !important; }
 }

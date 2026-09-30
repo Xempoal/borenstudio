@@ -4,6 +4,7 @@ const sections = ['estudio', 'afluya', 'proceso', 'proyectos', 'integraciones', 
 
 for (const viewport of [{ width: 1440, height: 900 }, { width: 390, height: 844 }, { width: 320, height: 740 }, { width: 1920, height: 1080 }]) {
   test(`landing renders and responds at ${viewport.width}px`, async ({ page }, testInfo) => {
+    test.setTimeout(120000);
     const errors = [];
     page.on('pageerror', error => errors.push(error.message));
     page.on('console', message => { if (message.type() === 'error') errors.push(message.text()); });
@@ -12,7 +13,13 @@ for (const viewport of [{ width: 1440, height: 900 }, { width: 390, height: 844 
     await expect(page.locator('.hero-media')).toHaveClass(/ready/);
     await page.evaluate(() => document.fonts.ready);
     await page.waitForTimeout(2500);
-    await expect(page.locator('h1')).toHaveText('Diseño con carácter. Desarrollo con intención.');
+    const title = page.locator('h1');
+    await expect(title).toHaveAttribute('aria-label', 'Diseño y desarrollo a tu medida.');
+    await expect(title).toContainText('Diseño y');
+    // The last line types, deletes and rotates phrases.
+    const typed = page.locator('.typed');
+    const phrase = await typed.textContent();
+    await expect(typed).not.toHaveText(phrase, { timeout: 8000 });
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
 
     // The tower keeps assembling itself.
@@ -41,6 +48,9 @@ for (const viewport of [{ width: 1440, height: 900 }, { width: 390, height: 844 
     const paused = await tower.screenshot();
     await page.waitForTimeout(300);
     expect(Buffer.compare(paused, await tower.screenshot())).toBe(0);
+    const pausedPhrase = await page.locator('.typed').textContent();
+    await page.waitForTimeout(2500);
+    await expect(page.locator('.typed')).toHaveText(pausedPhrase);
     await page.getByRole('button', { name: 'Reanudar animación' }).click();
 
     for (const id of sections) {
@@ -84,7 +94,9 @@ test('reduced motion and unavailable WebGL keep the landing usable', async ({ br
   const fallbackPage = await fallback.newPage();
   await fallbackPage.goto('/');
   await expect(fallbackPage.locator('.hero-fallback')).toBeVisible();
-  await expect(fallbackPage.locator('.motion-control')).toBeHidden();
+  // Without WebGL the control still pauses the rotating title.
+  await fallbackPage.locator('.motion-control').click();
+  await expect(fallbackPage.locator('.motion-control')).toHaveAttribute('aria-pressed', 'true');
   await expect(fallbackPage.locator('.contact-link')).toBeVisible();
   await fallback.close();
 });

@@ -77,6 +77,12 @@ addEventListener('keydown', event => { if (event.key === 'Escape' && !menu.hidde
 const splits = [...document.querySelectorAll('.split')];
 const revealed = new WeakSet();
 function split(element) {
+  // Titles with hand-written lines (the hero) keep their markup.
+  if (element.hasAttribute('data-lines')) {
+    element.classList.add('is-split');
+    if (!revealed.has(element) && !reduced.matches) gsap.set(element.querySelectorAll('.line'), { yPercent: 110 });
+    return;
+  }
   const text = element.dataset.text ?? element.textContent.trim().replace(/\s+/g, ' ');
   element.dataset.text = text;
   element.setAttribute('aria-label', text);
@@ -221,25 +227,80 @@ document.querySelectorAll('.entry-item').forEach(item => {
   });
 });
 
+// --- Typewriter on the hero title ------------------------------------------
+function createTyping(title) {
+  const target = title.querySelector('.typed');
+  const phrases = JSON.parse(target.dataset.phrases);
+  let index = 0;
+  let timer = 0;
+  let paused = false;
+  let visible = true;
+  let mode = 'hold';
+  const next = delay => { clearTimeout(timer); timer = setTimeout(step, delay); };
+  function step() {
+    if (paused || !visible || document.hidden || reduced.matches) { title.classList.remove('typing'); return; }
+    const text = target.textContent;
+    if (mode === 'hold') { mode = 'delete'; title.classList.add('typing'); next(40); return; }
+    if (mode === 'delete') {
+      if (text.length) { target.textContent = text.slice(0, -1); next(38); return; }
+      index = (index + 1) % phrases.length;
+      mode = 'type';
+      next(260);
+      return;
+    }
+    const phrase = phrases[index];
+    if (text.length < phrase.length) { target.textContent = phrase.slice(0, text.length + 1); next(62 + Math.random() * 45); return; }
+    mode = 'hold';
+    title.classList.remove('typing');
+    next(1900);
+  }
+  new IntersectionObserver(([entry]) => { visible = entry.isIntersecting; if (visible && !paused) next(600); }).observe(title);
+  document.addEventListener('visibilitychange', () => { if (!document.hidden && !paused) next(600); });
+  next(2800);
+  return {
+    get paused() { return paused; },
+    setPaused(value) {
+      paused = value;
+      if (paused) {
+        clearTimeout(timer);
+        // Never freeze on a half-typed word.
+        target.textContent = phrases[index];
+        mode = 'hold';
+        title.classList.remove('typing');
+      } else next(1200);
+      title.classList.toggle('paused', paused);
+    },
+  };
+}
+const typing = createTyping(document.querySelector('.hero-title'));
+
 // --- 3D ---------------------------------------------------------------------
 const heroMedia = document.querySelector('.hero-media');
 const control = document.querySelector('.motion-control');
-Promise.all([document.fonts.load('800 100px "Inter Tight"'), document.fonts.load('800 100px Archivo')]).catch(() => {}).finally(() => {
-  const tower = createTower(document.querySelector('#tower'), { onReady: () => heroMedia.classList.add('ready') });
-  if (!tower) { root.classList.add('no-webgl'); return; }
-  const updateControl = () => {
-    const stopped = tower.paused;
-    const label = stopped ? 'Reanudar animación' : 'Pausar animación';
-    control.setAttribute('aria-pressed', String(stopped));
-    control.setAttribute('aria-label', label);
-    control.title = label;
-    control.innerHTML = `<i data-lucide="${stopped ? 'play' : 'pause'}" aria-hidden="true"></i>`;
-    createIcons({ icons });
-    control.hidden = reduced.matches;
-  };
-  control.addEventListener('click', () => { tower.setPaused(!tower.paused); updateControl(); });
-  reduced.addEventListener('change', updateControl);
+let tower = null;
+function updateControl() {
+  const stopped = reduced.matches || typing.paused;
+  const label = stopped ? 'Reanudar animación' : 'Pausar animación';
+  control.setAttribute('aria-pressed', String(stopped));
+  control.setAttribute('aria-label', label);
+  control.title = label;
+  control.innerHTML = `<i data-lucide="${stopped ? 'play' : 'pause'}" aria-hidden="true"></i>`;
+  createIcons({ icons });
+  control.hidden = reduced.matches;
+}
+// One control pauses both the tower and the rotating title.
+control.addEventListener('click', () => {
+  const pause = !typing.paused;
+  typing.setPaused(pause);
+  tower?.setPaused(pause);
   updateControl();
+});
+reduced.addEventListener('change', updateControl);
+updateControl();
+Promise.all([document.fonts.load('800 100px "Inter Tight"'), document.fonts.load('800 100px Archivo')]).catch(() => {}).finally(() => {
+  tower = createTower(document.querySelector('#tower'), { onReady: () => heroMedia.classList.add('ready') });
+  if (!tower) { root.classList.add('no-webgl'); return; }
+  tower.setPaused(typing.paused);
 
   try {
     createClusters(document.querySelectorAll('.cluster'));
