@@ -311,7 +311,8 @@ export function createTower(canvas, { onReady } = {}) {
     const elevation = .43 + eased.y * .05;
     const azimuth = eased.x * .18;
     camera.position.set(Math.sin(azimuth) * Math.cos(elevation) * distance, target.y + Math.sin(elevation) * distance, Math.cos(azimuth) * Math.cos(elevation) * distance);
-    camera.lookAt(target);
+    // On phones the column sits higher, right under the headline.
+    camera.lookAt(target.x, camera.userData.small ? target.y - .45 : target.y, target.z);
     tower.rotation.y = spinAngle;
 
     renderer.clear();

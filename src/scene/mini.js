@@ -79,9 +79,9 @@ function cylinder(radius, h, sides, top = sides, segments = 48, thetaStart = 0, 
 function clusterTalk() {
   const group = new THREE.Group();
   const specs = [
-    ['terrazzo', 'pink'], ['wood', 'green'], ['terrazzo', 'terrazzo'],
-    ['basalt', 'orange'], ['terrazzo', 'cyan'], ['wood', 'wood'],
-    ['terrazzo', 'green'], ['basalt', 'basalt'], ['wood', 'pink'],
+    ['terrazzo', 'lavender'], ['wood', 'teal'], ['terrazzo', 'terrazzo'],
+    ['basalt', 'peach'], ['terrazzo', 'indigo'], ['wood', 'wood'],
+    ['terrazzo', 'teal'], ['basalt', 'basalt'], ['wood', 'lavender'],
   ];
   const items = specs.map(([sides, top], i) => {
     const x = (i % 3 - 1) * .56;
@@ -106,14 +106,14 @@ function clusterTalk() {
 
 function clusterBuild() {
   const group = new THREE.Group();
-  const base = [['terrazzo', 'terrazzo'], ['wood', 'wood'], ['basalt', 'basalt'], ['terrazzo', 'green']].map(([sides, top], i) => {
+  const base = [['terrazzo', 'terrazzo'], ['wood', 'wood'], ['basalt', 'basalt'], ['terrazzo', 'teal']].map(([sides, top], i) => {
     const plate = block(.62, .22, .62, sides, top, .03);
     plate.position.set((i % 2 - .5) * .66, .11, (Math.floor(i / 2) - .5) * .66);
     group.add(plate);
     return plate;
   });
   // Blocks drop one after another onto the stack, then the stack resets.
-  const stack = [['terrazzo', 'pink'], ['wood', 'wood'], ['basalt', 'orange'], ['terrazzo', 'cyan']].map(([sides, top]) => {
+  const stack = [['terrazzo', 'lavender'], ['wood', 'wood'], ['basalt', 'peach'], ['terrazzo', 'indigo']].map(([sides, top]) => {
     const piece = block(.56, .34, .56, sides, top, .035);
     group.add(piece);
     return piece;
@@ -144,15 +144,15 @@ function clusterCare() {
   const group = new THREE.Group();
   const drum = cylinder(.3, .7, 'wood', 'wood');
   drum.position.set(-.45, .35, .2);
-  const tower = block(.5, 1.25, .5, 'terrazzo', 'cyan', .03);
+  const tower = block(.5, 1.25, .5, 'terrazzo', 'indigo', .03);
   tower.position.set(.12, .625, -.2);
   const low = block(.5, .5, .5, 'basalt', 'basalt', .03);
   low.position.set(.55, .25, .35);
-  const small = block(.34, .34, .34, 'terrazzo', 'pink', .03);
+  const small = block(.34, .34, .34, 'terrazzo', 'lavender', .03);
   small.position.set(-.1, .17, .6);
   const ball = new THREE.Mesh(new THREE.SphereGeometry(.2, 48, 32), materials.terrazzo());
   ball.castShadow = true;
-  const stripes = cylinder(.26, .52, 'terrazzo', 'orange');
+  const stripes = cylinder(.26, .52, 'terrazzo', 'peach');
   stripes.position.set(-.55, .26, -.45);
   group.add(drum, tower, low, small, ball, stripes);
   return {
@@ -262,18 +262,18 @@ const cardBuilders = [
     body.position.y = .09;
     const screen = block(2, .06, 1.25, 'basalt', 'screen', .03);
     screen.position.y = .19;
-    const hero = block(1.1, .05, .22, 'lime', 'lime', .02);
+    const hero = block(1.1, .05, .22, 'sage', 'sage', .02);
     hero.position.set(-.35, .23, -.3);
     const line1 = block(1.3, .04, .09, 'terrazzo', 'terrazzo', .02);
     line1.position.set(-.25, .23, -.02);
     const line2 = block(.9, .04, .09, 'terrazzo', 'terrazzo', .02);
     line2.position.set(-.45, .23, .15);
-    const cta = block(.5, .09, .22, 'green', 'green', .04);
+    const cta = block(.5, .09, .22, 'teal', 'teal', .04);
     cta.position.set(-.6, .25, .4);
-    const pic = block(.55, .05, .55, 'pink', 'pink', .03);
+    const pic = block(.55, .05, .55, 'lavender', 'lavender', .03);
     pic.position.set(.62, .23, .12);
     g.add(body, screen, hero, line1, line2, cta, pic);
-    return { group: g, band: 'green' };
+    return { group: g, band: 'teal' };
   },
   // Sites & blogs: stacked pages.
   () => {
@@ -284,14 +284,14 @@ const cardBuilders = [
       page.rotation.y = i * .06;
       g.add(page);
     });
-    const tab = block(.5, .08, .26, 'pink', 'pink', .03);
+    const tab = block(.5, .08, .26, 'lavender', 'lavender', .03);
     tab.position.set(-.55, .5, -.15);
     const l1 = block(1.1, .04, .08, 'basalt', 'basalt', .02);
     l1.position.set(-.2, .48, .2);
     const l2 = block(.8, .04, .08, 'basalt', 'basalt', .02);
     l2.position.set(-.35, .48, .4);
     g.add(tab, l1, l2);
-    return { group: g, band: 'pink' };
+    return { group: g, band: 'lavender' };
   },
   // Online stores: an open shipping box with a tag inside.
   () => {
@@ -312,11 +312,11 @@ const cardBuilders = [
       flap.rotation.set(i < 2 ? Math.sign(z) * .55 : 0, 0, i >= 2 ? -Math.sign(x) * .55 : 0);
       g.add(flap);
     });
-    const tag = block(.55, .75, .12, 'cyan', 'cyan', .05);
+    const tag = block(.55, .75, .12, 'indigo', 'indigo', .05);
     tag.position.set(0, .75, 0);
     tag.rotation.set(-.25, .5, .2);
     g.add(tag);
-    return { group: g, band: 'cyan' };
+    return { group: g, band: 'indigo' };
   },
   // Apps: a phone with app tiles.
   () => {
@@ -326,18 +326,18 @@ const cardBuilders = [
     const screen = block(.9, .05, 1.8, 'basalt', 'screen', .1);
     screen.position.y = .15;
     g.add(phone, screen);
-    ['yellow', 'pink', 'green', 'cyan', 'orange', 'lemon'].forEach((c, i) => {
+    ['amber', 'lavender', 'teal', 'indigo', 'peach', 'sage'].forEach((c, i) => {
       const tile = block(.3, .1, .3, c, c, .06);
       tile.position.set((i % 2 - .5) * .42, .21 + (i === 0 ? .1 : 0), (Math.floor(i / 2) - 1) * .44 - .1);
       g.add(tile);
     });
     g.rotation.y = .5;
-    return { group: g, band: 'yellow' };
+    return { group: g, band: 'amber' };
   },
   // SaaS: a layered pie chart.
   () => {
     const g = new THREE.Group();
-    const slices = [[0, 2.1, .32, 'green'], [2.1, 1.5, .22, 'terrazzo'], [3.6, 1.2, .26, 'basalt'], [4.8, 1.48, .18, 'mint']];
+    const slices = [[0, 2.1, .32, 'teal'], [2.1, 1.5, .22, 'terrazzo'], [3.6, 1.2, .26, 'basalt'], [4.8, 1.48, .18, 'sage']];
     const base = cylinder(1.12, .18, 'wood', 'wood', 72);
     base.position.y = .09;
     g.add(base);
@@ -346,22 +346,22 @@ const cardBuilders = [
       s.position.y = .18 + h / 2;
       g.add(s);
     });
-    return { group: g, band: 'orange' };
+    return { group: g, band: 'peach' };
   },
   // Automation: interlocking gears.
   () => {
     const g = new THREE.Group();
     const a = gear(12, .78, 'terrazzo', 'terrazzo');
     a.position.set(-.45, .03, 0);
-    const b = gear(9, .56, 'yellow', 'yellow');
+    const b = gear(9, .56, 'amber', 'amber');
     b.position.set(.72, .03, .38);
     b.rotation.y = .3;
-    const c = block(.3, .3, .3, 'blue', 'blue', .05);
+    const c = block(.3, .3, .3, 'indigo', 'indigo', .05);
     c.position.set(.55, .15, -.6);
     const axle = cylinder(.12, .5, 'basalt', 'basalt');
     axle.position.set(-.45, .25, 0);
     g.add(a, b, c, axle);
-    return { group: g, band: 'blue' };
+    return { group: g, band: 'sage' };
   },
 ];
 

@@ -1,6 +1,6 @@
 const { test, expect } = require('@playwright/test');
 
-const sections = ['estudio', 'afluya', 'proceso', 'proyectos', 'integraciones', 'servicios', 'contacto'];
+const sections = ['estudio', 'afluya', 'proceso', 'proyectos', 'integraciones', 'servicios', 'faq', 'contacto'];
 
 for (const viewport of [{ width: 1440, height: 900 }, { width: 390, height: 844 }, { width: 320, height: 740 }, { width: 1920, height: 1080 }]) {
   test(`landing renders and responds at ${viewport.width}px`, async ({ page }, testInfo) => {
@@ -54,6 +54,11 @@ for (const viewport of [{ width: 1440, height: 900 }, { width: 390, height: 844 
     await expect(page.getByRole('tab', { name: 'PidoYa' })).toHaveAttribute('aria-selected', 'true');
     await expect(page.locator('#afluya a[href="https://afluya.com"]').first()).toBeVisible();
     await expect(page.locator('.contact-link')).toHaveAttribute('href', /^https:\/\/wa.me\/525636146876/);
+    await page.locator('#faq summary').first().click();
+    await expect(page.locator('#faq details').first()).toHaveAttribute('open', '');
+    // The phone number is never shown; every WhatsApp link opens a prefilled message.
+    expect(await page.evaluate(() => document.body.innerText.includes('3614'))).toBe(false);
+    expect(await page.locator('a[href*="wa.me"]').evaluateAll(links => links.every(link => new URL(link.href).searchParams.get('text')?.includes('me interesa')))).toBe(true);
     expect(await page.locator('.card-media.rendered').count()).toBe(6);
     expect(await page.locator('img').evaluateAll(images => images.every(image => !image.complete || image.naturalWidth > 0))).toBe(true);
     expect(errors).toEqual([]);

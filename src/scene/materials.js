@@ -111,6 +111,13 @@ export const palette = {
   orange: '#ff7a2e',
   red: '#e8402c',
   lime: '#c8f333',
+  // Secondary palette for the process loops and service renders.
+  lavender: '#b39dff',
+  peach: '#ffb38a',
+  teal: '#1aa89a',
+  amber: '#f2b33d',
+  indigo: '#4a5bd6',
+  sage: '#a9c9a4',
 };
 
 export const materials = {

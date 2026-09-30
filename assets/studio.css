@@ -234,6 +234,23 @@ html:not(.js) .site-in { display: none; }
 .square:hover { background: var(--black); color: var(--white); }
 .square .lucide { width: 16px; height: 16px; }
 
+/* ---------- FAQ ---------- */
+.faq { padding: 96px 0; background: var(--white); border-bottom: 1px solid var(--canvas); }
+.faq-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 96px; align-items: start; }
+.faq-head .desc { max-width: 420px; margin-top: 40px; }
+.faq-list { border-top: 1px solid var(--canvas); }
+.faq details { border-bottom: 1px solid var(--canvas); }
+.faq summary { display: flex; justify-content: space-between; align-items: center; gap: 24px; padding: 28px 0; cursor: pointer; list-style: none; font: 500 24px/1.2 var(--font-sans); letter-spacing: -.03em; }
+.faq summary::-webkit-details-marker { display: none; }
+.faq summary:hover .faq-icon { background: var(--black); color: var(--white); }
+.faq-icon { position: relative; flex: none; width: 40px; height: 40px; border-radius: 50%; background: var(--mist); transition: background-color .3s, color .3s, transform .5s var(--ease); }
+.faq-icon::before, .faq-icon::after { content: ''; position: absolute; left: 50%; top: 50%; width: 14px; height: 2px; border-radius: 2px; background: currentColor; transform: translate(-50%, -50%); }
+.faq-icon::after { transform: translate(-50%, -50%) rotate(90deg); }
+.faq details[open] .faq-icon { transform: rotate(45deg); background: var(--yellow); color: var(--black); }
+.faq details p { max-width: 560px; padding: 0 64px 28px 0; color: var(--slate); font-size: 18px; line-height: 1.4; letter-spacing: -.01em; }
+.faq details[open] p { animation: faq-in .6s var(--ease); }
+@keyframes faq-in { from { opacity: 0; transform: translateY(-8px); } }
+
 /* ---------- Entry ---------- */
 .entry1 { background: var(--white); }
 .entry1 .items { display: grid; grid-template-columns: 1fr 1fr; }
@@ -312,7 +329,7 @@ html:not(.js) .site-in { display: none; }
   .btn-cta { height: 36px; padding: 0 14px; border-radius: 10px; }
   .hero-home { min-height: 0; padding: 104px 0 0; display: flex; flex-direction: column; }
   .hero-home .desc { width: auto; max-width: 440px; margin-top: 32px; }
-  .hero-media { position: relative; left: auto; top: auto; order: 2; width: 100%; margin-top: 8px; }
+  .hero-media { position: relative; left: auto; top: auto; order: 2; width: 100%; margin-top: -4vw; }
   .motion-control { bottom: 24px; }
   .rs-scale { border-radius: 40px 40px 0 0; clip-path: inset(0 var(--rs-inset, 0px) 0 var(--rs-inset, 0px) round 40px 40px 0 0); }
   .content-columns { padding: 64px 0; }
@@ -343,6 +360,11 @@ html:not(.js) .site-in { display: none; }
   .card-details { padding: 0; }
   .card .btn { margin-top: 12px; background: var(--white); }
   .prev-next { display: none; }
+  .faq { padding: 64px 0; }
+  .faq-grid { grid-template-columns: 1fr; gap: 40px; }
+  .faq-head .desc { margin-top: 24px; }
+  .faq summary { font-size: 19px; padding: 22px 0; }
+  .faq details p { padding: 0 0 22px; font-size: 16px; }
   .entry-item { height: 330px; padding: 24px 20px; }
   .entry-top { flex-direction: column; justify-content: space-between; height: 100%; }
   .entry-item .type-body-small { order: -1; }
