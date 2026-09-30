@@ -13,7 +13,8 @@ npm run dev -- --port 8790
 ```
 
 Tambien se puede abrir `index.html` directamente para revisar la portada.
-Las fuentes Syne, Newsreader y Manrope se cargan desde Google Fonts.
+Las fuentes Archivo condensada (titulares), Inter Tight (texto) y JetBrains Mono
+(etiquetas) se cargan desde Google Fonts.
 
 ## Verificacion
 
@@ -36,7 +37,18 @@ o JavaScript, actualizar la version de sus URLs en `index.html` para invalidar
 la cache de assets. El portal de clientes y los otros sitios conservan sus
 archivos y comandos existentes.
 
-El modelo B esta construido con geometria propia. Se pausa al salir de pantalla
-o cambiar de pestana, limita la densidad de pixeles a 1.5 y respeta la preferencia
-de movimiento reducido. Si WebGL falla, se muestra una B tipografica y el
-contenido sigue disponible.
+La estructura sigue la de dayos.com: hero con torre 3D, seccion negra
+redondeada, producto destacado (Afluya) en laptop, tres animaciones de proceso,
+carrusel de proyectos, rejilla de integraciones, carrusel de servicios, dos CTAs
+y footer. El codigo 3D vive en `src/scene/`:
+
+- `tower.js`: torre hexagonal de piezas (terrazo, basalto, madera y resina de
+  color) rotuladas con los proyectos. Las piezas salen y entran sin parar, con
+  reflejo en el piso. Renderiza a la densidad real de la pantalla (hasta 2x).
+- `mini.js`: un solo renderer fuera de pantalla dibuja las tres animaciones de
+  proceso y las imagenes de las tarjetas de servicios en canvas 2D.
+- `materials.js`: texturas procedurales compartidas.
+
+El scroll suave usa Lenis. Todo se pausa fuera de pantalla o con la pestana
+oculta, hay boton de pausa y se respeta el movimiento reducido. Si WebGL falla
+se muestra una silueta plana y el contenido sigue disponible.

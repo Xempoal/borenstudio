@@ -1,163 +1,258 @@
-import * as THREE from 'three';
-import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+import Lenis from 'lenis';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { createIcons, ArrowUpRight, ArrowDown, ArrowUp, Plus, Pause, Play } from 'lucide';
+import { createIcons, ArrowUpRight, ArrowRight, ArrowLeft, ArrowUp, Pause, Play, MessageCircle, CreditCard, CalendarCheck, Package, Search, Bell, ChartColumn, Globe } from 'lucide';
+import { createTower } from './scene/tower.js';
+import { createClusters, renderCards } from './scene/mini.js';
 
-createIcons({ icons: { ArrowUpRight, ArrowDown, ArrowUp, Plus, Pause, Play } });
-document.querySelector('#year').textContent = new Date().getFullYear();
+const icons = { ArrowUpRight, ArrowRight, ArrowLeft, ArrowUp, Pause, Play, MessageCircle, CreditCard, CalendarCheck, Package, Search, Bell, ChartColumn, Globe };
+createIcons({ icons });
 gsap.registerPlugin(ScrollTrigger);
+document.querySelector('#year').textContent = new Date().getFullYear();
 const reduced = matchMedia('(prefers-reduced-motion: reduce)');
-const motion = gsap.matchMedia();
-motion.add('(prefers-reduced-motion: no-preference)', () => {
-  gsap.utils.toArray('[data-reveal]').forEach(element => {
-    gsap.from(element, { y: 45, opacity: 0, duration: 1, ease: 'power3.out', scrollTrigger: { trigger: element, start: 'top 94%', once: true } });
+const root = document.documentElement;
+
+// --- Smooth scroll ----------------------------------------------------------
+let lenis = null;
+if (!reduced.matches) {
+  lenis = new Lenis({ lerp: .1, smoothWheel: true });
+  lenis.on('scroll', ScrollTrigger.update);
+  gsap.ticker.add(time => lenis.raf(time * 1000));
+  gsap.ticker.lagSmoothing(0);
+}
+function scrollTo(target) {
+  const offset = innerWidth <= 860 ? -64 : -80;
+  if (lenis) lenis.scrollTo(target, { offset, duration: 1.4 });
+  else scrollBy({ top: target.getBoundingClientRect().top + offset });
+}
+document.addEventListener('click', event => {
+  const link = event.target.closest('a[href^="#"]');
+  if (!link) return;
+  const target = document.querySelector(link.getAttribute('href'));
+  if (!target) return;
+  event.preventDefault();
+  setMenu(false);
+  scrollTo(target);
+});
+
+// --- Site intro -------------------------------------------------------------
+Promise.race([document.fonts.ready, new Promise(resolve => setTimeout(resolve, 1200))]).then(() => {
+  requestAnimationFrame(() => root.classList.add('loaded'));
+});
+
+// --- Nav theme follows the section under it -------------------------------
+const nav = document.querySelector('.the-nav');
+const themed = [...document.querySelectorAll('[data-nav]')];
+function updateNav() {
+  const probe = nav.offsetHeight / 2;
+  const current = themed.find(section => {
+    const rect = section.getBoundingClientRect();
+    return rect.top <= probe && rect.bottom > probe;
   });
-  gsap.utils.toArray('.project-image').forEach(element => {
-    gsap.fromTo(element.querySelector('img'), { yPercent: 6, scale: .96 }, { yPercent: -6, scale: 1.02, ease: 'none', scrollTrigger: { trigger: element, start: 'top bottom', end: 'bottom top', scrub: 1 } });
+  // Rounded sections start with a strip of the previous color behind the arc.
+  let theme = current?.dataset.nav ?? 'light';
+  if (current?.classList.contains('rounded-section')) {
+    const arc = current.querySelector('.rs-scale').getBoundingClientRect();
+    if (arc.top > probe) theme = current.classList.contains('rs-white') ? 'dark' : 'light';
+  }
+  if (nav.dataset.theme !== theme) nav.dataset.theme = theme;
+}
+addEventListener('scroll', updateNav, { passive: true });
+lenis?.on('scroll', updateNav);
+updateNav();
+
+// --- Mobile menu ------------------------------------------------------------
+const burger = document.querySelector('.nav-burger');
+const menu = document.querySelector('#menu');
+function setMenu(open) {
+  burger.setAttribute('aria-expanded', String(open));
+  burger.setAttribute('aria-label', open ? 'Cerrar menú' : 'Abrir menú');
+  menu.hidden = !open;
+  if (open) { lenis?.stop(); nav.dataset.theme = 'light'; } else { lenis?.start(); updateNav(); }
+}
+burger.addEventListener('click', () => setMenu(menu.hidden));
+addEventListener('keydown', event => { if (event.key === 'Escape' && !menu.hidden) setMenu(false); });
+
+// --- Split headings into lines that slide up --------------------------------
+const splits = [...document.querySelectorAll('.split')];
+const revealed = new WeakSet();
+function split(element) {
+  const text = element.dataset.text ?? element.textContent.trim().replace(/\s+/g, ' ');
+  element.dataset.text = text;
+  element.setAttribute('aria-label', text);
+  element.innerHTML = text.split(' ').map(word => `<span class="w">${word}</span>`).join(' ');
+  const lines = [];
+  let top = null;
+  element.querySelectorAll('.w').forEach(word => {
+    if (word.offsetTop !== top) { top = word.offsetTop; lines.push([]); }
+    lines.at(-1).push(word.textContent);
+  });
+  element.innerHTML = lines.map(line => `<span class="line-wrap" aria-hidden="true"><span class="line">${line.join(' ')}</span></span>`).join(' ');
+  element.classList.add('is-split');
+  if (revealed.has(element) || reduced.matches) return;
+  gsap.set(element.querySelectorAll('.line'), { yPercent: 110 });
+}
+function reveal(element, delay = 0) {
+  revealed.add(element);
+  gsap.to(element.querySelectorAll('.line'), { yPercent: 0, duration: 1.1, ease: 'power4.out', stagger: .09, delay });
+}
+document.fonts.ready.then(() => {
+  splits.forEach(split);
+  splits.forEach(element => {
+    if (reduced.matches) return;
+    if (element.closest('.hero-home')) { reveal(element, .75); return; }
+    ScrollTrigger.create({ trigger: element, start: 'top 88%', once: true, onEnter: () => reveal(element) });
+  });
+  ScrollTrigger.refresh();
+});
+let resizeTimer = 0;
+let lastWidth = innerWidth;
+addEventListener('resize', () => {
+  if (innerWidth === lastWidth) return;
+  lastWidth = innerWidth;
+  clearTimeout(resizeTimer);
+  resizeTimer = setTimeout(() => {
+    splits.forEach(element => { const was = revealed.has(element); split(element); if (was || reduced.matches) gsap.set(element.querySelectorAll('.line'), { yPercent: 0 }); });
+    ScrollTrigger.refresh();
+  }, 200);
+});
+
+// Soft fade-up for body copy.
+if (!reduced.matches) {
+  gsap.from('.hero-home .desc', { y: 24, opacity: 0, duration: 1, ease: 'power3.out', delay: 1.1 });
+  gsap.utils.toArray('.cols-3 > li, .manifesto .desc p, .content1 .desc p, .solutions li, .brand-card, .card-track > li').forEach(element => {
+    gsap.from(element, { y: 32, opacity: 0, duration: 1, ease: 'power3.out', scrollTrigger: { trigger: element, start: 'top 92%', once: true } });
+  });
+  gsap.from('.laptop', { x: 120, opacity: 0, duration: 1.4, ease: 'power3.out', scrollTrigger: { trigger: '.content1', start: 'top 70%', once: true } });
+}
+
+// --- Rounded sections open up as they arrive --------------------------------
+if (!reduced.matches) {
+  document.querySelectorAll('.rs-scale').forEach(arc => {
+    gsap.fromTo(arc, { '--rs-inset': () => `${Math.min(64, innerWidth * .045)}px` }, {
+      '--rs-inset': '0px', ease: 'none',
+      scrollTrigger: { trigger: arc, start: 'top bottom', end: 'top 20%', scrub: true, invalidateOnRefresh: true },
+    });
+  });
+}
+
+// --- Project carousel (autoplay, pause, pagination) -------------------------
+(() => {
+  const carousel = document.querySelector('.case-carousel');
+  const track = carousel.querySelector('.case-track');
+  const slides = [...track.children];
+  const dots = [...carousel.querySelectorAll('.pagination button')];
+  const play = carousel.querySelector('.carousel-play');
+  const delay = 6000;
+  carousel.style.setProperty('--autoplay', `${delay}ms`);
+  let index = 0;
+  let timer = 0;
+  let playing = !reduced.matches;
+  const goTo = (next, smooth = true) => {
+    index = (next + slides.length) % slides.length;
+    track.scrollTo({ left: slides[index].offsetLeft - track.firstElementChild.offsetLeft, behavior: smooth ? 'smooth' : 'auto' });
+    setActive(index);
+  };
+  function setActive(active) {
+    dots.forEach((dot, i) => {
+      const on = i === active;
+      if (on && dot.getAttribute('aria-selected') === 'true') return;
+      dot.setAttribute('aria-selected', String(on));
+      if (on) { dot.style.animation = 'none'; void dot.offsetWidth; dot.style.animation = ''; }
+    });
+    restart();
+  }
+  function restart() {
+    clearTimeout(timer);
+    if (playing) timer = setTimeout(() => goTo(index + 1), delay);
+  }
+  function setPlaying(value) {
+    playing = value;
+    carousel.classList.toggle('paused', !playing);
+    play.setAttribute('aria-label', playing ? 'Pausar carrusel' : 'Reproducir carrusel');
+    play.innerHTML = `<i data-lucide="${playing ? 'pause' : 'play'}" aria-hidden="true"></i>`;
+    createIcons({ icons });
+    restart();
+  }
+  dots.forEach((dot, i) => dot.addEventListener('click', () => goTo(i)));
+  play.addEventListener('click', () => setPlaying(!playing));
+  let scrollTimer = 0;
+  track.addEventListener('scroll', () => {
+    clearTimeout(scrollTimer);
+    scrollTimer = setTimeout(() => {
+      const nearest = slides.reduce((best, slide, i) => Math.abs(slide.offsetLeft - track.firstElementChild.offsetLeft - track.scrollLeft) < Math.abs(slides[best].offsetLeft - track.firstElementChild.offsetLeft - track.scrollLeft) ? i : best, 0);
+      if (nearest !== index) { index = nearest; setActive(index); }
+    }, 120);
+  }, { passive: true });
+  // Only autoplay while the carousel is on screen.
+  new IntersectionObserver(([entry]) => {
+    if (entry.isIntersecting) restart(); else clearTimeout(timer);
+  }).observe(carousel);
+  setPlaying(playing);
+  setActive(0);
+})();
+
+// --- Service cards carousel ---------------------------------------------------
+(() => {
+  const track = document.querySelector('.card-track');
+  const step = () => (track.firstElementChild.getBoundingClientRect().width + 24);
+  document.querySelector('.prev-next .prev').addEventListener('click', () => track.scrollBy({ left: -step(), behavior: 'smooth' }));
+  document.querySelector('.prev-next .next').addEventListener('click', () => track.scrollBy({ left: step(), behavior: 'smooth' }));
+})();
+
+// --- Tilting integration cards ----------------------------------------------
+document.querySelectorAll('.brand-card').forEach(card => {
+  card.addEventListener('pointermove', event => {
+    const rect = card.getBoundingClientRect();
+    const x = (event.clientX - rect.left) / rect.width - .5;
+    const y = (event.clientY - rect.top) / rect.height - .5;
+    card.style.setProperty('--ry', `${x * 22}deg`);
+    card.style.setProperty('--rx', `${-y * 22}deg`);
+  });
+  card.addEventListener('pointerleave', () => { card.style.setProperty('--ry', '0deg'); card.style.setProperty('--rx', '0deg'); });
+});
+
+// --- Yellow square follows the cursor on the contact blocks -----------------
+document.querySelectorAll('.entry-item').forEach(item => {
+  item.addEventListener('pointermove', event => {
+    const rect = item.getBoundingClientRect();
+    item.style.setProperty('--x', `${event.clientX - rect.left}px`);
+    item.style.setProperty('--y', `${event.clientY - rect.top}px`);
   });
 });
-document.querySelectorAll('details').forEach(detail => detail.addEventListener('toggle', () => ScrollTrigger.refresh()));
-document.fonts.ready.then(() => ScrollTrigger.refresh());
 
-function createSculpture() {
-  const canvas = document.querySelector('#sculpture');
-  const container = canvas.parentElement;
-  const hero = document.querySelector('.hero');
-  const control = document.querySelector('.motion-control');
-  let renderer;
-  try {
-    renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, powerPreference: 'low-power' });
-  } catch {
-    return;
-  }
-  renderer.setPixelRatio(Math.min(devicePixelRatio, 1.5));
-  renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = .95;
-  const scene = new THREE.Scene();
-  const camera = new THREE.PerspectiveCamera(35, 1, .1, 50);
-  camera.position.set(0, 0, 10);
-  const pmrem = new THREE.PMREMGenerator(renderer);
-  const room = new RoomEnvironment();
-  const environment = pmrem.fromScene(room, .04);
-  scene.environment = environment.texture;
-  room.dispose();
-  pmrem.dispose();
-  scene.add(new THREE.HemisphereLight(0xffffff, 0x64702b, 1));
-  const key = new THREE.DirectionalLight(0xeaffae, 2);
-  key.position.set(-3, 5, 5);
-  scene.add(key);
-  const rim = new THREE.DirectionalLight(0xffffff, 2);
-  rim.position.set(5, -2, 3);
-  scene.add(rim);
-
-  // The B is modeled for the studio, with two counters and a silver inset spine.
-  const shape = new THREE.Shape();
-  shape.moveTo(-1.05, -1.6);
-  shape.lineTo(-1.05, 1.6);
-  shape.lineTo(.1, 1.6);
-  shape.bezierCurveTo(1.55, 1.6, 1.65, .35, .68, .08);
-  shape.bezierCurveTo(1.95, -.15, 1.65, -1.6, .15, -1.6);
-  shape.closePath();
-  const upper = new THREE.Path();
-  upper.moveTo(-.32, .43); upper.lineTo(.07, .43);
-  upper.bezierCurveTo(.7, .43, .7, 1.02, .07, 1.02);
-  upper.lineTo(-.32, 1.02); upper.closePath();
-  const lower = new THREE.Path();
-  lower.moveTo(-.32, -1.01); lower.lineTo(.15, -1.01);
-  lower.bezierCurveTo(.85, -1.01, .85, -.35, .15, -.35);
-  lower.lineTo(-.32, -.35); lower.closePath();
-  shape.holes.push(upper, lower);
-  const geometry = new THREE.ExtrudeGeometry(shape, { depth: .65, bevelEnabled: true, bevelSegments: 5, steps: 1, bevelSize: .12, bevelThickness: .12, curveSegments: 36 });
-  geometry.center();
-  const material = new THREE.MeshPhysicalMaterial({ color: 0xc8f333, metalness: .72, roughness: .23, clearcoat: 1, clearcoatRoughness: .15 });
-  const group = new THREE.Group();
-  group.add(new THREE.Mesh(geometry, material));
-  const spine = new THREE.Mesh(new THREE.BoxGeometry(.09, 2.95, .77), new THREE.MeshStandardMaterial({ color: 0xf5ffe5, metalness: .95, roughness: .17 }));
-  spine.position.set(-1.14, 0, 0);
-  group.add(spine);
-  scene.add(group);
-  let width = 0;
-  let active = true;
-  let paused = reduced.matches;
-  let elapsed = 0;
-  let previous = 0;
-  let frame = 0;
-  let progress = 0;
-  const pointer = { x: 0, y: 0 };
-  const eased = { x: 0, y: 0 };
-
-  function render(time = 0) {
-    frame = 0;
-    const delta = previous ? Math.min((time - previous) / 1000, .05) : 0;
-    previous = time;
-    if (!paused && !reduced.matches) elapsed += delta;
-    eased.x += (pointer.x - eased.x) * .04;
-    eased.y += (pointer.y - eased.y) * .04;
-    const mobile = width <= 700;
-    const moving = !paused && !reduced.matches;
-    group.position.set(mobile ? .25 : camera.aspect * 1.4, mobile ? .8 : .05, 0);
-    group.scale.setScalar(mobile ? .4 : 1.05);
-    group.rotation.set(.12 + (moving ? eased.y * .12 : 0), -.48 + (moving ? Math.sin(elapsed * .45) * .17 + eased.x * .2 + progress * .95 : 0), -.17 + (moving ? Math.sin(elapsed * .3) * .04 + progress * .18 : 0));
-    if (moving) group.position.y += Math.sin(elapsed * .7) * .055 - progress * .35;
-    renderer.render(scene, camera);
-    if (active && !document.hidden && moving) frame = requestAnimationFrame(render);
-  }
-  function requestRender() {
-    if (!frame && active && !document.hidden) frame = requestAnimationFrame(render);
-  }
-  function resize() {
-    width = container.clientWidth;
-    camera.aspect = width / container.clientHeight;
-    camera.updateProjectionMatrix();
-    renderer.setSize(width, container.clientHeight, false);
-    requestRender();
-  }
-  new ResizeObserver(resize).observe(container);
-  new IntersectionObserver(([entry]) => {
-    active = entry.isIntersecting;
-    if (!active) { cancelAnimationFrame(frame); frame = 0; previous = 0; }
-    else requestRender();
-  }).observe(hero);
-  hero.addEventListener('pointermove', event => {
-    pointer.x = (event.clientX / width - .5) * 2;
-    pointer.y = (event.clientY / container.clientHeight - .5) * 2;
-  }, { passive: true });
-  hero.addEventListener('pointerleave', () => { pointer.x = 0; pointer.y = 0; });
-  ScrollTrigger.create({ trigger: hero, start: 'top top', end: 'bottom top', onUpdate: self => { progress = self.progress; } });
-  function updateControl() {
-    const stopped = paused || reduced.matches;
-    control.setAttribute('aria-pressed', String(stopped));
+// --- 3D ---------------------------------------------------------------------
+const heroMedia = document.querySelector('.hero-media');
+const control = document.querySelector('.motion-control');
+Promise.all([document.fonts.load('800 100px "Inter Tight"'), document.fonts.load('800 100px Archivo')]).catch(() => {}).finally(() => {
+  const tower = createTower(document.querySelector('#tower'), { onReady: () => heroMedia.classList.add('ready') });
+  if (!tower) { root.classList.add('no-webgl'); return; }
+  const updateControl = () => {
+    const stopped = tower.paused;
     const label = stopped ? 'Reanudar animación' : 'Pausar animación';
+    control.setAttribute('aria-pressed', String(stopped));
     control.setAttribute('aria-label', label);
     control.title = label;
     control.innerHTML = `<i data-lucide="${stopped ? 'play' : 'pause'}" aria-hidden="true"></i>`;
-    createIcons({ icons: { Play, Pause } });
+    createIcons({ icons });
     control.hidden = reduced.matches;
-    requestRender();
-  }
-  control.addEventListener('click', () => { paused = !paused; updateControl(); });
-  reduced.addEventListener('change', () => { paused = reduced.matches; updateControl(); });
-  document.addEventListener('visibilitychange', () => {
-    previous = 0;
-    if (document.hidden) { cancelAnimationFrame(frame); frame = 0; }
-    else requestRender();
-  });
-  canvas.addEventListener('webglcontextlost', event => {
-    event.preventDefault();
-    cancelAnimationFrame(frame);
-    active = false;
-    frame = 0;
-    container.classList.remove('ready');
-    control.hidden = true;
-  });
-  canvas.addEventListener('webglcontextrestored', () => {
-    active = true;
-    container.classList.add('ready');
-    updateControl();
-  });
-  resize();
-  container.classList.add('ready');
+  };
+  control.addEventListener('click', () => { tower.setPaused(!tower.paused); updateControl(); });
+  reduced.addEventListener('change', updateControl);
   updateControl();
-}
-createSculpture();
+
+  try {
+    createClusters(document.querySelectorAll('.cluster'));
+    const cards = document.querySelectorAll('.card-media');
+    let drawnFor = 0;
+    const draw = () => {
+      const width = cards[0].getBoundingClientRect().width;
+      if (Math.abs(width - drawnFor) < 2) return;
+      drawnFor = width;
+      renderCards(cards);
+    };
+    new IntersectionObserver((entries, observer) => {
+      if (entries.some(entry => entry.isIntersecting)) { draw(); observer.disconnect(); addEventListener('resize', () => { clearTimeout(draw.t); draw.t = setTimeout(draw, 300); }); }
+    }, { rootMargin: '600px' }).observe(document.querySelector('.carousel2'));
+  } catch { /* the small scenes are decorative */ }
+});
